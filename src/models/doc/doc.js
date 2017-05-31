@@ -2,12 +2,20 @@ import Block from './block';
 
 export default class Doc {
 
-  static fromElement() {
-    return new Doc();
+  static fromElement(el) {
+    const doc = new Doc(el);
+    doc.render();
+    return doc;
   }
 
-  constructor() {
+  constructor(el) {
+    this.el = el;
     this.blocks = [new Block()];
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    this.blocks.forEach(block => this.el.appendChild(block.render()));
   }
 
 }

@@ -5,10 +5,10 @@ export default class WriteEditor {
   constructor(el) {
     this.el = el;
     this.doc = Doc.fromElement(el);
-    this.setEditMode(true);
+    this.enableEditing(true);
   }
 
-  setEditMode(editMode) {
+  enableEditing(editMode) {
     this.el.contentEditable = editMode ? 'true' : 'false';
   }
 

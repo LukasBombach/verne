@@ -1,7 +1,7 @@
 export default class Inline {
 
-  constructor() {
-    this.text = '';
+  constructor(text = '') {
+    this.text = text;
     this.attrs = [];
   }
 

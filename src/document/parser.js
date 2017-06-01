@@ -7,12 +7,12 @@ export default class Parser {
   static blockTags = ['p', 'ul', 'ol', 'li', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div'];
 
   static tagAttributeMap = {
-    strong: 'bold', //TextNode.ATTRIBUTES.BOLD,
-    b: 'bold',      //TextNode.ATTRIBUTES.BOLD,
-    em: 'italic',   //TextNode.ATTRIBUTES.ITALIC,
-    i: 'italic',    //TextNode.ATTRIBUTES.ITALIC,
-    u: 'underline', //TextNode.ATTRIBUTES.UNDERLINE,
-    del: 'del',     //TextNode.ATTRIBUTES.DEL,
+    strong: 'bold', // TextNode.ATTRIBUTES.BOLD,
+    b: 'bold',      // TextNode.ATTRIBUTES.BOLD,
+    em: 'italic',   // TextNode.ATTRIBUTES.ITALIC,
+    i: 'italic',    // TextNode.ATTRIBUTES.ITALIC,
+    u: 'underline', // TextNode.ATTRIBUTES.UNDERLINE,
+    del: 'del',     // TextNode.ATTRIBUTES.DEL,
   };
 
   static parse(el) {
@@ -20,11 +20,11 @@ export default class Parser {
   }
 
   static getChildrenFor(domNode, attributes = [], parent) {
-    return [].prototype.map.call(domNode.childNodes, node => {
+    return [].prototype.map.call(domNode.childNodes, (node) => {
       if (Parser.isBlockNode(node)) return Parser.getBlockNode(node, attributes, parent);
       else if (Parser.isTextNodeWithContents(node)) return Parser.getTextNode(node, attributes, parent);
       // else if (Parser.isAttributeNode(node)) childNodes = childNodes.concat(Parser.getChildrenFor(node, Parser.addAttributeForNode(attributes, node), parent));
-      else return undefined;
+      return undefined;
     }).filter(node => node !== undefined);
   }
 
@@ -56,9 +56,9 @@ export default class Parser {
   static addAttributeForNode(attrs = [], node) {
     const attributeMap = Parser.tagAttributeMap;
     const tagName = node.tagName ? node.tagName.toLowerCase() : '';
-    attrs = attrs.slice(0);
-    if (attributeMap[tagName] && attrs.indexOf(tagName) === -1) attrs.push(attributeMap[tagName]);
-    return attrs;
+    const _attrs = attrs.slice(0);
+    if (attributeMap[tagName] && _attrs.indexOf(tagName) === -1) _attrs.push(attributeMap[tagName]);
+    return _attrs;
   }
 
 }

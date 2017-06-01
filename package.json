@@ -26,6 +26,7 @@
   },
   "eslintConfig": {
     "extends": "airbnb",
+    "parser": "babel-eslint",
     "rules": {
       "no-underscore-dangle": "off",
       "max-len": "off"
@@ -45,5 +46,8 @@
     "plugins": [
       "transform-class-properties"
     ]
+  },
+  "dependencies": {
+    "babel-eslint": "^7.2.3"
   }
 }

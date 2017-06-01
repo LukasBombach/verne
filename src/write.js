@@ -1,4 +1,4 @@
-import Doc from './models/doc/doc';
+import Doc from './document/doc';
 
 export default class WriteEditor {
 

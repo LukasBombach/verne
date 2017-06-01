@@ -1,4 +1,4 @@
-import Block from './block';
+import BlockNode from './block_node';
 
 export default class Doc {
 
@@ -10,7 +10,7 @@ export default class Doc {
 
   constructor(el) {
     this.el = el;
-    this.blocks = [new Block()];
+    this.blocks = [new BlockNode()];
   }
 
   render() {

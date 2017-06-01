@@ -1,16 +1,18 @@
 import Doc from './doc';
+import BlockNode from './block_node';
+import TextNode from './text_node';
 
 export default class Parser {
 
   static blockTags = ['p', 'ul', 'ol', 'li', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div'];
 
   static tagAttributeMap = {
-    strong: TextNode.ATTRIBUTES.BOLD,
-    b: TextNode.ATTRIBUTES.BOLD,
-    em: TextNode.ATTRIBUTES.ITALIC,
-    i: TextNode.ATTRIBUTES.ITALIC,
-    u: TextNode.ATTRIBUTES.UNDERLINE,
-    del: TextNode.ATTRIBUTES.DEL,
+    strong: 'bold', //TextNode.ATTRIBUTES.BOLD,
+    b: 'bold',      //TextNode.ATTRIBUTES.BOLD,
+    em: 'italic',   //TextNode.ATTRIBUTES.ITALIC,
+    i: 'italic',    //TextNode.ATTRIBUTES.ITALIC,
+    u: 'underline', //TextNode.ATTRIBUTES.UNDERLINE,
+    del: 'del',     //TextNode.ATTRIBUTES.DEL,
   };
 
   static parse(el) {
@@ -21,7 +23,7 @@ export default class Parser {
     return [].prototype.map.call(domNode.childNodes, node => {
       if (Parser.isBlockNode(node)) return Parser.getBlockNode(node, attributes, parent);
       else if (Parser.isTextNodeWithContents(node)) return Parser.getTextNode(node, attributes, parent);
-      // else if (Parser.isAttributeNode(node)) childNodes = childNodes.concat(Parser._getChildrenFor(node, Parser.addAttributeForNode(attributes, node), parent));
+      // else if (Parser.isAttributeNode(node)) childNodes = childNodes.concat(Parser.getChildrenFor(node, Parser.addAttributeForNode(attributes, node), parent));
       else return undefined;
     }).filter(node => node !== undefined);
   }
@@ -34,15 +36,15 @@ export default class Parser {
     return node.nodeType === Node.TEXT_NODE && /[^\t\n\r ]/.test(node.textContent);
   }
 
-  static getBlockNode(domNode, attributes = [], parent) {
-    const nodeType = domNode.tagName.toLowerCase();
-    const blockNode = new BlockNode(this._type, nodeType, parent);
-    blockNode.children = Parser._getChildrenFor(domNode, attributes, blockNode);
+  static getBlockNode(domNode, attrs = [], parent) {
+    const tagName = domNode.tagName.toLowerCase();
+    const blockNode = new BlockNode(tagName, parent);
+    blockNode.setChildren(Parser.getChildrenFor(domNode, attrs, blockNode));
     return blockNode;
   }
 
-  static getTextNode(node, attributes = [], parent) {
-    return new TextNode(this._type, attributes, node.nodeValue, parent);
+  static getTextNode(node, attrs = [], parent) {
+    return new TextNode(node.nodeValue, parent, attrs);
   }
 
   static isAttributeNode(domNode) {
@@ -51,14 +53,12 @@ export default class Parser {
     return !!(tagName && attributeMap[tagName]);
   }
 
-  static addAttributeForNode(attributes = [], node) {
+  static addAttributeForNode(attrs = [], node) {
     const attributeMap = Parser.tagAttributeMap;
     const tagName = node.tagName ? node.tagName.toLowerCase() : '';
-    attributes = attributes.slice(0);
-    if (attributeMap[tagName] && attributes.indexOf(tagName) === -1) attributes.push(attributeMap[tagName]);
-    return attributes;
+    attrs = attrs.slice(0);
+    if (attributeMap[tagName] && attrs.indexOf(tagName) === -1) attrs.push(attributeMap[tagName]);
+    return attrs;
   }
-
-
 
 }

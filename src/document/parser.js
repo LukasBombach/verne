@@ -1,5 +1,4 @@
 // import Doc from './doc';
-import NodeList from './node_list';
 import BlockNode from './block_node';
 import TextNode from './text_node';
 

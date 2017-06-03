@@ -6,12 +6,14 @@
 </head>
 <body>
     <div id="editable-area">
-        Nullam id dolor id nibh ultricies vehicula ut id elit. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Maecenas faucibus mollis interdum.
+        <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Vestibulum id ligula porta felis euismod semper.</p>
+        <p>Praesent <strong>commodo cursus magna</strong>, vel scelerisque nisl consectetur et. Maecenas faucibus mollis interdum.</p>
+        <p>Etiam <strong>porta <em>s<del>e</del>m</em> malesuada</strong> magna mollis euismod.</p>
     </div>
     <script src="../dist/index.js"></script>
     <script>
-        var el = document.getElementById('editable-area');
-        var editor = new window.document.WriteEditor(el);
+        const el = document.getElementById('editable-area');
+        const editor = new window.document.WriteEditor(el);
         editor.focus();
     </script>
 </body>

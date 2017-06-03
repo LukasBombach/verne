@@ -10,11 +10,6 @@ export default class TextNode {
     return new TextNode(this.text, parent, this.attrs);
   }
 
-  appendText(text) {
-    this.text += text;
-    return this;
-  }
-
   render() {
     return document.createTextNode(this.text);
   }

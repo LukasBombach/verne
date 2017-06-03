@@ -1,21 +1,13 @@
-import BlockNode from './block_node';
-
 export default class Doc {
 
-  static fromElement(el) {
-    const doc = new Doc(el);
-    doc.render();
-    return doc;
-  }
-
-  constructor(el) {
+  constructor(el, nodes) {
     this.el = el;
-    this.blocks = [new BlockNode()];
+    this.nodes = nodes;
   }
 
   render() {
     this.el.innerHTML = '';
-    this.blocks.forEach(block => this.el.appendChild(block.render()));
+    this.nodes.forEach(block => this.el.appendChild(block.render()));
   }
 
 }

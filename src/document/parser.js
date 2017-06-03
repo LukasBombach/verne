@@ -1,4 +1,4 @@
-// import Doc from './doc';
+import Doc from './doc';
 import BlockNode from './block_node';
 import TextNode from './text_node';
 
@@ -16,8 +16,7 @@ export default class Parser {
   };
 
   static parse(el) {
-    return Parser.getChildrenFor(el);
-    // return new Doc(el, Parser.getChildrenFor(el));
+    return new Doc(el, Parser.getChildrenFor(el));
   }
 
   static getChildrenFor(domNode, attrs = [], parent) {

@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack --progress --colors --watch --env=development",
+    "build": "webpack --optimize-minimize --define process.env.NODE_ENV=\"production\"",
     "lint": "eslint src *.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -48,6 +49,7 @@
     ]
   },
   "dependencies": {
-    "babel-eslint": "^7.2.3"
+    "babel-eslint": "^7.2.3",
+    "debounce": "^1.0.2"
   }
 }

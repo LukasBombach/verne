@@ -1,13 +1,19 @@
+import Parser from './parser';
+
 export default class Doc {
 
-  constructor(el, nodes) {
-    this.el = el;
-    this.nodes = nodes;
+  static fromElement(el) {
+    return new Doc(el, Parser.getChildrenFor(el));
   }
 
-  render() {
-    this.el.innerHTML = '';
-    this.nodes.forEach(block => this.el.appendChild(block.render()));
+  constructor(el, nodes, domNodeMap) {
+    this.el = el;
+    this.nodes = nodes;
+    this.domNodeMap = domNodeMap;
+  }
+
+  insertTextFromInputEvent(e) {
+
   }
 
 }

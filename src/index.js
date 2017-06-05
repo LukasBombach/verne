@@ -1,3 +1,3 @@
-import WriteEditor from './write';
+import WriteEditor from './write_editor';
 
-window.document.WriteEditor = WriteEditor;
+window.WriteEditor = WriteEditor;

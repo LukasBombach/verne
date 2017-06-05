@@ -15,11 +15,7 @@ export default class Parser {
     del: 'del',
   };
 
-  static parse(el) {
-    return new Doc(el, Parser.getChildrenFor(el));
-  }
-
-  static getChildrenFor(domNode, attrs = [], parent) {
+  static getChildrenFor(domNode, attrs = [], parent = null) {
     let nodeList = [];
     [].forEach.call(domNode.childNodes, (childNode) => {
       if (Parser.isBlockNode(childNode)) nodeList.push(Parser.getBlockNode(childNode, attrs, parent));
@@ -33,8 +29,8 @@ export default class Parser {
     return domNode.tagName && Parser.blockTags.indexOf(domNode.tagName.toLowerCase()) !== -1;
   }
 
-  static isTextNodeWithContents(node) {
-    return node.nodeType === Node.TEXT_NODE && /[^\t\n\r ]/.test(node.textContent);
+  static isTextNodeWithContents(domNode) {
+    return domNode.nodeType === Node.TEXT_NODE && /[^\t\n\r ]/.test(domNode.textContent);
   }
 
   static isAttributeNode(domNode) {
@@ -49,8 +45,8 @@ export default class Parser {
     return new BlockNode(tagName, parent, children);
   }
 
-  static getTextNode(node, attrs = [], parent) {
-    return new TextNode(node.nodeValue, parent, attrs);
+  static getTextNode(domNode, attrs = [], parent) {
+    return new TextNode(domNode.nodeValue, parent, attrs);
   }
 
 }

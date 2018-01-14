@@ -4,14 +4,11 @@ export default class TextNode {
     this.text = text;
     this.parent = parent;
     this.attrs = attrs;
+    Object.freeze(this);
   }
 
   cloneWithParent(parent) {
     return new TextNode(this.text, parent, this.attrs);
-  }
-
-  render() {
-    return document.createTextNode(this.text);
   }
 
 }

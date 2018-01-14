@@ -1,4 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import Doc from './document/doc';
+import WriteJsDoc from './renderers/react/doc';
 
 export default class WriteEditor {
 
@@ -6,7 +9,9 @@ export default class WriteEditor {
     this.el = el;
     this.doc = Doc.fromElement(el);
     this.el.contentEditable = 'true';
-    this.el.addEventListener('keydown', e => this.doc.insertTextFromInputEvent(e));
+    ReactDOM.render(<WriteJsDoc doc={this.doc} />, document.getElementById('render-area'));
+    console.log(this.doc);
+    // this.el.addEventListener('input', e => this.doc.insertTextFromInputEvent(e), false);
   }
 
   focus() {

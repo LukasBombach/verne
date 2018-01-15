@@ -6,8 +6,8 @@ import TextNode from '../../document/text_node';
 class WriteJsBlock extends Component {
 
   renderChild(node) {
-    if (node instanceof BlockNode) return <WriteJsBlock node={node} />;
-    if (node instanceof TextNode) return <WriteJsText node={node} />;
+    if (node instanceof BlockNode) return <WriteJsBlock key={node.id} node={node} />;
+    if (node instanceof TextNode) return <WriteJsText key={node.id} node={node} />;
     console.warn('Could not find React Component to render node', node);
     return null;
   }

@@ -29,6 +29,12 @@ class WriteJsDoc extends React.Component<WriteJsDocProps, undefined> {
     this.observer.disconnect();
   }*/
 
+
+  constructor(props: WriteJsDocProps, context: any) {
+    super(props, context);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
   getNodes(): Array<BlockNode|TextNode> {
     return this.props.doc ? this.props.doc.nodes : [];
   }
@@ -37,10 +43,27 @@ class WriteJsDoc extends React.Component<WriteJsDocProps, undefined> {
     e.preventDefault();
     // console.log('activeElement', document.activeElement);
     const selection = window.getSelection();
-    console.log(selection);
-    console.log(nodeMap);
-    console.log(selection.focusNode);
-    console.log(nodeMap.get(selection.focusNode));
+    // console.log(selection);
+    // console.log(nodeMap);
+    // console.log(selection.focusNode);
+    // console.log(nodeMap.get(selection.focusNode));
+    console.log('component', this.findReactComponent(selection.focusNode));
+  }
+
+  findReactComponent(el: Node) {
+    let operations: number = 0;
+    while (el) {
+      for (const key in el) {
+        operations++;
+        if (el.hasOwnProperty(key) && key.indexOf('_reactInternal') !== -1) {
+          console.log('num operations', operations, 'key', key);
+          return (el as any)[key];
+        }
+      }
+      el = el.parentElement;
+    }
+    console.log('num operations', operations, 'returned null');
+    return null;
   }
 
   renderNode(node: BlockNode|TextNode): JSX.Element {

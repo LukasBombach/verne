@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import Doc from './document/doc';
-import WriteJsDoc from './io/react/doc';
+import WriteJsDoc from './io/react/components/doc';
 import Events from './events';
 import Actions from './actions';
 

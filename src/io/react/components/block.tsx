@@ -1,7 +1,7 @@
 import * as React from 'react';
-import BlockNode from '../../document/block_node';
+import BlockNode from '../../../document/block_node';
+import TextNode from '../../../document/text_node';
 import WriteJsText from './text';
-import TextNode from '../../document/text_node';
 
 interface WriteJsBlockProps {
   node: BlockNode

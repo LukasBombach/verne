@@ -15,6 +15,7 @@ export default class Events {
 
   handleInput(e: Event) {
     e.preventDefault();
+    console.log(e)
     // const insertTextAction = new InsertTextAction(e.data);
     // this.editor.actions.dispatch(insertTextAction);
   }

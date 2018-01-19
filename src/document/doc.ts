@@ -11,7 +11,7 @@ export default class Doc {
 
   constructor(editor: WriteEditor) {
     this.editor = editor;
-    this.nodes = DomParser.getChildrenFor(this.editor.getEl());
+    this.nodes = DomParser.getChildrenFor(editor.getEl());
   }
 
 }

@@ -13,10 +13,12 @@ module.exports = {
     umdNamedDefine: true,
   },
   devtool: 'source-map',
+  resolve: {
+    extensions: ['.js', '.json', '.ts', '.tsx'],
+  },
   module: {
     loaders: [
-      // Process JS with Babel.
-      { test: /\.tsx?$/, loader: require.resolve('awesome-typescript-loader') },
+      { test: /\.tsx?$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ },
       { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
     ],
   },

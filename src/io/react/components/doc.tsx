@@ -46,8 +46,8 @@ class WriteJsDoc extends React.Component<WriteJsDocProps, undefined> {
     // console.log(selection);
     // console.log(nodeMap);
     // console.log(selection.focusNode);
-    // console.log(nodeMap.get(selection.focusNode));
-    console.log('component', this.findReactComponent(selection.focusNode));
+    console.log(nodeMap.get(selection.focusNode));
+    // console.log('component', this.findReactComponent(selection.focusNode));
   }
 
   findReactComponent(el: Node) {

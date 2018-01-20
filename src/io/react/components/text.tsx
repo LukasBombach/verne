@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import TextNode from '../../../document/text_node';
 import nodeMap from '../node_map';
 
@@ -32,8 +33,9 @@ export default class WriteJsText extends React.Component<WriteJsTextProps, undef
 
   componentDidMount() {
     if (this.el) {
-      console.log(this.el)
       nodeMap.set(this.el.firstChild, this.props.node);
+    } else {
+      nodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
     }
   }
 

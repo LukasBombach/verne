@@ -1,14 +1,32 @@
 import DomParser from './dom_parser';
-import WriteEditor from "../write_editor";
 import TextNode from "./text_node";
 import BlockNode from "./block_node";
+
+import insertTextTransformation from './transformations/insert_text';
 
 export default class Doc {
 
   public nodes: Array<BlockNode|TextNode>;
 
-  constructor(el: Node) {
-    this.nodes = DomParser.getChildrenFor(el);
+  public static fromElement(el: Node): Doc {
+    const nodes = DomParser.getChildrenFor(el);
+    return new Doc(nodes);
+  }
+
+  constructor(nodes: Array<BlockNode|TextNode>) {
+    this.nodes = nodes;
+  }
+
+  public async transform(transformationName: string, params: any): Promise<Doc> {
+    if (transformationName === 'insertText') return await insertTextTransformation(this, params);
+    else console.warn(`Could not find handler for transformationName "${transformationName}"`);
+  }
+
+  public replaceBlockNode(oldBlockNode: BlockNode, newBlockNode: BlockNode) {
+    const nodes = this.nodes.slice(0);
+    const index = nodes.indexOf(oldBlockNode);
+    nodes[index] = newBlockNode;
+    return new Doc(nodes);
   }
 
 }

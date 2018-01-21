@@ -1,10 +1,11 @@
 import * as React from 'react';
-import nodeMap from '../node_map';
+import {KeyboardEvent} from "react";
+import WriteEditor from "../../../write_editor";
+import Selection from '../selection';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import Block from './block';
 import Inline from './inline';
-import WriteEditor from "../../../write_editor";
 
 interface EditorProps {
   html?: string;
@@ -25,9 +26,19 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  handleKeyDown() {
-    const selection = window.getSelection();
-    console.log(nodeMap.get(selection.focusNode));
+  async handleKeyDown(e: KeyboardEvent<Node>) {
+    e.preventDefault();
+    const selection = Selection.getUserSelection();
+    const node = selection.focusNode;
+    const offset = selection.focusOffset;
+    const key = e.key;
+    await this.core.actions.dispatch({ type: 'input', node, offset, key });
+  }
+
+  getEventHandlers() {
+    return {
+      onKeyDown: this.handleKeyDown,
+    }
   }
 
   renderNode(node: BlockNode|TextNode): JSX.Element {
@@ -39,7 +50,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
 
   render() {
     return (
-      <div contentEditable={true} suppressContentEditableWarning={true} onKeyDown={this.handleKeyDown}>
+      <div contentEditable={true} suppressContentEditableWarning={true} {...this.getEventHandlers()}>
         {this.state.nodes.map(node => this.renderNode(node))}
       </div>
     );

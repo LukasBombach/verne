@@ -22,4 +22,9 @@ export default class TextNode {
     return new TextNode(this.text, parent, this.attrs);
   }
 
+  insertString(offset: number, str: string): TextNode {
+    const text = this.text.substr(0, offset) + str + this.text.substr(offset);
+    return new TextNode(text, null, this.attrs);
+  }
+
 }

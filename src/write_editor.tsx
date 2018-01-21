@@ -1,6 +1,8 @@
 import Doc from './document/doc';
 import Actions from './actions';
 
+import inputActionHandler from './action_handlers/input';
+
 export default class WriteEditor {
 
   public doc: Doc;
@@ -9,19 +11,20 @@ export default class WriteEditor {
   public static fromHtml(html: string): WriteEditor  {
     const template = document.createElement('template');
     template.innerHTML = html;
-    return WriteEditor.fromEl(template.content);
+    return WriteEditor.fromElement(template.content);
   }
 
-  public static fromEl(el: Node): WriteEditor {
-    const doc = new Doc(el);
+  public static fromElement(el: Node): WriteEditor {
+    const doc = Doc.fromElement(el);
     const writeEditor = new WriteEditor();
     writeEditor.doc = doc;
     return writeEditor;
   }
 
   constructor() {
-    this.doc = null;
+    this.doc = new Doc([]);
     this.actions = new Actions(this);
+    this.actions.registerActionHandler('input', inputActionHandler(this));
   }
 
 }

@@ -1,29 +1,27 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
 import Doc from './document/doc';
-import WriteJsDoc from './io/react/components/doc';
-import Events from './events';
 import Actions from './actions';
 
 export default class WriteEditor {
 
-  private el: HTMLElement;
-  private doc: Doc;
-  private events: Events;
-  private actions: Actions;
+  public doc: Doc;
+  public actions: Actions;
 
-  constructor(el: HTMLElement) {
-    this.el = el;
-    this.doc = new Doc(this);
-    this.events = new Events(this);
-    this.actions = new Actions(this);
-    this.el.contentEditable = 'true';
-    this.events.listen();
-    ReactDOM.render(<WriteJsDoc doc={this.doc} />, document.getElementById('render-area'));
+  public static fromHtml(html: string): WriteEditor  {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    return WriteEditor.fromEl(template.content);
   }
 
-  getEl(): HTMLElement {
-    return this.el;
+  public static fromEl(el: Node): WriteEditor {
+    const doc = new Doc(el);
+    const writeEditor = new WriteEditor();
+    writeEditor.doc = doc;
+    return writeEditor;
+  }
+
+  constructor() {
+    this.doc = null;
+    this.actions = new Actions(this);
   }
 
 }

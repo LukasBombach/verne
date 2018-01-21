@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextNode from '../../../document/text_node';
 import WriteJsText from './text';
 
-interface WriteJsInlineProps {
+interface InlineProps {
   node: TextNode
 }
 
@@ -13,7 +13,7 @@ interface attributeElementsMap {
   del: string;
 }
 
-export default class WriteJsInline extends React.Component<WriteJsInlineProps, undefined> {
+export default class Inline extends React.Component<InlineProps, undefined> {
 
   static attrElMap: attributeElementsMap = {
     bold: 'strong',
@@ -23,7 +23,7 @@ export default class WriteJsInline extends React.Component<WriteJsInlineProps, u
 
   render() {
     return this.props.node.attrs
-      .map(attr => WriteJsInline.attrElMap[attr] || 'span')
+      .map(attr => Inline.attrElMap[attr] || 'span')
       .reduce((Prev, Cur) => <Cur>{Prev}</Cur>, <WriteJsText node={this.props.node} />);
   }
 

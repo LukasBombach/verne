@@ -9,9 +9,9 @@ export default class Events {
     this.editor = editor;
   }
 
-  listen() {
-    this.editor.getEl().addEventListener('input', e => this.handleInput(e), false);
-  }
+  // listen() {
+  //   this.editor.getEl().addEventListener('input', e => this.handleInput(e), false);
+  // }
 
   handleInput(e: Event) {
     e.preventDefault();

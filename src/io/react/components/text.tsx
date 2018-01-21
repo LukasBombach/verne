@@ -3,11 +3,11 @@ import * as ReactDOM from 'react-dom';
 import nodeMap from '../node_map';
 import TextNode from '../../../document/text_node';
 
-interface WriteJsTextProps {
+interface TextProps {
   node: TextNode
 }
 
-export default class WriteJsText extends React.Component<WriteJsTextProps, undefined> {
+export default class Text extends React.Component<TextProps, undefined> {
 
   componentDidMount() {
       nodeMap.set(ReactDOM.findDOMNode(this), this.props.node);

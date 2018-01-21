@@ -5,13 +5,10 @@ import BlockNode from "./block_node";
 
 export default class Doc {
 
-  private editor: WriteEditor;
-
   public nodes: Array<BlockNode|TextNode>;
 
-  constructor(editor: WriteEditor) {
-    this.editor = editor;
-    this.nodes = DomParser.getChildrenFor(editor.getEl());
+  constructor(el: Node) {
+    this.nodes = DomParser.getChildrenFor(el);
   }
 
 }

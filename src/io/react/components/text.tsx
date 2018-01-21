@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import TextNode from '../../../document/text_node';
 import nodeMap from '../node_map';
+import TextNode from '../../../document/text_node';
 
 interface WriteJsTextProps {
   node: TextNode

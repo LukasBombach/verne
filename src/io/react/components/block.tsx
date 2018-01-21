@@ -17,11 +17,10 @@ export default class WriteJsBlock extends React.Component<WriteJsBlockProps, und
   }
 
   render() {
-    const { node } = this.props;
-    const BlockTag = node.tagName;
+    const { children, tagName: BlockTag } = this.props.node;
     return (
       <BlockTag>
-        {node.children.map(node => this.renderChild(node))}
+        {children.map(child => this.renderChild(child))}
       </BlockTag>
     );
   }

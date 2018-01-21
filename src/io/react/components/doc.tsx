@@ -3,7 +3,7 @@ import Doc from '../../../document/doc';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import WriteJsBlock from './block';
-import WriteJsText from './inline';
+import WriteJsInline from './inline';
 import nodeMap from '../node_map';
 
 interface WriteJsDocProps {
@@ -68,7 +68,7 @@ class WriteJsDoc extends React.Component<WriteJsDocProps, undefined> {
 
   renderNode(node: BlockNode|TextNode): JSX.Element {
     if (node instanceof BlockNode) return <WriteJsBlock key={node.id} node={node} />;
-    if (node instanceof TextNode) return <WriteJsText key={node.id} node={node} />;
+    if (node instanceof TextNode) return <WriteJsInline key={node.id} node={node} />;
     console.warn('Could not find React Component to render node', node);
     return null;
   }

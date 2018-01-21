@@ -11,6 +11,8 @@ interface InputAction {
 export default function (editor: WriteEditor): Function {
   return async (action: InputAction) => {
     const { node, offset, key } = action;
-    const doc = await editor.doc.transform('insertText', { node, offset, key })
+    console.log('old doc', editor.doc);
+    editor.doc = await editor.doc.transform('insertText', { node, offset, key })
+    console.log('new doc', editor.doc);
   }
 }

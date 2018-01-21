@@ -20,7 +20,9 @@ export default class BlockNode {
   }
 
   replaceText(oldTextNode: TextNode, newTextNode: TextNode): BlockNode {
-    if (!(this.parent instanceof Doc)) throw new Error('Cloning BlockNode that does not have the Doc as its parent. This is dangerous, cloned BlockNodes down the tree must also update their parent');
+    // if (!(this.parent instanceof Doc)) throw new Error('Cloning BlockNode that does not have the Doc as its parent. This is dangerous, cloned BlockNodes down the tree must also update their parent');
+    // todo parent should be doc not null
+    if (this.parent !== null) throw new Error('Cloning BlockNode that does not have the Doc as its parent. This is dangerous, cloned BlockNodes down the tree must also update their parent');
     const children = this.children.slice(0);
     const index = children.indexOf(oldTextNode);
     children[index] = newTextNode;

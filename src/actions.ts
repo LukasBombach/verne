@@ -2,7 +2,6 @@ import WriteEditor from "./write_editor";
 
 interface ActionHandlers {
   [key:string]: Function;
-  string: Function;
 }
 
 export default class Actions {
@@ -12,6 +11,7 @@ export default class Actions {
 
   constructor(editor: WriteEditor) {
     this.editor = editor;
+    this.actionHandlers = {};
   }
 
   async dispatch(action: any): Promise<Actions> {

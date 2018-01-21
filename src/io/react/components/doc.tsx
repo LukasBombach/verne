@@ -3,7 +3,7 @@ import Doc from '../../../document/doc';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import WriteJsBlock from './block';
-import WriteJsText from './text';
+import WriteJsText from './inline';
 import nodeMap from '../node_map';
 
 interface WriteJsDocProps {

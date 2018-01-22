@@ -22,7 +22,7 @@ export default class Block extends React.Component<BlockProps, undefined> {
 
   render() {
     const { children, tagName: BlockTag, id } = this.props.node;
-    console.info('Rendering Block', id);
+    console.info('Rendering Block ', id);
     return (
       <BlockTag>
         {children.map(child => this.renderChild(child))}

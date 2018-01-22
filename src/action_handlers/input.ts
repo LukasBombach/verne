@@ -14,5 +14,6 @@ export default function (editor: WriteEditor): Function {
     console.log('old doc', editor.doc);
     editor.doc = await editor.doc.transform('insertText', { node, offset, key })
     console.log('new doc', editor.doc);
+    editor.triggerUpdate()
   }
 }

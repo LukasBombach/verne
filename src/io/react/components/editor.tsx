@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {KeyboardEvent} from "react";
 import WriteEditor from "../../../write_editor";
+import Doc from "../../../document/doc";
 import Selection from '../selection';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
@@ -23,6 +24,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     super(props, context);
     this.core = WriteEditor.fromHtml(props.html);
     this.state = { nodes: this.core.doc.nodes };
+    this.core.onUpdate((doc: Doc) => this.setState({ nodes: doc.nodes }));
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 

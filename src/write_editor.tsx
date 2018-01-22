@@ -5,8 +5,9 @@ import inputActionHandler from './action_handlers/input';
 
 export default class WriteEditor {
 
-  public doc: Doc;
-  public actions: Actions;
+  public doc: Doc = new Doc([]);
+  public actions: Actions = new Actions(this);
+  private onUpdateListeners: Function[] = [];
 
   public static fromHtml(html: string): WriteEditor  {
     const template = document.createElement('template');
@@ -22,9 +23,18 @@ export default class WriteEditor {
   }
 
   constructor() {
-    this.doc = new Doc([]);
-    this.actions = new Actions(this);
     this.actions.registerActionHandler('input', inputActionHandler(this));
+  }
+
+  public onUpdate(func: Function): WriteEditor {
+    this.onUpdateListeners.push(func);
+    return this;
+  }
+
+  public triggerUpdate() {
+    for (const onUpdateListener of this.onUpdateListeners) {
+      onUpdateListener(this.doc);
+    }
   }
 
 }

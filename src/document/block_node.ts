@@ -14,8 +14,7 @@ export default class BlockNode {
     this.tagName = tagName;
     this.parent = parent;
     this.children = children.map(child => child.cloneWithParent(this));
-    this.id = BlockNode.nextNodeId;
-    BlockNode.nextNodeId += 1;
+    this.id = ++BlockNode.nextNodeId;
     Object.freeze(this);
   }
 
@@ -29,6 +28,7 @@ export default class BlockNode {
     return new BlockNode(this.tagName, this.parent, children);
   }
 
+  // todo get rid of this
   cloneWithParent(parent: BlockNode): BlockNode {
     return new BlockNode(this.tagName, parent, this.children);
   }

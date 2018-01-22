@@ -5,7 +5,9 @@ import BlockNode from "./block_node";
 import insertTextTransformation from './transformations/insert_text';
 
 export default class Doc {
+  private static nextNodeId = 0;
 
+  public id: number;
   public nodes: Array<BlockNode|TextNode>;
 
   public static fromElement(el: Node): Doc {
@@ -13,8 +15,10 @@ export default class Doc {
     return new Doc(nodes);
   }
 
-  constructor(nodes: Array<BlockNode|TextNode>) {
+  constructor(nodes: Array<BlockNode|TextNode> = []) {
     this.nodes = nodes;
+    this.id = ++Doc.nextNodeId;
+    Object.freeze(this);
   }
 
   public async transform(transformationName: string, params: any): Promise<Doc> {

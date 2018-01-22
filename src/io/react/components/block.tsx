@@ -9,6 +9,10 @@ interface BlockProps {
 
 export default class Block extends React.Component<BlockProps, undefined> {
 
+  shouldComponentUpdate(nextProps: BlockProps): boolean {
+    return nextProps.node.id !== this.props.node.id;
+  }
+
   renderChild(node: BlockNode|TextNode): JSX.Element {
     if (node instanceof BlockNode) return <Block key={node.id} node={node} />;
     if (node instanceof TextNode) return <Inline key={node.id} node={node} />;
@@ -17,7 +21,8 @@ export default class Block extends React.Component<BlockProps, undefined> {
   }
 
   render() {
-    const { children, tagName: BlockTag } = this.props.node;
+    const { children, tagName: BlockTag, id } = this.props.node;
+    console.info('Rendering Block', id);
     return (
       <BlockTag>
         {children.map(child => this.renderChild(child))}

@@ -13,11 +13,16 @@ export default class Text extends React.Component<TextProps, undefined> {
       nodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
   }
 
+  shouldComponentUpdate(nextProps: TextProps): boolean {
+    return nextProps.node.id !== this.props.node.id;
+  }
+
   componentWillUnmount() {
     nodeMap.delete(ReactDOM.findDOMNode(this));
   }
 
   render() {
+    console.info('Rendering Text', this.props.node.id);
     return this.props.node.text;
   }
 

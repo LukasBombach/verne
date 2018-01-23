@@ -34,6 +34,14 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     const actionResult = await this.core.actions.dispatch(action);
     await this.setState({ nodes: actionResult.doc.nodes });
     const domNode = NodeMap.getDomNode(actionResult.selection.focusNode);
+    
+    const sel = window.getSelection();
+    const range = document.createRange();
+    range.setStart(domNode, actionResult.selection.focusOffset);
+    range.setEnd(domNode, actionResult.selection.focusOffset);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
     console.log(domNode);
     console.log('actionResult', actionResult)
   }

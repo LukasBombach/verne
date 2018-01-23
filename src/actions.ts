@@ -14,10 +14,10 @@ export default class Actions {
   constructor(editor: WriteEditor) {
     this.editor = editor;
     this.middlewares = [
-      (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving a');       next('a'); },
-      (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving b');       next('b'); },
-      (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving c');       next('c'); },
-      (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving d', next); next('d'); },
+      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving a');       next('a'); },
+      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving b');       next('b'); },
+      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving c');       next('c'); },
+      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving d', next); next('d'); },
     ];
     this.composedMiddlewares = this.composeMiddlewares(this.middlewares);
   }

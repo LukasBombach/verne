@@ -2,6 +2,8 @@ import WriteEditor from "./write_editor";
 import Doc from "./document/doc";
 import Selection from "./selection";
 
+import inputMiddleware from './middleware/input';
+
 interface ActionHandlers {
   [key:string]: Function;
 }
@@ -15,7 +17,9 @@ export default class Actions {
 
   private editor: WriteEditor;
   private actionHandlers: ActionHandlers = {};
-  private middlewares: Function[] = []; // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving a'); next('a'); },
+  private middlewares: Function[] = [
+    inputMiddleware
+  ];
   private composedMiddlewares: Function;
 
   constructor(editor: WriteEditor) {
@@ -35,7 +39,9 @@ export default class Actions {
   }
 
   private applyMiddlewares(originalAction: any): Promise<any> {
-    return new Promise(resolve => this.composedMiddlewares((newAction: any) => resolve(newAction))(originalAction))
+    return new Promise(resolve => {
+      this.composedMiddlewares((action: any) => { resolve(action); })(originalAction);
+    });
   }
 
   private composeMiddlewares(middlewares: Function[]): Function {
@@ -43,11 +49,11 @@ export default class Actions {
       return (arg: any) => arg;
     }
     if (middlewares.length === 1) {
-      return middlewares[0];
+      return middlewares[0]();
     }
     return middlewares
       .map(middleware => middleware(this.editor))
-      .reduce((a, b) => (...args: any[]) => a(b(...args)));
+      .reduce((a, b) => (...args: any[]) => a(b(...args)))();
   }
 
   private async handle(action: any): Promise<Doc> {

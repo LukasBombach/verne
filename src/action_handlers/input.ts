@@ -9,7 +9,7 @@ interface InputAction {
 
 export default function (editor: WriteEditor): Function {
   return async (action: InputAction) => {
-    const { node, offset, key } = action;
+    const { key, selection: { focusNode: node, focusOffset: offset } } = action;
     editor.doc = await editor.doc.transform('insertText', { node, offset, key });
   }
 }

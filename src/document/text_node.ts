@@ -14,12 +14,11 @@ export default class TextNode {
     this.parent = parent;
     this.attrs = attrs;
     this.id = ++TextNode.nextNodeId;
-    Object.freeze(this);
   }
 
-  // todo get rid of this
-  cloneWithParent(parent: BlockNode): TextNode {
-    return new TextNode(this.text, parent, this.attrs);
+  dangerouslyMutateParent(newParent: BlockNode): TextNode {
+    this.parent = newParent;
+    return this;
   }
 
   insertString(offset: number, str: string): TextNode {

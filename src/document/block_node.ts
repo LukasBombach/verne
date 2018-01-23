@@ -12,9 +12,9 @@ export default class BlockNode {
   constructor(tagName: string, parent: BlockNode = null, children: Array<BlockNode|TextNode> = []) {
     this.tagName = tagName;
     this.parent = parent;
-    this.children = children.map(child => child.cloneWithParent(this));
+    this.children = children;
+    this.children.forEach(child => child.dangerouslyMutateParent(this));
     this.id = ++BlockNode.nextNodeId;
-    Object.freeze(this);
   }
 
   replaceText(oldTextNode: TextNode, newTextNode: TextNode): BlockNode {
@@ -27,9 +27,9 @@ export default class BlockNode {
     return new BlockNode(this.tagName, this.parent, children);
   }
 
-  // todo get rid of this
-  cloneWithParent(parent: BlockNode): BlockNode {
-    return new BlockNode(this.tagName, parent, this.children);
+  dangerouslyMutateParent(newParent: BlockNode): BlockNode {
+    this.parent = newParent || null;
+    return this;
   }
 
 }

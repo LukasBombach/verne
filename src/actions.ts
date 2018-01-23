@@ -8,26 +8,18 @@ export default class Actions {
 
   private editor: WriteEditor;
   private actionHandlers: ActionHandlers = {};
-  private middlewares: Function[] = [];
+  private middlewares: Function[] = []; // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving a'); next('a'); },
   private composedMiddlewares: Function;
 
   constructor(editor: WriteEditor) {
     this.editor = editor;
-    this.middlewares = [
-      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving a');       next('a'); },
-      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving b');       next('b'); },
-      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving c');       next('c'); },
-      // (editor: WriteEditor) => (next: Function) => (action: any) => { console.log('got', action, 'giving d', next); next('d'); },
-    ];
     this.composedMiddlewares = this.composeMiddlewares(this.middlewares);
   }
 
-  public async dispatch(action: any, callback?: Function): Promise<Actions> {
+  public async dispatch(action: any): Promise<any> {
     const actionAfterMiddlewares = await this.applyMiddlewares(action);
-    console.log(actionAfterMiddlewares);
     await this.handle(actionAfterMiddlewares);
-    if (callback) callback(actionAfterMiddlewares, this.editor.doc);
-    return this;
+    return actionAfterMiddlewares;
   }
 
   public registerActionHandler(actionName: string, handler: Function): Actions {
@@ -51,10 +43,10 @@ export default class Actions {
       .reduce((a, b) => (...args: any[]) => a(b(...args)));
   }
 
-  private handle(action: any): Actions {
+  private async handle(action: any): Promise<Actions> {
     const handler = this.actionHandlers[action.type];
     if (handler) {
-      handler(action);
+      await handler(action);
     } else {
       console.warn(`No handler for action ${action.type}`);
     }

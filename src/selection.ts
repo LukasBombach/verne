@@ -1,4 +1,4 @@
-import TextNode from "../document/text_node";
+import TextNode from "./document/text_node";
 
 export default class Selection {
 

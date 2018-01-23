@@ -8,7 +8,7 @@ interface ActionHandlers {
 
 export interface ActionResult {
   doc: Doc;
-  selection: Selection
+  selection?: Selection
 }
 
 export default class Actions {
@@ -23,10 +23,10 @@ export default class Actions {
     this.composedMiddlewares = this.composeMiddlewares(this.middlewares);
   }
 
-  public async dispatch(action: any): Promise<any> {
+  public async dispatch(action: any): Promise<ActionResult> {
     const actionAfterMiddlewares = await this.applyMiddlewares(action);
-    await this.handle(actionAfterMiddlewares);
-    return actionAfterMiddlewares;
+    const doc = await this.handle(actionAfterMiddlewares);
+    return { doc };
   }
 
   public registerActionHandler(actionName: string, handler: Function): Actions {
@@ -50,14 +50,14 @@ export default class Actions {
       .reduce((a, b) => (...args: any[]) => a(b(...args)));
   }
 
-  private async handle(action: any): Promise<Actions> {
+  private async handle(action: any): Promise<Doc> {
     const handler = this.actionHandlers[action.type];
     if (handler) {
       await handler(action);
     } else {
       console.warn(`No handler for action ${action.type}`);
     }
-    return this;
+    return this.editor.doc;
   }
 
 }

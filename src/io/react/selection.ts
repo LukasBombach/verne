@@ -1,6 +1,13 @@
 import TextNode from "../../document/text_node";
 import nodeMap from './node_map';
 
+export interface SelectionJson {
+  anchorNode: TextNode;
+  focusNode: TextNode;
+  anchorOffset: number;
+  focusOffset: number;
+}
+
 export default class Selection {
 
   public anchorNode: TextNode;
@@ -23,4 +30,14 @@ export default class Selection {
     this.anchorOffset = anchorOffset;
     this.focusOffset = focusOffset;
   }
+
+  toJson(): SelectionJson {
+    return {
+      anchorNode: this.anchorNode,
+      focusNode: this.focusNode,
+      anchorOffset: this.anchorOffset,
+      focusOffset: this.focusOffset,
+    }
+  }
+
 }

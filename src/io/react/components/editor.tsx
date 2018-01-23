@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {KeyboardEvent} from "react";
 import WriteEditor from "../../../write_editor";
-import Doc from "../../../document/doc";
 import Selection from '../selection';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
@@ -29,16 +28,18 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
 
   async handleKeyDown(e: KeyboardEvent<Node>) {
     e.preventDefault();
-    const selection = Selection.getUserSelection(); //.toJson();
 
-    const action = { type: 'input', node: selection.focusNode, offset: selection.focusOffset, key: e.key };
-    await this.core.actions.dispatch(action);
-    this.setState({ nodes: this.core.doc.nodes })
+    const selection = Selection.getUserSelection().toJson();
+    const action = { type: 'input', selection, key: e.key };
+    const actionResult = await this.core.actions.dispatch(action);
+    console.log(actionResult)
 
-    // const action = { type: 'input', selection, key: e.key };
-    // const actionResult = await this.core.actions.dispatch(action);
+    // const action = { type: 'input', node: selection.focusNode, offset: selection.focusOffset, key: e.key };
+    // await this.core.actions.dispatch(action);
+    // this.setState({ nodes: this.core.doc.nodes })
+
     // this.setState({ nodes: actionResult.doc.nodes });
-    // this.core.setSelection(actionResult.selection);
+    // this.selection.set(actionResult.selection);
 
   }
 

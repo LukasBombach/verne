@@ -1,10 +1,9 @@
 import WriteEditor from "../write_editor";
-import TextNode from "../document/text_node";
+import SelectionJson from '../selection';
 
 interface InputAction {
   type: string;
-  node: TextNode;
-  offset: number;
+  selection: SelectionJson;
   key: string;
 }
 

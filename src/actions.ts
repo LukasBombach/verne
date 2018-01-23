@@ -1,7 +1,14 @@
 import WriteEditor from "./write_editor";
+import Doc from "./document/doc";
+import Selection from "./selection";
 
 interface ActionHandlers {
   [key:string]: Function;
+}
+
+export interface ActionResult {
+  doc: Doc;
+  selection: Selection
 }
 
 export default class Actions {

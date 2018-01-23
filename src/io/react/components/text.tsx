@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import nodeMap from '../node_map';
 import TextNode from '../../../document/text_node';
+import { debug } from '../../../config';
 
 interface TextProps {
   node: TextNode
@@ -22,7 +23,7 @@ export default class Text extends React.Component<TextProps, undefined> {
   }
 
   render() {
-    // console.info('Rendering Text  ', this.props.node.id);
+    if (debug.logNodeRendering) console.info('Rendering Text  ', this.props.node.id);
     return this.props.node.text;
   }
 

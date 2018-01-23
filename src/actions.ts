@@ -17,10 +17,10 @@ export default class Actions {
 
   private editor: WriteEditor;
   private actionHandlers: ActionHandlers = {};
+  private composedMiddlewares: Function;
   private middlewares: Function[] = [
     inputMiddleware
   ];
-  private composedMiddlewares: Function;
 
   constructor(editor: WriteEditor) {
     this.editor = editor;
@@ -39,18 +39,12 @@ export default class Actions {
   }
 
   private applyMiddlewares(originalAction: any): Promise<any> {
-    return new Promise(resolve => {
-      this.composedMiddlewares((action: any) => { resolve(action); })(originalAction);
-    });
+    return new Promise(resolve => this.composedMiddlewares((action: any) => { resolve(action); })(originalAction));
   }
 
   private composeMiddlewares(middlewares: Function[]): Function {
-    if (middlewares.length === 0) {
-      return (arg: any) => arg;
-    }
-    if (middlewares.length === 1) {
-      return middlewares[0]();
-    }
+    if (middlewares.length === 0) return (arg: any) => arg;
+    if (middlewares.length === 1) return middlewares[0]();
     return middlewares
       .map(middleware => middleware(this.editor))
       .reduce((a, b) => (...args: any[]) => a(b(...args)))();

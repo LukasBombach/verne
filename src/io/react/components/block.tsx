@@ -2,6 +2,7 @@ import * as React from 'react';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import Inline from './inline';
+import { debug } from '../../../config';
 
 interface BlockProps {
   node: BlockNode
@@ -22,7 +23,7 @@ export default class Block extends React.Component<BlockProps, undefined> {
 
   render() {
     const { children, tagName: BlockTag, id } = this.props.node;
-    // console.info('Rendering Block ', id);
+    if (debug.logNodeRendering) console.info('Rendering Block ', id);
     return (
       <BlockTag>
         {children.map(child => this.renderChild(child))}

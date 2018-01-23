@@ -1,10 +1,17 @@
 import DomParser from './dom_parser';
 import TextNode from "./text_node";
 import BlockNode from "./block_node";
-
+import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
+import {TYPE_INSERT_TEXT} from "../actions/input";
+
+export interface TransformationResult {
+  doc: Doc;
+  selection: Selection
+}
 
 export default class Doc {
+
   private static nextNodeId = 0;
 
   public id: number;
@@ -21,9 +28,9 @@ export default class Doc {
     Object.freeze(this);
   }
 
-  public async transform(transformationName: string, params: any): Promise<Doc> {
-    if (transformationName === 'insertText') return await insertTextTransformation(this, params);
-    else console.warn(`Could not find handler for transformationName "${transformationName}"`);
+  public async transform(action: any): Promise<TransformationResult> {
+    if (action.type === TYPE_INSERT_TEXT) return await insertTextTransformation(this, action);
+    else console.warn(`Could not find transformation for action "${action.type}"`, action);
   }
 
   public replaceBlockNode(oldBlockNode: BlockNode, newBlockNode: BlockNode) {

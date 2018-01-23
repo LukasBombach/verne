@@ -1,41 +1,26 @@
 import WriteEditor from "./write_editor";
 import Doc from "./document/doc";
 import Selection from "./selection";
-
-import inputMiddleware from './middleware/input';
-
-interface ActionHandlers {
-  [key:string]: Function;
-}
+import middlewares from './middleware';
 
 export interface ActionResult {
   doc: Doc;
-  selection?: Selection
+  selection: Selection
 }
 
 export default class Actions {
 
   private editor: WriteEditor;
-  private actionHandlers: ActionHandlers = {};
-  private composedMiddlewares: Function;
-  private middlewares: Function[] = [
-    inputMiddleware
-  ];
+  private composedMiddlewares: Function = this.composeMiddlewares(middlewares);
 
   constructor(editor: WriteEditor) {
     this.editor = editor;
-    this.composedMiddlewares = this.composeMiddlewares(this.middlewares);
   }
 
   public async dispatch(action: any): Promise<ActionResult> {
     const actionAfterMiddlewares = await this.applyMiddlewares(action);
-    const doc = await this.handle(actionAfterMiddlewares);
-    return { doc };
-  }
-
-  public registerActionHandler(actionName: string, handler: Function): Actions {
-    this.actionHandlers[actionName] = handler;
-    return this;
+    const { doc, selection } = await this.editor.doc.transform(actionAfterMiddlewares);
+    return { doc, selection: selection };
   }
 
   private applyMiddlewares(originalAction: any): Promise<any> {
@@ -48,16 +33,6 @@ export default class Actions {
     return middlewares
       .map(middleware => middleware(this.editor))
       .reduce((a, b) => (...args: any[]) => a(b(...args)))();
-  }
-
-  private async handle(action: any): Promise<Doc> {
-    const handler = this.actionHandlers[action.type];
-    if (handler) {
-      await handler(action);
-    } else {
-      console.warn(`No handler for action ${action.type}`);
-    }
-    return this.editor.doc;
   }
 
 }

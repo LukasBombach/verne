@@ -1,8 +1,6 @@
 import Doc from './document/doc';
 import Actions from './actions';
 
-import inputActionHandler from './action_handlers/input';
-
 export default class WriteEditor {
 
   public doc: Doc = new Doc([]);
@@ -19,10 +17,6 @@ export default class WriteEditor {
     const writeEditor = new WriteEditor();
     writeEditor.doc = doc;
     return writeEditor;
-  }
-
-  constructor() {
-    this.actions.registerActionHandler('input', inputActionHandler(this));
   }
 
 }

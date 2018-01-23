@@ -29,7 +29,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
   async handleKeyDown(e: KeyboardEvent<Node>) {
     e.preventDefault();
     const selection = Selection.getUserSelection().toJson();
-    const action = { type: 'input', selection, key: e.key };
+    const action = { type: 'input', selection, str: e.key };
     const actionResult = await this.core.actions.dispatch(action);
     await this.setState({ nodes: actionResult.doc.nodes });
     console.log('actionResult', actionResult)

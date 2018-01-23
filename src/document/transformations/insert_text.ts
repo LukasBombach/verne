@@ -1,15 +1,14 @@
-import Doc from "../doc";
-import TextNode from "../text_node";
+import Doc, {TransformationResult} from "../doc";
+import {InsertTextAction} from "../../actions/input";
+import Selection from "../../selection";
 
-interface InsertTextTransformationParams {
-  node: TextNode;
-  offset: number;
-  key: string;
-}
-
-export default function (doc: Doc, { node, offset, key}: InsertTextTransformationParams): Doc {
+export default function (doc: Doc, action: InsertTextAction): TransformationResult {
+  const { selection: { focusNode: node, focusOffset: offset }, str} = action;
   const oldBlockNode = node.parent;
-  const newTextNode = node.insertString(offset, key);
+  const newTextNode = node.insertString(offset, str);
   const newBlockNode = oldBlockNode.replaceText(node, newTextNode);
-  return doc.replaceBlockNode(oldBlockNode, newBlockNode);
+  const newDoc = doc.replaceBlockNode(oldBlockNode, newBlockNode);
+  const newOffset = offset + 1;
+  const newSelection = Selection.caret(newTextNode, newOffset);
+  return { doc: newDoc, selection: newSelection };
 }

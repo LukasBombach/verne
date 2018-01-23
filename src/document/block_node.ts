@@ -1,4 +1,3 @@
-import Doc from "./doc";
 import TextNode from "./text_node";
 
 export default class BlockNode {

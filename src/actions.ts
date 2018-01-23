@@ -22,9 +22,11 @@ export default class Actions {
     this.composedMiddlewares = this.composeMiddlewares(this.middlewares);
   }
 
-  public async dispatch(action: any): Promise<Actions> {
+  public async dispatch(action: any, callback?: Function): Promise<Actions> {
     const actionAfterMiddlewares = await this.applyMiddlewares(action);
+    console.log(actionAfterMiddlewares);
     await this.handle(actionAfterMiddlewares);
+    if (callback) callback(actionAfterMiddlewares, this.editor.doc);
     return this;
   }
 
@@ -33,8 +35,8 @@ export default class Actions {
     return this;
   }
 
-  private applyMiddlewares(action: any): Promise<any> {
-    return new Promise(resolve => this.composedMiddlewares((action: any) => resolve(action))(action))
+  private applyMiddlewares(originalAction: any): Promise<any> {
+    return new Promise(resolve => this.composedMiddlewares((newAction: any) => resolve(newAction))(originalAction))
   }
 
   private composeMiddlewares(middlewares: Function[]): Function {
@@ -54,7 +56,7 @@ export default class Actions {
     if (handler) {
       handler(action);
     } else {
-      console.warn(`No handler or action ${action.type}`);
+      console.warn(`No handler for action ${action.type}`);
     }
     return this;
   }

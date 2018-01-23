@@ -24,7 +24,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     super(props, context);
     this.core = WriteEditor.fromHtml(props.html);
     this.state = { nodes: this.core.doc.nodes };
-    this.core.onUpdate((doc: Doc) => this.setState({ nodes: doc.nodes }));
+    // this.core.onUpdate((doc: Doc) => this.setState({ nodes: doc.nodes }));
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
@@ -34,7 +34,12 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     const node = selection.focusNode;
     const offset = selection.focusOffset;
     const key = e.key;
-    await this.core.actions.dispatch({ type: 'input', node, offset, key });
+    const action = { type: 'input', node, offset, key };
+    const callback = (finalAction: any, doc: Doc) => {
+      console.log(finalAction, doc);
+      this.setState({ nodes: doc.nodes })
+    };
+    await this.core.actions.dispatch(action, callback);
   }
 
   getEventHandlers() {

@@ -36,9 +36,10 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     this.setState({ nodes: this.core.doc.nodes })
 
     // const action = { type: 'input', selection, key: e.key };
-    // const resultingAction = await this.core.actions.dispatch(action);
-    // this.setState({ nodes: this.core.doc.nodes })
-    // this.core.setSelection(resultingAction.selection)
+    // const actionResult = await this.core.actions.dispatch(action);
+    // this.setState({ nodes: actionResult.doc.nodes });
+    // this.core.setSelection(actionResult.selection);
+
   }
 
   getEventHandlers() {

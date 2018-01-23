@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import nodeMap from '../node_map';
+import NodeMap from '../node_map';
 import TextNode from '../../../document/text_node';
 import { debug } from '../../../config';
 
@@ -11,7 +11,7 @@ interface TextProps {
 export default class Text extends React.Component<TextProps, undefined> {
 
   componentDidMount() {
-      nodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
+      NodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
   }
 
   shouldComponentUpdate(nextProps: TextProps): boolean {
@@ -19,7 +19,7 @@ export default class Text extends React.Component<TextProps, undefined> {
   }
 
   componentWillUnmount() {
-    nodeMap.delete(ReactDOM.findDOMNode(this));
+    NodeMap.delete(ReactDOM.findDOMNode(this));
   }
 
   render() {

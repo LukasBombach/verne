@@ -1,5 +1,5 @@
 import TextNode from "../../document/text_node";
-import nodeMap from './node_map';
+import NodeMap from './node_map';
 
 export interface SelectionJson {
   anchorNode: TextNode;
@@ -17,8 +17,8 @@ export default class Selection {
 
   static getUserSelection(): Selection {
     const nativeSelection = window.getSelection();
-    const anchorNode = nodeMap.get(nativeSelection.anchorNode);
-    const focusNode = nodeMap.get(nativeSelection.focusNode);
+    const anchorNode = NodeMap.getTextNode(nativeSelection.anchorNode);
+    const focusNode = NodeMap.getTextNode(nativeSelection.focusNode);
     const anchorOffset = nativeSelection.anchorOffset;
     const focusOffset = nativeSelection.focusOffset;
     return new Selection(anchorNode, focusNode, anchorOffset, focusOffset);

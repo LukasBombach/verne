@@ -6,6 +6,7 @@ import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import Block from './block';
 import Inline from './inline';
+import NodeMap from '../node_map';
 
 interface EditorProps {
   html?: string;
@@ -32,6 +33,8 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     const action = { type: 'input', selection, str: e.key };
     const actionResult = await this.core.actions.dispatch(action);
     await this.setState({ nodes: actionResult.doc.nodes });
+    const domNode = NodeMap.getDomNode(actionResult.selection.focusNode);
+    console.log(domNode);
     console.log('actionResult', actionResult)
   }
 

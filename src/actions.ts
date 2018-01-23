@@ -20,6 +20,7 @@ export default class Actions {
   public async dispatch(action: any): Promise<ActionResult> {
     const actionAfterMiddlewares = await this.applyMiddlewares(action);
     const { doc, selection } = await this.editor.doc.transform(actionAfterMiddlewares);
+    this.editor.doc = doc;
     return { doc, selection: selection };
   }
 

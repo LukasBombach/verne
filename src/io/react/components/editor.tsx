@@ -33,17 +33,17 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     const action = { type: 'input', selection, str: e.key };
     const actionResult = await this.core.actions.dispatch(action);
     await this.setState({ nodes: actionResult.doc.nodes });
+    console.log('actionResult', actionResult);
+
     const domNode = NodeMap.getDomNode(actionResult.selection.focusNode);
-    
     const sel = window.getSelection();
     const range = document.createRange();
     range.setStart(domNode, actionResult.selection.focusOffset);
     range.setEnd(domNode, actionResult.selection.focusOffset);
     sel.removeAllRanges();
     sel.addRange(range);
+    console.log('domNode', domNode);
 
-    console.log(domNode);
-    console.log('actionResult', actionResult)
   }
 
   getEventHandlers() {
@@ -61,7 +61,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
 
   render() {
     return (
-      <div contentEditable={true} suppressContentEditableWarning={true} {...this.getEventHandlers()}>
+      <div contentEditable={true} suppressContentEditableWarning={true} spellCheck={false} {...this.getEventHandlers()}>
         {this.state.nodes.map(node => this.renderNode(node))}
       </div>
     );

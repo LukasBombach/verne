@@ -10,7 +10,7 @@ export default () => (next: Function) => (action: InputAction) => {
     return next(action);
   }
 
-  if (['Meta', 'Control'].indexOf(str) !== -1) {
+  if (['Meta', 'Control', 'Shift'].indexOf(str) !== -1) {
     return next(action);
   }
 

@@ -4,7 +4,7 @@ import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import Block from './block';
 import Inline from './inline';
-import eventHandlers from '../eventHandlers';
+import getEventHandlers from '../eventHandlers';
 
 interface EditorProps {
   html?: string;
@@ -12,6 +12,10 @@ interface EditorProps {
 
 interface EditorState {
   nodes: Array<BlockNode|TextNode>;
+}
+
+interface EventHandlers {
+  [key: string]: Function
 }
 
 export interface EventHandlerInterface {
@@ -22,33 +26,21 @@ export interface EventHandlerInterface {
 export default class Editor extends React.Component<EditorProps, EditorState> {
 
   private core: WriteEditor;
-  private eventHandlers: any; // todo temp
+  private eventHandlers: EventHandlers;
 
   constructor(props: EditorProps, context: any) {
     super(props, context);
     this.core = WriteEditor.fromHtml(props.html);
     this.state = { nodes: this.core.doc.nodes };
-    const eventHandlerInterface: EventHandlerInterface = {
-      setState: (newState: any, callback: Function) => this.setState(newState, callback),
-      core: this.core,
-    };
-    this.eventHandlers = eventHandlers
-      .map(([eventName, handler]) => [eventName, (e: any) => handler(eventHandlerInterface, e)])
-      .reduce((acc, [eventName, handler]) => ({ [eventName]: handler, ...acc }), {})
+    this.eventHandlers = getEventHandlers(this.getEventHandlerInterface());
   }
 
-  //getEventHandlers() {
-  //  const eventHandlerInterface: EventHandlerInterface = {
-  //    setState: (...args: any[]) => this.setState(...args),
-  //    core: this.core,
-  //  };
-  //  return Object.keys(eventHandlers)
-  //    .map((key: string) => [key, (...args: any[]) => {
-  //        return (...args: any[]) => eventHandlers[key](eventHandlerInterface, ...args)
-  //      }]
-  //    )
-  //    .reduce((eventHandlers, handler) => eventHandlers[key] = handler, {})
-  //}
+  getEventHandlerInterface(): EventHandlerInterface {
+    return  {
+      setState: (newState: any, callback?: () => void): void => this.setState(newState, callback),
+      core: this.core,
+    };
+  }
 
   renderNode(node: BlockNode|TextNode): JSX.Element {
     if (node instanceof BlockNode) return <Block key={node.id} node={node} />;

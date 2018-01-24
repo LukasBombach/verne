@@ -1,5 +1,6 @@
 import {KeyboardEvent} from "react";
 import Selection from '../selection';
+import {EventHandlerInterface} from "../components/editor";
 
 export default async function handleKeyDown({ setState, core }: EventHandlerInterface, e: KeyboardEvent<Node>) {
   e.preventDefault();

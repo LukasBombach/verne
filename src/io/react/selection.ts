@@ -24,6 +24,16 @@ export default class Selection {
     return new Selection(anchorNode, focusNode, anchorOffset, focusOffset);
   }
 
+  static setCaret(node: TextNode, offset: number) {
+    const domNode = NodeMap.getDomNode(node);
+    const nativeSelection = window.getSelection();
+    const nativeRange = document.createRange();
+    nativeRange.setStart(domNode, offset);
+    nativeRange.setEnd(domNode, offset);
+    nativeSelection.removeAllRanges();
+    nativeSelection.addRange(nativeRange);
+  }
+
   constructor(anchorNode: TextNode, focusNode: TextNode, anchorOffset: number, focusOffset: number) {
     this.anchorNode = anchorNode;
     this.focusNode = focusNode;

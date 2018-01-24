@@ -6,7 +6,6 @@ import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import Block from './block';
 import Inline from './inline';
-import NodeMap from '../node_map';
 
 interface EditorProps {
   html?: string;
@@ -31,19 +30,9 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     e.preventDefault();
     const selection = Selection.getUserSelection().toJson();
     const action = { type: 'input', selection, str: e.key };
-    const actionResult = await this.core.actions.dispatch(action);
-    await this.setState({ nodes: actionResult.doc.nodes });
-    console.log('actionResult', actionResult);
-
-    const domNode = NodeMap.getDomNode(actionResult.selection.focusNode);
-    const sel = window.getSelection();
-    const range = document.createRange();
-    range.setStart(domNode, actionResult.selection.focusOffset);
-    range.setEnd(domNode, actionResult.selection.focusOffset);
-    sel.removeAllRanges();
-    sel.addRange(range);
-    console.log('domNode', domNode);
-
+    const { doc, selection: { focusNode, focusOffset } } = await this.core.actions.dispatch(action);
+    await this.setState({ nodes: doc.nodes });
+    Selection.setCaret(focusNode, focusOffset);
   }
 
   getEventHandlers() {

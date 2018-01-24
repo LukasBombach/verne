@@ -1,11 +1,10 @@
 import * as React from 'react';
-import {KeyboardEvent} from "react";
 import WriteEditor from "../../../write_editor";
-import Selection from '../selection';
 import BlockNode from '../../../document/block_node';
 import TextNode from '../../../document/text_node';
 import Block from './block';
 import Inline from './inline';
+import eventHandlers from '../eventHandlers';
 
 interface EditorProps {
   html?: string;
@@ -15,31 +14,41 @@ interface EditorState {
   nodes: Array<BlockNode|TextNode>;
 }
 
+export interface EventHandlerInterface {
+  setState: Function;
+  core: WriteEditor;
+}
+
 export default class Editor extends React.Component<EditorProps, EditorState> {
 
   private core: WriteEditor;
+  private eventHandlers: any; // todo temp
 
   constructor(props: EditorProps, context: any) {
     super(props, context);
     this.core = WriteEditor.fromHtml(props.html);
     this.state = { nodes: this.core.doc.nodes };
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    const eventHandlerInterface: EventHandlerInterface = {
+      setState: (newState: any, callback: Function) => this.setState(newState, callback),
+      core: this.core,
+    };
+    this.eventHandlers = eventHandlers
+      .map(([eventName, handler]) => [eventName, (e: any) => handler(eventHandlerInterface, e)])
+      .reduce((acc, [eventName, handler]) => ({ [eventName]: handler, ...acc }), {})
   }
 
-  async handleKeyDown(e: KeyboardEvent<Node>) {
-    e.preventDefault();
-    const selection = Selection.getUserSelection().toJson();
-    const action = { type: 'input', selection, str: e.key };
-    const { doc, selection: { focusNode, focusOffset } } = await this.core.actions.dispatch(action);
-    await this.setState({ nodes: doc.nodes });
-    Selection.setCaret(focusNode, focusOffset);
-  }
-
-  getEventHandlers() {
-    return {
-      onKeyDown: this.handleKeyDown,
-    }
-  }
+  //getEventHandlers() {
+  //  const eventHandlerInterface: EventHandlerInterface = {
+  //    setState: (...args: any[]) => this.setState(...args),
+  //    core: this.core,
+  //  };
+  //  return Object.keys(eventHandlers)
+  //    .map((key: string) => [key, (...args: any[]) => {
+  //        return (...args: any[]) => eventHandlers[key](eventHandlerInterface, ...args)
+  //      }]
+  //    )
+  //    .reduce((eventHandlers, handler) => eventHandlers[key] = handler, {})
+  //}
 
   renderNode(node: BlockNode|TextNode): JSX.Element {
     if (node instanceof BlockNode) return <Block key={node.id} node={node} />;
@@ -50,7 +59,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
 
   render() {
     return (
-      <div contentEditable={true} suppressContentEditableWarning={true} spellCheck={false} {...this.getEventHandlers()}>
+      <div contentEditable={true} suppressContentEditableWarning={true} spellCheck={false} {...this.eventHandlers}>
         {this.state.nodes.map(node => this.renderNode(node))}
       </div>
     );

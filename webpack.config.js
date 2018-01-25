@@ -28,7 +28,7 @@ module.exports = {
   ],
   devServer: {
     quiet: true,
-    contentBase: path.join(__dirname, "public"),
+    contentBase: [path.join(__dirname, "public"), path.join(__dirname, "dist")],
     open: true,
     overlay: true,
     clientLogLevel: 'none',

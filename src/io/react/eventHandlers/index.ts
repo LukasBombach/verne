@@ -1,5 +1,5 @@
 import handleKeyDown from './onKeyDown';
-import {EventHandlerInterface} from "../components/editor";
+import Editor from "../components/editor";
 
 const eventHandlers: [string, Function][] = [
   ['onKeyDown', handleKeyDown]
@@ -7,6 +7,7 @@ const eventHandlers: [string, Function][] = [
 
 /**
  * returns an object that can be set as props to the react editor's content editable element
+ *
  * [
  *   ['onKeyDown', handleKeyDown],
  *   ['onClick', handleClick]
@@ -15,15 +16,12 @@ const eventHandlers: [string, Function][] = [
  * becomes
  *
  * {
- *   onKeyDown: (event) => handleKeyDown(eventHandlerInterface, event),
- *   onClick: (event) => handleClick(eventHandlerInterface, event)
+ *   onKeyDown: (event) => handleKeyDown(editor, event),
+ *   onClick: (event) => handleClick(editor, event)
  * }
- *
- * @param {EventHandlerInterface} eventHandlerInterface
- * @returns {Object}
  */
-export default function getEventHandlers(eventHandlerInterface: EventHandlerInterface) {
+export default function getEventHandlers(editor: Editor) {
   return eventHandlers
-    .map(([eventName, handler]) => [eventName, (e: any): any => handler(eventHandlerInterface, e)])
+    .map(([eventName, handler]) => [eventName, (e: any): any => handler(editor, e)])
     .reduce((acc: object, [eventName, handler]) => ({ ...acc, [eventName as string]: handler }), {});
 }

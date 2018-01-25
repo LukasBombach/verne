@@ -18,29 +18,11 @@ interface EventHandlers {
   [key: string]: Function
 }
 
-export interface EventHandlerInterface {
-  setState: Function;
-  core: WriteEditor;
-}
-
 export default class Editor extends React.Component<EditorProps, EditorState> {
 
-  private core: WriteEditor;
-  private eventHandlers: EventHandlers;
-
-  constructor(props: EditorProps, context: any) {
-    super(props, context);
-    this.core = WriteEditor.fromHtml(props.html);
-    this.state = { nodes: this.core.doc.nodes };
-    this.eventHandlers = getEventHandlers(this.getEventHandlerInterface());
-  }
-
-  getEventHandlerInterface(): EventHandlerInterface {
-    return  {
-      setState: (newState: any, callback?: () => void): void => this.setState(newState, callback),
-      core: this.core,
-    };
-  }
+  public core: Readonly<WriteEditor> = WriteEditor.fromHtml(this.props.html);
+  public state: Readonly<EditorState> = { nodes: this.core.doc.nodes };
+  private eventHandlers: EventHandlers = getEventHandlers(this);
 
   renderNode(node: BlockNode|TextNode): JSX.Element {
     if (node instanceof BlockNode) return <Block key={node.id} node={node} />;

@@ -11,7 +11,7 @@ export default () => (next: Function) => (action: InputAction) => {
     return next(action);
   }
 
-  if (['Meta', 'Control', 'Shift', 'Alt'].indexOf(str) !== -1) {
+  if (['Meta', 'Control', 'Shift', 'Alt', 'Meta'].indexOf(str) !== -1) {
     return next(action);
   }
 

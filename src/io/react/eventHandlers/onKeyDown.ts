@@ -4,9 +4,9 @@ import {EventHandlerInterface} from "../components/editor";
 
 export default async function handleKeyDown({ setState, core }: EventHandlerInterface, e: KeyboardEvent<Node>) {
   e.preventDefault();
-  const selection = Selection.getUserSelection().toJson();
-  const action = { type: 'input', selection, str: e.key };
-  const { doc, selection: { focusNode, focusOffset } } = await core.actions.dispatch(action);
-  await setState({ nodes: doc.nodes });
-  Selection.setCaret(focusNode, focusOffset);
+  const selectionJson = Selection.getUserSelection().toJson();
+  const action = { type: 'input', selection: selectionJson, str: e.key };
+  const { doc, selection } = await core.actions.dispatch(action);
+  setState(() => ({ nodes: doc.nodes }));
+  if (selection) Selection.setCaret(selection.focusNode, selection.focusOffset);
 }

@@ -30,7 +30,8 @@ export default class Doc {
 
   public async transform(action: any): Promise<TransformationResult> {
     if (action.type === TYPE_INSERT_TEXT) return await insertTextTransformation(this, action);
-    else console.warn(`Could not find transformation for action "${action.type}"`, action);
+    console.warn(`Could not find transformation for action "${action.type}"`, action);
+    return { doc: this, selection: null };
   }
 
   public replaceBlockNode(oldBlockNode: BlockNode, newBlockNode: BlockNode) {

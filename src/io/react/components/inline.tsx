@@ -22,10 +22,11 @@ export default class Inline extends React.Component<InlineProps, undefined> {
     del: 'del',
   };
 
-  // todo inline nodes still get re-rendered, this method is not even called when a block node updates
   shouldComponentUpdate(nextProps: InlineProps): boolean {
-    return nextProps.node.text !== this.props.node.text ||
-      JSON.stringify(nextProps.node.attrs) !== JSON.stringify(this.props.node.attrs);
+    // todo inline nodes still get re-rendered, this method is not even called when a block node updates
+    // return nextProps.node.text !== this.props.node.text ||
+    //   JSON.stringify(nextProps.node.attrs) !== JSON.stringify(this.props.node.attrs);
+    return nextProps.node.id !== this.props.node.id;
   }
 
   render() {

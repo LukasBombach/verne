@@ -1,4 +1,5 @@
 const path = require('path');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 // const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
@@ -21,5 +22,15 @@ module.exports = {
       { test: /\.tsx?$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ },
       { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
     ],
+  },
+  plugins: [
+    new FriendlyErrorsWebpackPlugin(),
+  ],
+  devServer: {
+    quiet: true,
+    contentBase: path.join(__dirname, "public"),
+    open: true,
+    overlay: true,
+    clientLogLevel: 'none',
   },
 };

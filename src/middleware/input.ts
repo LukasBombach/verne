@@ -1,10 +1,11 @@
 import {InputAction, InsertTextAction, TYPE_INPUT} from "../actions/input";
+import {debug} from "../config";
 
 export default () => (next: Function) => (action: InputAction) => {
 
   const { type, selection, str} = action;
 
-  console.log('input       ', action);
+  if (debug.log.middlewareCalls) console.log('input', action);
 
   if (type !== TYPE_INPUT) {
     return next(action);
@@ -26,6 +27,7 @@ export default () => (next: Function) => (action: InputAction) => {
     console.warn('This should handle Delete input')
   }
 
-  next({ type: 'insert_text', selection, str });
+  const insertTextAction: InsertTextAction = { type: 'insert_text', selection, str };
+  next(insertTextAction);
 
 }

@@ -1,3 +1,6 @@
 export const debug = {
-  logNodeRendering: false,
+  log: {
+    nodeRendering: false,
+    middlewareCalls: false,
+  }
 };

@@ -7,7 +7,6 @@ export interface SelectionJson {
   focusOffset: number;
 }
 
-
 export default class Selection {
 
   public anchorNode: TextNode;
@@ -26,7 +25,11 @@ export default class Selection {
     this.focusOffset = focusOffset;
   }
 
-  toJson(): SelectionJson {
+  public isCollapsed() {
+    return this.anchorNode === this.focusNode && this.anchorOffset === this.focusOffset;
+  }
+
+  public toJson(): SelectionJson {
     return {
       anchorNode: this.anchorNode,
       focusNode: this.focusNode,

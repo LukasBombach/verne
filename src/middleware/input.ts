@@ -1,4 +1,5 @@
-import {InputAction, InsertTextAction, TYPE_INPUT} from "../actions/input";
+import {DeleteRangeAction, InputAction, InsertTextAction, TYPE_INPUT} from "../actions/input";
+import Range from '../range';
 import {debug} from "../config";
 
 export default () => (next: Function) => (action: InputAction) => {
@@ -20,14 +21,17 @@ export default () => (next: Function) => (action: InputAction) => {
   }
 
   if (str === 'Backspace') {
-    console.warn('This should handle Backspace input')
+    const range = selection.isCollapsed() ? Range.fromCaret(selection, -1) : Range.fromSelection(selection);
+    const deleteRangeAction: DeleteRangeAction = { type: 'delete_range', range };
+    return next(deleteRangeAction);
   }
 
   if (str === 'Delete') {
-    console.warn('This should handle Delete input')
+    console.warn('This should handle Delete input');
+    return;
   }
 
   const insertTextAction: InsertTextAction = { type: 'insert_text', selection, str };
-  next(insertTextAction);
+  return next(insertTextAction);
 
 }

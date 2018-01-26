@@ -15,7 +15,7 @@ export default class Doc {
   private static nextNodeId = 0;
 
   public id: number;
-  public nodes: Array<BlockNode|TextNode>;
+  public children: Array<BlockNode|TextNode>;
 
   public static fromElement(el: Node): Doc {
     const nodes = DomParser.getChildrenFor(el);
@@ -23,7 +23,7 @@ export default class Doc {
   }
 
   constructor(nodes: Array<BlockNode|TextNode> = []) {
-    this.nodes = nodes;
+    this.children = nodes;
     this.id = ++Doc.nextNodeId;
     Object.freeze(this);
   }
@@ -35,10 +35,14 @@ export default class Doc {
   }
 
   public replaceBlockNode(oldBlockNode: BlockNode, newBlockNode: BlockNode) {
-    const nodes = this.nodes.slice(0);
+    const nodes = this.children.slice(0);
     const index = nodes.indexOf(oldBlockNode);
     nodes[index] = newBlockNode;
     return new Doc(nodes);
+  }
+
+  indexOf(node: TextNode|BlockNode): number {
+    return this.children.indexOf(node);
   }
 
 }

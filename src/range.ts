@@ -27,13 +27,12 @@ export default class Range {
   }
 
   constructor(startNode: TextNode, endNode: TextNode, startOffset: number, endOffset: number) {
-
-    const startNode.precedes(endNode);
-
-    this.startNode = startNode;
-    this.endNode = endNode;
-    this.startOffset = startOffset;
-    this.endOffset = endOffset;
+    const switchNodes = startNode.precedes(endNode);
+    const switchOffsets = startNode === endNode && startOffset > endOffset;
+    this.startNode = switchNodes ? startNode : endNode;
+    this.endNode = switchNodes ? endNode : startNode;
+    this.startOffset = switchOffsets ? endOffset : startOffset;
+    this.endOffset = switchOffsets ? startOffset :endOffset ;
   }
 
 }

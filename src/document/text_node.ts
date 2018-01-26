@@ -16,14 +16,37 @@ export default class TextNode {
     this.id = ++TextNode.nextNodeId;
   }
 
-  dangerouslyMutateParent(newParent: BlockNode): TextNode {
-    this.parent = newParent;
-    return this;
-  }
-
   insertString(offset: number, str: string): TextNode {
     const text = this.text.substr(0, offset) + str + this.text.substr(offset);
     return new TextNode(text, null, this.attrs);
+  }
+
+  precedes(that: TextNode): boolean {
+    let parentNode: BlockNode|TextNode = this.parent;
+    const thisIndex = this.getIndex();
+    const thatIndex = that.getIndex();
+    if (thatIndex !== -1) return thatIndex < thisIndex;
+    while(parentNode = parentNode.prev()) {
+      if (parentNode.hasChild(that)) return true;
+    }
+    return false;
+  }
+
+  getIndex(): number {
+    return this.parent.indexOf(this);
+  }
+
+  prev(): BlockNode|TextNode {
+    return this.parent.children[this.getIndex()];
+  }
+
+  hasChild(node: TextNode|BlockNode): boolean {
+    return false;
+  }
+
+  dangerouslyMutateParent(newParent: BlockNode): TextNode {
+    this.parent = newParent;
+    return this;
   }
 
 }

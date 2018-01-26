@@ -1,10 +1,12 @@
 import {DeleteRangeAction, InputAction, InsertTextAction, TYPE_INPUT} from "../actions/input";
 import Range from '../range';
 import {debug} from "../config";
+import Selection from "../selection";
 
 export default () => (next: Function) => (action: InputAction) => {
 
-  const { type, selection, str} = action;
+  const { type, selection: selectionJson, str} = action;
+  const selection = Selection.fromJson(selectionJson);
 
   if (debug.log.middlewareCalls) console.log('input', action);
 

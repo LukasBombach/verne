@@ -18,6 +18,10 @@ export default class Selection {
     return new Selection(node, node, offset, offset);
   }
 
+  public static fromJson({ anchorNode, focusNode, anchorOffset, focusOffset }: SelectionJson) {
+    return new Selection(anchorNode, focusNode, anchorOffset, focusOffset);
+  }
+
   constructor(anchorNode: TextNode, focusNode: TextNode, anchorOffset: number, focusOffset: number) {
     this.anchorNode = anchorNode;
     this.focusNode = focusNode;

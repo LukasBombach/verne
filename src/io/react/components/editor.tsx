@@ -21,7 +21,7 @@ interface EventHandlers {
 export default class Editor extends React.Component<EditorProps, EditorState> {
 
   public core: Readonly<WriteEditor> = WriteEditor.fromHtml(this.props.html);
-  public state: Readonly<EditorState> = { nodes: this.core.doc.nodes };
+  public state: Readonly<EditorState> = { nodes: this.core.doc.children };
   private eventHandlers: EventHandlers = getEventHandlers(this);
 
   renderNode(node: BlockNode|TextNode): JSX.Element {

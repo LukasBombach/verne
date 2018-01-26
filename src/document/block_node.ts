@@ -1,3 +1,4 @@
+import Doc from "./doc";
 import TextNode from "./text_node";
 
 export default class BlockNode {
@@ -5,11 +6,11 @@ export default class BlockNode {
   private static nextNodeId = 0;
 
   public tagName: string;
-  public parent: BlockNode;
+  public parent: BlockNode|Doc;
   public children: Array<BlockNode|TextNode>;
   public id: number;
 
-  constructor(tagName: string, parent: BlockNode = null, children: Array<BlockNode|TextNode> = []) {
+  constructor(tagName: string, parent: BlockNode|Doc = null, children: Array<BlockNode|TextNode> = []) {
     this.tagName = tagName;
     this.parent = parent;
     this.children = children;
@@ -25,6 +26,22 @@ export default class BlockNode {
     const index = children.indexOf(oldTextNode);
     children[index] = newTextNode;
     return new BlockNode(this.tagName, this.parent, children);
+  }
+
+  getIndex(): number {
+    return this.parent.indexOf(this);
+  }
+
+  indexOf(node: TextNode|BlockNode): number {
+    return this.children.indexOf(node);
+  }
+
+  hasChild(node: TextNode|BlockNode): boolean {
+    return this.indexOf(node) !== -1;
+  }
+
+  prev(): BlockNode|TextNode {
+    return this.parent.children[this.getIndex()];
   }
 
   dangerouslyMutateParent(newParent: BlockNode): BlockNode {

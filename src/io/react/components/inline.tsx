@@ -23,9 +23,6 @@ export default class Inline extends React.Component<InlineProps, undefined> {
   };
 
   shouldComponentUpdate(nextProps: InlineProps): boolean {
-    // todo inline nodes still get re-rendered, this method is not even called when a block node updates
-    // return nextProps.node.text !== this.props.node.text ||
-    //   JSON.stringify(nextProps.node.attrs) !== JSON.stringify(this.props.node.attrs);
     return nextProps.node.id !== this.props.node.id;
   }
 

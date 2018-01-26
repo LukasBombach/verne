@@ -19,13 +19,17 @@ export default class Actions {
 
   public async dispatch(action: any): Promise<ActionResult> {
     const actionAfterMiddlewares = await this.applyMiddlewares(action);
-    const { doc, selection } = await this.editor.doc.transform(actionAfterMiddlewares);
-    this.editor.doc = doc;
-    return { doc, selection: selection };
+    return await this.applyAction(actionAfterMiddlewares);
   }
 
   private applyMiddlewares(originalAction: any): Promise<any> {
     return new Promise(resolve => this.composedMiddlewares((action: any) => { resolve(action); })(originalAction));
+  }
+
+  private async applyAction(action: any): Promise<ActionResult> {
+    const { doc, selection } = await this.editor.doc.transform(action);
+    this.editor.doc = doc;
+    return { doc, selection };
   }
 
   private composeMiddlewares(middlewares: Function[]): Function {

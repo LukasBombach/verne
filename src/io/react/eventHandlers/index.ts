@@ -6,7 +6,7 @@ const eventHandlers: [string, Function][] = [
 ];
 
 /**
- * returns an object that can be set as props to the react editor's content editable element
+ * Returns an object that can be set as props to the react editor's content editable element
  *
  * [
  *   ['onKeyDown', handleKeyDown],

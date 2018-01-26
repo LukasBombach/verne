@@ -1,6 +1,6 @@
-import DomParser from './dom_parser';
-import TextNode from "./text_node";
-import BlockNode from "./block_node";
+import DomParser from './parser/dom';
+import { default as LibNode } from "./node";
+import BlockNode from "./block";
 import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
 import {TYPE_INSERT_TEXT} from "../actions/input";
@@ -10,22 +10,15 @@ export interface TransformationResult {
   selection: Selection
 }
 
-export default class Doc {
-
-  private static nextNodeId = 0;
-
-  public id: number;
-  public children: Array<BlockNode|TextNode>;
+export default class Doc extends LibNode {
 
   public static fromElement(el: Node): Doc {
     const nodes = DomParser.getChildrenFor(el);
     return new Doc(nodes);
   }
 
-  constructor(nodes: Array<BlockNode|TextNode> = []) {
-    this.children = nodes;
-    this.id = ++Doc.nextNodeId;
-    Object.freeze(this);
+  constructor(children: LibNode[] = []) {
+    super(null, children)
   }
 
   public async transform(action: any): Promise<TransformationResult> {
@@ -34,15 +27,11 @@ export default class Doc {
     return { doc: this, selection: null };
   }
 
-  public replaceBlockNode(oldBlockNode: BlockNode, newBlockNode: BlockNode) {
-    const nodes = this.children.slice(0);
+  public replaceBlock(oldBlockNode: BlockNode, newBlockNode: BlockNode) {
+    const nodes = this.children().slice(0);
     const index = nodes.indexOf(oldBlockNode);
     nodes[index] = newBlockNode;
     return new Doc(nodes);
-  }
-
-  indexOf(node: TextNode|BlockNode): number {
-    return this.children.indexOf(node);
   }
 
 }

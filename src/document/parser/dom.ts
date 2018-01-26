@@ -1,8 +1,8 @@
-import BlockNode from './block_node';
-import TextNode from './text_node';
+import Block from '../block';
+import Text from '../text';
 
 interface TagAttributeMap {
-  [key:string]: string;
+  [key: string]: string;
   strong: string;
   b: string;
   em: string;
@@ -24,8 +24,8 @@ export default class DomParser {
     del: 'del',
   };
 
-  static getChildrenFor(domNode: Node, attrs: string[] = [], parent: BlockNode = null): Array<BlockNode|TextNode> {
-    let nodeList: Array<BlockNode|TextNode> = [];
+  static getChildrenFor(domNode: Node, attrs: string[] = [], parent: Block = null): Array<Block|Text> {
+    let nodeList: Array<Block|Text> = [];
     [].forEach.call(domNode.childNodes, (childNode: Element) => {
       if (DomParser.isBlockNode(childNode)) nodeList.push(DomParser.getBlockNode(childNode, attrs, parent));
       else if (DomParser.isTextNodeWithContents(childNode)) nodeList.push(DomParser.getTextNode(childNode, attrs, parent));
@@ -52,14 +52,14 @@ export default class DomParser {
     return !!(tagName && attributeMap[tagName]);
   }
 
-  static getBlockNode(domNode: Element, attrs: string[] = [], parent: BlockNode) {
+  static getBlockNode(domNode: Element, attrs: string[] = [], parent: Block) {
     const tagName = domNode.tagName.toLowerCase();
     const children = DomParser.getChildrenFor(domNode, attrs);
-    return new BlockNode(tagName, parent, children);
+    return new Block(tagName, parent, children);
   }
 
-  static getTextNode(domNode: Element, attrs: string[] = [], parent: BlockNode) {
-    return new TextNode(domNode.nodeValue, parent, attrs);
+  static getTextNode(domNode: Element, attrs: string[] = [], parent: Block) {
+    return new Text(domNode.nodeValue, attrs, parent);
   }
 
 }

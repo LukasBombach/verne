@@ -1,4 +1,4 @@
-import TextNode from "../../document/text_node";
+import TextNode from "../../document/text";
 
 export default class NodeMap {
 
@@ -11,7 +11,7 @@ export default class NodeMap {
   public static getDomNode(textNode: TextNode): Node {
     const entries = NodeMap.map.entries();
     for (const entry of entries) {
-      if (entry[1].id === textNode.id) return entry[0];
+      if (entry[1].id() === textNode.id()) return entry[0];
     }
     return null;
   }

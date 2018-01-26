@@ -3,7 +3,7 @@ import Actions from './actions';
 
 export default class WriteEditor {
 
-  public doc: Doc = new Doc([]);
+  public doc: Doc = new Doc();
   public actions: Actions = new Actions(this);
 
   public static fromHtml(html: string): WriteEditor  {

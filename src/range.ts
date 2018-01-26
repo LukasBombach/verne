@@ -1,4 +1,4 @@
-import TextNode from "./document/text_node";
+import TextNode from "./document/text";
 import Selection from "./selection";
 
 export default class Range {
@@ -17,14 +17,19 @@ export default class Range {
     return new Range(startNode, endNode, startOffset, endOffset);
   }
 
-  public static fromCaret(selection: Selection, span: number = 0): Range {
-    const startNode = selection.focusNode;
-    const endNode = selection.focusNode;
-    const startOffset = selection.focusOffset;
-    const endOffset = selection.focusOffset;
-    const range = new Range(startNode, endNode, startOffset, endOffset);
-    return range;
+  public static fromCaret(selection: Selection, spanBy: number = 0): Range {
+    // const { node, offset } = selection.focusNode.walk({ startOffset: selection.focusOffset, characters: spanBy });
+    return new Range(selection.focusNode, selection.focusNode, selection.focusOffset, selection.focusOffset);
   }
+
+  // moveStartBy(numChars: number): Range {
+  //   if (numChars < 0 && this.startOffset - numChars >= 0) this.startOffset -= numChars;
+  //   if (numChars < 0 && this.startOffset - numChars < 0) return this; // todo oh shit
+  //   return this;
+  // }
+  // moveEndBy(numChars: number): Range {
+  //   return this;
+  // }
 
   constructor(startNode: TextNode, endNode: TextNode, startOffset: number, endOffset: number) {
     const switchNodes = startNode.precedes(endNode);

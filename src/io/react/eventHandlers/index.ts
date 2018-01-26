@@ -22,6 +22,6 @@ const eventHandlers: [string, Function][] = [
  */
 export default function getEventHandlers(editor: Editor) {
   return eventHandlers
-    .map(([eventName, handler]) => [eventName, (e: any): any => handler(editor, e)])
-    .reduce((acc: object, [eventName, handler]) => ({ ...acc, [eventName as string]: handler }), {});
+    .map(([eventName, handler]) => [eventName, (event: any): any => handler(editor, event)])
+    .reduce((acc, [eventName, handler]) => ({ ...acc, [eventName as string]: handler }), {});
 }

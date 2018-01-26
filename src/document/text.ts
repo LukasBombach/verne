@@ -1,5 +1,10 @@
 import Node from "./node";
 
+interface WalkResult {
+  node: Text;
+  offset: number;
+}
+
 export default class Text extends Node {
 
   private _text: string;
@@ -23,6 +28,15 @@ export default class Text extends Node {
     const text = this.text().substr(0, offset) + str + this.text().substr(offset);
     const attrs = this.attrs().slice(0);
     return new Text(text, attrs, this.parent());
+  }
+
+  walkByCharacters(numChars: number, startOffset: number): WalkResult {
+    let node = this;
+    let offset = startOffset;
+    if (numChars < 0 && startOffset - numChars >= 0) {
+      offset = startOffset - numChars;
+      return { node , offset };
+    }
   }
 
 }

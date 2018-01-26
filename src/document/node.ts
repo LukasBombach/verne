@@ -1,3 +1,15 @@
+// import Text from "./text";
+//
+// interface WalkOptions {
+//   startOffset: number;
+//   byCharacters: number;
+// }
+//
+// interface WalkResult {
+//   node: Text;
+//   offset: number;
+// }
+
 export default class Node {
 
   private static nextNodeId = 0;
@@ -35,6 +47,40 @@ export default class Node {
     return index === siblings.length - 1 ? null : siblings[index + 1];
   }
 
+  firstSibling() {
+    return this.siblings()[0];
+  }
+
+  lastSibling() {
+    const siblings = this.siblings();
+    return siblings[siblings.length];
+  }
+
+  prevInTree(): Node {
+    const prev = this.prev();
+    if (prev) return prev;
+    const parent = this.parent();
+    const parentPrev = parent.prev();
+  }
+
+  nextInTree(): Node {
+
+  }
+
+  firstInTree(): Node {
+    const firstSibling = this.firstSibling();
+    const children = firstSibling.children();
+    if (!children.length) return firstSibling;
+    return children[0].firstInTree();
+  }
+
+  lastInTree(): Node {
+    const lastSibling = this.lastSibling();
+    const children = lastSibling.children();
+    if (!children.length) return lastSibling;
+    return children[children.length].lastInTree();
+  }
+
   siblings(): Node[] {
     return this.parent().children();
   }
@@ -67,7 +113,11 @@ export default class Node {
     return false;
   }
 
-  dangerouslyMutateParent(parent: Node = null): Node {
+  // walk({ startOffset, byCharacters }: WalkOptions): WalkResult {
+  //
+  // }
+
+  __dangerouslyMutateParent(parent: Node = null): Node {
     this._parent = parent;
     return this;
   }

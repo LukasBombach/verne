@@ -8,7 +8,7 @@ export default class Block extends Node {
   constructor(tagName: string, parent: Node, children: Node[]) {
     super(parent, children);
     this._tagName = tagName;
-    this.children().forEach(child => child.dangerouslyMutateParent(this));
+    this.children().forEach(child => child.__dangerouslyMutateParent(this));
   }
 
   tagName() {

@@ -32,8 +32,11 @@ export default class Node {
     return this.parent() ? this.siblings().indexOf(this) : 0;
   }
 
-  parent(): Node {
-    return this._parent;
+  parent(condition?: (parent: Node) => boolean): Node {
+    if (!condition) return this._parent;
+    if (condition && condition(this._parent)) return this._parent;
+    if (this._parent) return this._parent.parent(condition);
+    return null;
   }
 
   prev(): Node {
@@ -47,37 +50,40 @@ export default class Node {
     return index === siblings.length - 1 ? null : siblings[index + 1];
   }
 
-  firstSibling() {
+  firstSibling(): Node {
     return this.siblings()[0];
   }
 
-  lastSibling() {
+  lastSibling(): Node {
     const siblings = this.siblings();
     return siblings[siblings.length];
   }
 
   prevInTree(): Node {
     const prev = this.prev();
-    if (prev) return prev;
-    const parent = this.parent();
-    const parentPrev = parent.prev();
+    if (prev) return prev.lastInTree();
+    const parentWithPrev = this.parent(parent => !!parent.prev());
+    if (parentWithPrev) return parentWithPrev.prevInTree();
+    return null;
   }
 
   nextInTree(): Node {
-
+    const next = this.next();
+    if (next) return next.firstInTree();
+    const parentWithNext = this.parent(parent => !!parent.next());
+    if (parentWithNext) return parentWithNext.nextInTree();
+    return null;
   }
 
   firstInTree(): Node {
-    const firstSibling = this.firstSibling();
-    const children = firstSibling.children();
-    if (!children.length) return firstSibling;
+    const children = this.children();
+    if (!children.length) return this;
     return children[0].firstInTree();
   }
 
   lastInTree(): Node {
-    const lastSibling = this.lastSibling();
-    const children = lastSibling.children();
-    if (!children.length) return lastSibling;
+    const children = this.children();
+    if (!children.length) return this;
     return children[children.length].lastInTree();
   }
 
@@ -112,10 +118,6 @@ export default class Node {
     for (let i = thisIndex; i < siblings.length; ++i) if (siblings[i].hasChild(that)) return true;
     return false;
   }
-
-  // walk({ startOffset, byCharacters }: WalkOptions): WalkResult {
-  //
-  // }
 
   __dangerouslyMutateParent(parent: Node = null): Node {
     this._parent = parent;

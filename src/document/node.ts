@@ -1,15 +1,3 @@
-// import Text from "./text";
-//
-// interface WalkOptions {
-//   startOffset: number;
-//   byCharacters: number;
-// }
-//
-// interface WalkResult {
-//   node: Text;
-//   offset: number;
-// }
-
 export default class Node {
 
   private static nextNodeId = 0;
@@ -59,32 +47,32 @@ export default class Node {
     return siblings[siblings.length];
   }
 
-  prevInTree(): Node {
+  prevLeaf(): Node {
     const prev = this.prev();
-    if (prev) return prev.lastInTree();
+    if (prev) return prev.lastLeaf();
     const parentWithPrev = this.parent(parent => !!parent.prev());
-    if (parentWithPrev) return parentWithPrev.prevInTree();
+    if (parentWithPrev) return parentWithPrev.prevLeaf();
     return null;
   }
 
-  nextInTree(): Node {
+  nextLeaf(): Node {
     const next = this.next();
-    if (next) return next.firstInTree();
+    if (next) return next.firstLeaf();
     const parentWithNext = this.parent(parent => !!parent.next());
-    if (parentWithNext) return parentWithNext.nextInTree();
+    if (parentWithNext) return parentWithNext.nextLeaf();
     return null;
   }
 
-  firstInTree(): Node {
+  firstLeaf(): Node {
     const children = this.children();
     if (!children.length) return this;
-    return children[0].firstInTree();
+    return children[0].firstLeaf();
   }
 
-  lastInTree(): Node {
+  lastLeaf(): Node {
     const children = this.children();
     if (!children.length) return this;
-    return children[children.length].lastInTree();
+    return children[children.length].lastLeaf();
   }
 
   siblings(): Node[] {

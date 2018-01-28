@@ -27,35 +27,56 @@ export default class Node {
     return null;
   }
 
-  prev(): Node {
-    const index = this.index();
-    return index === 0 ? null : this.siblings()[index - 1];
-  }
-
-  next(): Node {
-    const index = this.index();
+  prev(condition?: (parent: Node) => boolean): Node {
     const siblings = this.siblings();
-    return index === siblings.length - 1 ? null : siblings[index + 1];
-  }
-
-  firstSibling(): Node {
-    return this.siblings()[0];
-  }
-
-  lastSibling(): Node {
-    const siblings = this.siblings();
-    return siblings[siblings.length];
-  }
-
-  prevLeaf(): Node {
-    const prev = this.prev();
-    if (prev) return prev.lastLeaf();
-    const parentWithPrev = this.parent(parent => !!parent.prev());
-    if (parentWithPrev) return parentWithPrev.prevLeaf();
+    for (let i = this.index() - 1; i >= 0; i--) {
+      if (condition(siblings[i])) return siblings[i];
+    }
     return null;
   }
 
-  nextLeaf(): Node {
+  next(condition = (node: Node) => true): Node {
+    const siblings = this.siblings();
+    for (let i = this.index() + 1; i < siblings.length; i++) {
+      if (condition(siblings[i])) return siblings[i];
+    }
+    return null;
+  }
+
+  firstSibling(condition = (node: Node) => true): Node {
+    const siblings = this.siblings();
+    for (let i = 0; i < siblings.length; i++) {
+      if (condition(siblings[i])) return siblings[i];
+    }
+    return null;
+  }
+
+  lastSibling(condition = (node: Node) => true): Node {
+    const siblings = this.siblings();
+    for (let i = siblings.length - 1; i >= 0; i--) {
+      if (condition(siblings[i])) return siblings[i];
+    }
+    return null;
+  }
+
+  // prevLeaf(condition?: (parent: Node) => boolean): Node {
+  // let lastLeaf;
+  // for (let i = prevSiblings.length - 1; i >= 0; i--) {
+  //   lastLeaf = prevSiblings[i].lastLeaf(condition);
+  //   if (lastLeaf) return lastLeaf;
+  // }
+  // }
+
+  prevLeaf(condition?: (parent: Node) => boolean): Node {
+    const prevSiblings = this.prevSiblings();
+    const lastLeaf = prevSiblings.reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
+    if (lastLeaf) return lastLeaf;
+    const parentWithPrev = this.parent(parent => !!parent.prev());
+    if (parentWithPrev) return parentWithPrev.prevLeaf(condition);
+    return null;
+  }
+
+  nextLeaf(condition?: (parent: Node) => boolean): Node {
     const next = this.next();
     if (next) return next.firstLeaf();
     const parentWithNext = this.parent(parent => !!parent.next());
@@ -69,14 +90,23 @@ export default class Node {
     return children[0].firstLeaf();
   }
 
-  lastLeaf(): Node {
+  lastLeaf(condition = (node: Node) => true): Node {
     const children = this.children();
-    if (!children.length) return this;
-    return children[children.length].lastLeaf();
+    if (!children.length) return condition(this) ? this : null;
+    const lastSibling = this.lastSibling(condition);
+    return lastSibling ? lastSibling.lastLeaf() : null;
   }
 
   siblings(): Node[] {
     return this.parent().children();
+  }
+
+  prevSiblings(): Node[] {
+    return this.siblings().slice(0, this.index());
+  }
+
+  nextSiblings(): Node[] {
+    return this.siblings().slice(this.index() + 1);
   }
 
   children(): Node[] {

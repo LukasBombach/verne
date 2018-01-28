@@ -30,13 +30,21 @@ export default class Text extends Node {
     return new Text(text, attrs, this.parent());
   }
 
-  walkByCharacters(numChars: number, startOffset: number): WalkResult {
-    let node = this;
-    let offset = startOffset;
-    if (numChars < 0 && startOffset - numChars >= 0) {
-      offset = startOffset - numChars;
-      return { node , offset };
-    }
+  prevTextLeaf(): Text {
+    return this.prevLeaf(node => node instanceof Text) as Text;
   }
+
+  nextTextLeaf(): Text {
+    return this.nextLeaf(node => node instanceof Text) as Text;
+  }
+
+  // walkByCharacters(numChars: number, startOffset: number): WalkResult {
+  //   let node = this;
+  //   let offset = startOffset;
+  //   if (numChars < 0 && startOffset - numChars >= 0) {
+  //     offset = startOffset - numChars;
+  //     return { node , offset };
+  //   }
+  // }
 
 }

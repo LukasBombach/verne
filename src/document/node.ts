@@ -59,17 +59,8 @@ export default class Node {
     return null;
   }
 
-  // prevLeaf(condition?: (parent: Node) => boolean): Node {
-  // let lastLeaf;
-  // for (let i = prevSiblings.length - 1; i >= 0; i--) {
-  //   lastLeaf = prevSiblings[i].lastLeaf(condition);
-  //   if (lastLeaf) return lastLeaf;
-  // }
-  // }
-
   prevLeaf(condition?: (parent: Node) => boolean): Node {
-    const prevSiblings = this.prevSiblings();
-    const lastLeaf = prevSiblings.reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
+    const lastLeaf = this.prevSiblings().reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
     if (lastLeaf) return lastLeaf;
     const parentWithPrev = this.parent(parent => !!parent.prev());
     if (parentWithPrev) return parentWithPrev.prevLeaf(condition);

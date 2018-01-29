@@ -1,8 +1,10 @@
 import handleKeyDown from './onKeyDown';
+import handleOnClick from './onClick';
 import Editor from "../components/editor";
 
 const eventHandlers: [string, Function][] = [
-  ['onKeyDown', handleKeyDown]
+  ['onKeyDown', handleKeyDown],
+  ['onClick', handleOnClick],
 ];
 
 /**

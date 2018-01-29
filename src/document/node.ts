@@ -104,7 +104,7 @@ export default class Node {
 
   // ✅
   children(condition = (node: Node) => true): Node[] {
-    return this._children.filter(condition);
+    return this._children ? this._children.filter(condition) : [];
   }
 
   // ✅

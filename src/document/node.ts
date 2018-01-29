@@ -81,48 +81,63 @@ export default class Node {
     return lastSibling ? lastSibling.lastLeaf() : null;
   }
 
+  // ✅
   siblings(): Node[] {
-    return this.parent().children();
+    const parent = this.parent();
+    return parent ? parent.children() : [this];
   }
 
+  // ✅
   prevSiblings(): Node[] {
     return this.siblings().slice(0, this.index());
   }
 
+  // ✅
   nextSiblings(): Node[] {
     return this.siblings().slice(this.index() + 1);
   }
 
+  // ✅
   children(): Node[] {
     return this._children;
   }
 
-  hasChild(node: Node): boolean {
-    return this.children().indexOf(node) !== -1;
-  }
+  // ✅
+  // hasChild(node: Node): boolean {
+  //   return this.children().indexOf(node) !== -1;
+  // }
 
   // todo instead of checking with hasChild this should traverse down the siblings to check if that node is there
-  precedes(that: Node): boolean {
-    const thisIndex = this.index();
-    const thatIndex = that.index();
-    if (thatIndex !== -1) return thatIndex < thisIndex;
-    const siblings = this.siblings();
-    for (let i = thisIndex; i >= 0; --i) if (siblings[i].hasChild(that)) return true;
-    return false;
-  }
+  // todo check if compareDocumentPosition has a better performance
+  // precedes(that: Node): boolean {
+  //   const thisIndex = this.index();
+  //   const thatIndex = that.index();
+  //   if (thatIndex !== -1) return thatIndex < thisIndex;
+  //   const siblings = this.siblings();
+  //   for (let i = thisIndex; i >= 0; --i) if (siblings[i].hasChild(that)) return true;
+  //   return false;
+  // }
 
   // todo instead of checking with hasChild this should traverse down the siblings to check if that node is there
-  succeeds(that: Node): boolean {
-    const thisIndex = this.index();
-    const thatIndex = that.index();
-    if (thatIndex !== -1) return thatIndex < thisIndex;
-    const siblings = this.siblings();
-    for (let i = thisIndex; i < siblings.length; ++i) if (siblings[i].hasChild(that)) return true;
-    return false;
-  }
+  // todo check if compareDocumentPosition has a better performance
+  // succeeds(that: Node): boolean {
+  //   const thisIndex = this.index();
+  //   const thatIndex = that.index();
+  //   if (thatIndex !== -1) return thatIndex < thisIndex;
+  //   const siblings = this.siblings();
+  //   for (let i = thisIndex; i < siblings.length; ++i) if (siblings[i].hasChild(that)) return true;
+  //   return false;
+  // }
 
+  // ✅
   __dangerouslyMutateParent(parent: Node = null): Node {
     this._parent = parent;
+    return this;
+  }
+
+  // ✅
+  __dangerouslyMutateChildren(children: Node[]): Node {
+    this._children = children;
     return this;
   }
 

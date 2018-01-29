@@ -61,20 +61,24 @@ export default class Node {
     return null;
   }
 
-  // nextLeaf(condition?: (parent: Node) => boolean): Node {
-  //   const next = this.next();
-  //   if (next) return next.firstLeaf();
-  //   const parentWithNext = this.parent(parent => !!parent.next());
-  //   if (parentWithNext) return parentWithNext.nextLeaf();
-  //   return null;
-  // }
+  // 😐
+  nextLeaf(condition?: (parent: Node) => boolean): Node {
+    const firstInNext = this.nextSiblings().reduce((pre, cur) => pre || cur.lastLeaf(condition), null);
+    if (firstInNext) return firstInNext;
+    const parentWithNext = this.parent(parent => !!parent.next());
+    if (parentWithNext) return parentWithNext.nextLeaf(condition);
+    return null;
+  }
 
-  // firstLeaf(): Node {
-  //   const children = this.children();
-  //   if (!children.length) return this;
-  //   return children[0].firstLeaf();
-  // }
+  // ✅
+  firstLeaf(condition = (node: Node) => true): Node {
+    const children = this.children();
+    if (!children.length) return condition(this) ? this : null;
+    const firstSibling = this.firstSibling(condition);
+    return firstSibling ? firstSibling.firstLeaf() : null;
+  }
 
+  // ✅
   lastLeaf(condition = (node: Node) => true): Node {
     const children = this.children();
     if (!children.length) return condition(this) ? this : null;

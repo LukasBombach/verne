@@ -52,20 +52,20 @@ export default class Node {
     return sibling || null;
   }
 
-  // 😐
+  // ✅
   prevLeaf(condition = (node: Node) => true): Node {
     const lastLeafInPrev = this.prevSiblings().reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
     if (lastLeafInPrev) return lastLeafInPrev;
-    const parentWithPrev = this.parent(parent => !!parent.prev());
+    const parentWithPrev = this.parent(parent => !!parent && !!parent.prev());
     if (parentWithPrev) return parentWithPrev.prevLeaf(condition);
     return null;
   }
 
-  // 😐
+  // ✅
   nextLeaf(condition?: (parent: Node) => boolean): Node {
-    const firstInNext = this.nextSiblings().reduce((pre, cur) => pre || cur.lastLeaf(condition), null);
-    if (firstInNext) return firstInNext;
-    const parentWithNext = this.parent(parent => !!parent.next());
+    const firstLeafInNext = this.nextSiblings().reduce((pre, cur) => pre || cur.firstLeaf(condition), null);
+    if (firstLeafInNext) return firstLeafInNext;
+    const parentWithNext = this.parent(parent => !!parent && !!parent.next());
     if (parentWithNext) return parentWithNext.nextLeaf(condition);
     return null;
   }
@@ -74,29 +74,16 @@ export default class Node {
   firstLeaf(condition = (node: Node) => true): Node {
     const children = this.children();
     if (!children.length) return condition(this) ? this : null;
-    const firstSibling = this.firstSibling(condition);
-    return firstSibling ? firstSibling.firstLeaf() : null;
+    const firstLeaf = children.reduce((pre, cur) => pre || cur.firstLeaf(condition), null);
+    return firstLeaf || null;
   }
 
   // ✅
   lastLeaf(condition = (node: Node) => true): Node {
-    // children.reverse()
-    // if !children
-    //   return condition(this) ? this : null;
-    // for child of children
-    //   lastLeaf = child.lastLeaf()
-    //   if lastLeaf return lastLeaf
-    // return null
-
     const children = this.children();
-    if (!children) return condition(this) ? this : null;
+    if (!children.length) return condition(this) ? this : null;
     const lastLeaf = children.reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
     return lastLeaf || null;
-
-    // const children = this.children();
-    // if (!children.length) return condition(this) ? this : null;
-    // const lastSibling = this.lastSibling(condition);
-    // return lastSibling ? lastSibling.lastLeaf() : null;
   }
 
   // ✅

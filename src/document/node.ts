@@ -80,11 +80,18 @@ export default class Node {
 
   // ✅
   lastLeaf(condition = (node: Node) => true): Node {
-
-    // if !this.children()
+    // children.reverse()
+    // if !children
     //   return condition(this) ? this : null;
-    // 
+    // for child of children
+    //   lastLeaf = child.lastLeaf()
+    //   if lastLeaf return lastLeaf
+    // return null
 
+    const children = this.children();
+    if (!children) return condition(this) ? this : null;
+    const lastLeaf = children.reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
+    return lastLeaf || null;
 
     // const children = this.children();
     // if (!children.length) return condition(this) ? this : null;

@@ -52,6 +52,7 @@ export default class Node {
     return sibling || null;
   }
 
+  // 😐
   prevLeaf(condition = (node: Node) => true): Node {
     const lastLeafInPrev = this.prevSiblings().reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
     if (lastLeafInPrev) return lastLeafInPrev;
@@ -101,33 +102,6 @@ export default class Node {
   children(condition = (node: Node) => true): Node[] {
     return this._children.filter(condition);
   }
-
-  // ✅
-  // hasChild(node: Node): boolean {
-  //   return this.children().indexOf(node) !== -1;
-  // }
-
-  // todo instead of checking with hasChild this should traverse down the siblings to check if that node is there
-  // todo check if compareDocumentPosition has a better performance
-  // precedes(that: Node): boolean {
-  //   const thisIndex = this.index();
-  //   const thatIndex = that.index();
-  //   if (thatIndex !== -1) return thatIndex < thisIndex;
-  //   const siblings = this.siblings();
-  //   for (let i = thisIndex; i >= 0; --i) if (siblings[i].hasChild(that)) return true;
-  //   return false;
-  // }
-
-  // todo instead of checking with hasChild this should traverse down the siblings to check if that node is there
-  // todo check if compareDocumentPosition has a better performance
-  // succeeds(that: Node): boolean {
-  //   const thisIndex = this.index();
-  //   const thatIndex = that.index();
-  //   if (thatIndex !== -1) return thatIndex < thisIndex;
-  //   const siblings = this.siblings();
-  //   for (let i = thisIndex; i < siblings.length; ++i) if (siblings[i].hasChild(that)) return true;
-  //   return false;
-  // }
 
   // ✅
   __dangerouslyMutateParent(parent: Node = null): Node {

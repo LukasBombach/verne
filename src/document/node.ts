@@ -80,10 +80,16 @@ export default class Node {
 
   // ✅
   lastLeaf(condition = (node: Node) => true): Node {
-    const children = this.children();
-    if (!children.length) return condition(this) ? this : null;
-    const lastSibling = this.lastSibling(condition);
-    return lastSibling ? lastSibling.lastLeaf() : null;
+
+    // if !this.children()
+    //   return condition(this) ? this : null;
+    // 
+
+
+    // const children = this.children();
+    // if (!children.length) return condition(this) ? this : null;
+    // const lastSibling = this.lastSibling(condition);
+    // return lastSibling ? lastSibling.lastLeaf() : null;
   }
 
   // ✅

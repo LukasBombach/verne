@@ -14,7 +14,9 @@ export default class Doc extends LibNode {
 
   public static fromElement(el: Node): Doc {
     const nodes = DomParser.getChildrenFor(el);
-    return new Doc(nodes);
+    const doc = new Doc(nodes);
+    doc.children().forEach(child => child.__dangerouslyMutateParent(doc)); // todo this sucks
+    return doc;
   }
 
   constructor(children: LibNode[] = []) {

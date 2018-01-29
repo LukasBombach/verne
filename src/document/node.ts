@@ -12,51 +12,44 @@ export default class Node {
     this._children = children;
   }
 
+  // ✅
   id(): number {
     return this._id;
   }
 
+  // ✅
   index(): number {
     return this.parent() ? this.siblings().indexOf(this) : 0;
   }
 
-  parent(condition?: (parent: Node) => boolean): Node {
-    if (!condition) return this._parent;
-    if (condition && condition(this._parent)) return this._parent;
-    if (this._parent) return this._parent.parent(condition);
-    return null;
+  // ✅
+  parent(condition = (node: Node) => true): Node {
+    if (condition(this._parent)) return this._parent;
+    return this._parent ? this._parent.parent(condition) : null;
   }
 
-  prev(condition?: (parent: Node) => boolean): Node {
-    const prevSiblings = this.prevSiblings();
-    for (let i = prevSiblings.length - 1; i >= 0; i--) {
-      if (condition(prevSiblings[i])) return prevSiblings[i];
-    }
-    return null;
+  // ✅
+  prev(condition = (node: Node) => true): Node {
+    const sibling = this.prevSiblings().reverse().find(sibling => condition(sibling));
+    return sibling || null;
   }
 
+  // ✅
   next(condition = (node: Node) => true): Node {
-    const nextSiblings = this.nextSiblings();
-    for (let i = 0; i < nextSiblings.length; i++) {
-      if (condition(nextSiblings[i])) return nextSiblings[i];
-    }
-    return null;
+    const sibling = this.nextSiblings().find(sibling => condition(sibling));
+    return sibling || null;
   }
 
+  // ✅
   firstSibling(condition = (node: Node) => true): Node {
-    const siblings = this.siblings();
-    for (let i = 0; i < siblings.length; i++) {
-      if (condition(siblings[i])) return siblings[i];
-    }
-    return null;
+    const sibling = this.siblings().find(sibling => condition(sibling));
+    return sibling || null;
   }
 
+  // ✅
   lastSibling(condition = (node: Node) => true): Node {
-    const siblings = this.siblings();
-    for (let i = siblings.length - 1; i >= 0; i--) {
-      if (condition(siblings[i])) return siblings[i];
-    }
-    return null;
+    const sibling = this.siblings().reverse().find(sibling => condition(sibling));
+    return sibling || null;
   }
 
   prevLeaf(condition?: (parent: Node) => boolean): Node {

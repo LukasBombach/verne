@@ -30,6 +30,12 @@ export default class Text extends Node {
     return new Text(text, attrs, this.parent());
   }
 
+  removeString(startOffset: number, endOffset: number): Text {
+    const text = this.text().substr(0, startOffset)  + this.text().substr(endOffset);
+    const attrs = this.attrs().slice(0);
+    return new Text(text, attrs, this.parent());
+  }
+
   prevTextLeaf(): Text {
     return this.prevLeaf(node => node instanceof Text) as Text;
   }

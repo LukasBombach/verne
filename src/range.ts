@@ -40,6 +40,7 @@ export default class Range {
 
   moveStart(numChars: number): Range {
     const { node, offset} = Range.walkBy(this.startNode, this.startOffset, numChars);
+    console.log(this.startOffset, '->', offset);
     this.startNode = node;
     this.startOffset = offset;
     return this;
@@ -53,7 +54,7 @@ export default class Range {
   }
 
   private static walkBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
-    return numChars < 0 ? Range.walkBackwardsBy(node, startOffset, numChars) : Range.walkForwardsBy(node, startOffset, numChars);
+    return numChars < 0 ? Range.walkBackwardsBy(node, startOffset, Math.abs(numChars)) : Range.walkForwardsBy(node, startOffset, numChars);
   }
 
   private static walkBackwardsBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
@@ -62,7 +63,7 @@ export default class Range {
     const length = text.length;
     if (startOffset - numChars >= 0) return { node, offset: startOffset - numChars };
     const prevText = node.prevTextLeaf();
-    return Range.walkBackwardsBy(prevText, prevText.text().length, numChars - length)
+    return Range.walkBackwardsBy(prevText, prevText.text().length, numChars - startOffset)
   }
 
   private static walkForwardsBy(node: TextNode, startOffset: number, numChars: number): WalkResult {

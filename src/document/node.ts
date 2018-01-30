@@ -92,7 +92,7 @@ export default class Node {
     return this._children ? this._children.filter(condition) : [];
   }
 
-  __dangerouslyMutateParent(parent: Node = null): Node {
+  __dangerouslyMutateParent(parent: Node): Node {
     this._parent = parent;
     return this;
   }

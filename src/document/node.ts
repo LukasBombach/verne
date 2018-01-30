@@ -53,7 +53,7 @@ export default class Node {
     return null;
   }
 
-  nextLeaf(condition?: (parent: Node) => boolean): Node {
+  nextLeaf(condition = (node: Node) => true): Node {
     const firstLeafInNext = this.nextSiblings().reduce((pre, cur) => pre || cur.firstLeaf(condition), null);
     if (firstLeafInNext) return firstLeafInNext;
     const parentWithNext = this.parent(parent => !!parent && !!parent.next());

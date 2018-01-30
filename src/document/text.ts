@@ -30,22 +30,12 @@ export default class Text extends Node {
     return new Text(text, attrs, this.parent());
   }
 
-  prevText(): Text {
+  prevTextLeaf(): Text {
     return this.prevLeaf(node => node instanceof Text) as Text;
   }
 
-  nextText(): Text {
+  nextTextLeaf(): Text {
     return this.nextLeaf(node => node instanceof Text) as Text;
-  }
-
-  walkByCharacters(numChars: number, startOffset: number = 0): WalkResult {
-    if (startOffset > this.text().length) throw new Error(`startOffset (${startOffset} chars) must not be larger than node's text (${this.text().length} chars)`);
-    let node = this;
-    let remainingChars = numChars + startOffset;
-    while (remainingChars > 0) {
-
-    }
-    return { node , offset };
   }
 
 }

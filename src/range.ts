@@ -1,6 +1,11 @@
 import TextNode from "./document/text";
 import Selection from "./selection";
 
+interface WalkResult {
+  node: TextNode;
+  offset: number;
+}
+
 export default class Range {
 
   public startNode: TextNode;
@@ -24,22 +29,6 @@ export default class Range {
     return range;
   }
 
-  moveStart(numChars: number = 0): Range {
-    // if (startOffset > this.text().length) throw new Error(`startOffset (${startOffset} chars) must not be larger than node's text (${this.text().length} chars)`);
-    // let node = this;
-    // let remainingChars = numChars + startOffset;
-    // while (remainingChars > 0) {
-    //
-    // }
-    // return { node , offset };
-    return this;
-  }
-
-  moveEnd(numChars: number = 0): Range {
-    return this;
-  }
-
-
   constructor(startNode: TextNode, endNode: TextNode, startOffset: number, endOffset: number) {
     const switchNodes = false; // startNode.precedes(endNode);
     const switchOffsets = false; // startNode === endNode && startOffset > endOffset;
@@ -47,6 +36,42 @@ export default class Range {
     this.endNode = switchNodes ? endNode : startNode;
     this.startOffset = switchOffsets ? endOffset : startOffset;
     this.endOffset = switchOffsets ? startOffset :endOffset ;
+  }
+
+  moveStart(numChars: number): Range {
+    const { node, offset} = Range.walkBy(this.startNode, this.startOffset, numChars);
+    this.startNode = node;
+    this.startOffset = offset;
+    return this;
+  }
+
+  moveEnd(numChars: number): Range {
+    const { node, offset} = Range.walkBy(this.endNode, this.endOffset, numChars);
+    this.endNode = node;
+    this.endOffset = offset;
+    return this;
+  }
+
+  private static walkBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
+    return numChars < 0 ? Range.walkBackwardsBy(node, startOffset, numChars) : Range.walkForwardsBy(node, startOffset, numChars);
+  }
+
+  private static walkBackwardsBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
+    if (numChars < 0) throw new Error(`numChars must be greater than 0. You gave ${numChars}`);
+    const text = node.text();
+    const length = text.length;
+    if (startOffset - numChars >= 0) return { node, offset: startOffset - numChars };
+    const prevText = node.prevTextLeaf();
+    return Range.walkBackwardsBy(prevText, prevText.text().length, numChars - length)
+  }
+
+  private static walkForwardsBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
+    if (numChars < 0) throw new Error(`numChars must be greater than 0. You gave ${numChars}`);
+    const text = node.text();
+    const length = text.length;
+    if (startOffset + numChars < text.length) return { node, offset: startOffset + numChars };
+    const nextText = node.nextTextLeaf();
+    return Range.walkBackwardsBy(nextText, 0, numChars - length)
   }
 
 }

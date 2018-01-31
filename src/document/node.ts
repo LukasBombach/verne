@@ -92,6 +92,23 @@ export default class Node {
     return this._children ? this._children.filter(condition) : [];
   }
 
+  comparePositionWith(that: Node): number {
+    const thisPath = this.getPath();
+    const thatPath = that.getPath();
+    const firstCommonParentIndex = thisPath.findIndex((node, index) => node === thatPath[index]);
+    const comparableNodes = thisPath[firstCommonParentIndex].children();
+    const thisComparableNode = thisPath[firstCommonParentIndex - 1];
+    const thatComparableNode = thatPath[firstCommonParentIndex - 1];
+    const thisIndex = comparableNodes.indexOf(thisComparableNode);
+    const thatIndex = comparableNodes.indexOf(thatComparableNode);
+    return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
+  }
+
+  getPath(): Node[] {
+    const parent = this.parent();
+    return parent ? [this, ...parent.getPath()] : [this];
+  }
+
   __dangerouslyMutateParent(parent: Node): Node {
     this._parent = parent;
     return this;

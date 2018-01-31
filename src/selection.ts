@@ -1,4 +1,5 @@
 import TextNode from "./document/text";
+import Node from "./document/node";
 
 export interface SelectionJson {
   anchorNode: TextNode;
@@ -12,6 +13,14 @@ interface WalkResult {
   offset: number;
 }
 
+export interface ContainedNodes {
+  firstNode: TextNode;
+  lastNode: TextNode;
+  firstOffset: number;
+  lastOffset: number;
+  containedNodes: Node[];
+}
+
 export default class Selection {
 
   public focusNode: TextNode;
@@ -19,11 +28,11 @@ export default class Selection {
   public focusOffset: number;
   public anchorOffset: number;
 
-  public static caret(node: TextNode, offset: number): Selection {
+  static caret(node: TextNode, offset: number): Selection {
     return new Selection(node, node, offset, offset);
   }
 
-  public static fromJson({ anchorNode, focusNode, anchorOffset, focusOffset }: SelectionJson) {
+  static fromJson({ anchorNode, focusNode, anchorOffset, focusOffset }: SelectionJson) {
     return new Selection(anchorNode, focusNode, anchorOffset, focusOffset);
   }
 
@@ -34,10 +43,9 @@ export default class Selection {
     this.anchorOffset = anchorOffset;
   }
 
-  public isCollapsed() {
+  isCollapsed() {
     return this.anchorNode === this.focusNode && this.anchorOffset === this.focusOffset;
   }
-
 
   moveFocus(numChars: number): Selection {
     const { node, offset} = Selection.walkBy(this.focusNode, this.focusOffset, numChars);
@@ -51,6 +59,16 @@ export default class Selection {
     this.anchorNode = node;
     this.anchorOffset = offset;
     return this;
+  }
+
+  getContainedNodes(): ContainedNodes {
+    const anchorNodePosition = this.anchorNode.comparePositionWith(this.focusNode);
+    const firstNode = anchorNodePosition === -1 ? this.anchorNode : this.focusNode;
+    const lastNode = anchorNodePosition === -1 ? this.focusNode : this.anchorNode;
+    const firstOffset = anchorNodePosition === -1 ? this.anchorOffset : this.focusOffset;
+    const lastOffset = anchorNodePosition === -1 ? this.focusOffset : this.anchorOffset;
+    const containedNodes = Node.nodesBetween(firstNode, lastNode);
+    return { firstNode, lastNode, firstOffset, lastOffset, containedNodes };
   }
 
   private static walkBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
@@ -72,15 +90,5 @@ export default class Selection {
     const nextText = node.nextTextLeaf();
     return Selection.walkBackwardsBy(nextText, 0, numChars - length);
   }
-
-  public toJson(): SelectionJson {
-    return {
-      anchorNode: this.anchorNode,
-      focusNode: this.focusNode,
-      anchorOffset: this.anchorOffset,
-      focusOffset: this.focusOffset,
-    }
-  }
-
 
 }

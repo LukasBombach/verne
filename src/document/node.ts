@@ -1,10 +1,12 @@
+import first from "rollup/dist/typings/utils/first";
+
 export default class Node {
 
   private static nextNodeId = 0;
 
   private _id: number;
   private _parent: Node;
-  private _children: Array<Node>;
+  private _children: Node[];
 
   constructor(parent: Node = null, children: Node[] = []) {
     this._id = ++Node.nextNodeId;
@@ -92,9 +94,14 @@ export default class Node {
     return this._children ? this._children.filter(condition) : [];
   }
 
+  path(): Node[] {
+    const parent = this.parent();
+    return parent ? [this, ...parent.path()] : [this];
+  }
+
   comparePositionWith(that: Node): number {
-    const thisPath = this.getPath();
-    const thatPath = that.getPath();
+    const thisPath = this.path();
+    const thatPath = that.path();
     const firstCommonParentIndex = thisPath.findIndex((node, index) => node === thatPath[index]);
     const comparableNodes = thisPath[firstCommonParentIndex].children();
     const thisComparableNode = thisPath[firstCommonParentIndex - 1];
@@ -102,11 +109,6 @@ export default class Node {
     const thisIndex = comparableNodes.indexOf(thisComparableNode);
     const thatIndex = comparableNodes.indexOf(thatComparableNode);
     return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
-  }
-
-  getPath(): Node[] {
-    const parent = this.parent();
-    return parent ? [this, ...parent.getPath()] : [this];
   }
 
   __dangerouslyMutateParent(parent: Node): Node {
@@ -117,6 +119,35 @@ export default class Node {
   __dangerouslyMutateChildren(children: Node[]): Node {
     this._children = children;
     return this;
+  }
+
+  static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
+    //const firstParent = firstNode.parent();
+    //const lastParent = lastNode.parent();
+    //if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node !== lastNode);
+    // const node = firstNode;
+
+
+    const firstSiblings = firstNode.nextSiblings();
+    const lastSiblings = lastNode.prevSiblings();
+    const firstPath = firstNode.path();
+    const lastPath = lastNode.path();
+
+
+    const commonParent = firstPath.find((node, index) => node === lastPath[index]);
+
+    const firstCommonParentIndex = firstPath.findIndex((node, index) => node === lastPath[index]);
+    const comparableNodes = firstPath[firstCommonParentIndex].children();
+    const thisComparableNode = firstPath[firstCommonParentIndex - 1];
+    const thatComparableNode = lastPath[firstCommonParentIndex - 1];
+
+    const x = firstNode.nextSiblingsUntil(node => node !== thisComparableNode);
+
+    const nodes: Node[] = [];
+    // while () {
+//
+    // }
+    return nodes;
   }
 
 }

@@ -19,6 +19,10 @@ export default class Text extends Node {
     return this._attrs;
   }
 
+  length(): number {
+    return this.text().length;
+  }
+
   insertString(offset: number, str: string): Text {
     const text = this.text().substr(0, offset) + str + this.text().substr(offset);
     const attrs = this.attrs().slice(0);
@@ -26,7 +30,9 @@ export default class Text extends Node {
   }
 
   removeString(startOffset: number, endOffset: number): Text {
-    const text = this.text().substr(0, startOffset)  + this.text().substr(endOffset);
+    const lowerOffset = Math.min(startOffset, endOffset);
+    const higherOffset = Math.max(startOffset, endOffset);
+    const text = this.text().substr(0, lowerOffset)  + this.text().substr(higherOffset);
     const attrs = this.attrs().slice(0);
     return new Text(text, attrs, this.parent());
   }

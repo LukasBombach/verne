@@ -1,10 +1,5 @@
 import Node from "./node";
 
-interface WalkResult {
-  node: Text;
-  offset: number;
-}
-
 export default class Text extends Node {
 
   private _text: string;

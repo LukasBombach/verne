@@ -3,9 +3,9 @@ import Block from "../block";
 import {DeleteSelectionAction} from "../../actions/input";
 import Selection from "../../selection";
 
-export default function (doc: Doc, { selection }: DeleteSelectionAction): TransformationResult {
+export default function (doc: Doc, action: DeleteSelectionAction): TransformationResult {
 
-  const { focusNode, anchorNode, focusOffset, anchorOffset } = selection;
+  const { focusNode, anchorNode, focusOffset, anchorOffset } = action.selection;
 
   if (focusNode === anchorNode) {
     const lowerOffset = Math.min(focusOffset, anchorOffset);
@@ -17,5 +17,8 @@ export default function (doc: Doc, { selection }: DeleteSelectionAction): Transf
     const newSelection = Selection.caret(newTextNode, lowerOffset);
     return { doc: newDoc, selection: newSelection };
   }
+
+  console.warn('Did not handle DeleteSelectionAction in delete_selection transformation', action);
+  return { doc, selection: action.selection };
 
 }

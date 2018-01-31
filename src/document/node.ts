@@ -92,6 +92,36 @@ export default class Node {
     return this._children ? this._children.filter(condition) : [];
   }
 
+  // contains(that: Node): boolean {
+  //   if (this === that) return true;
+  //   if (this.children().indexOf(that) !== -1) return true;
+  //   this.children().reduce((pre, cur) => pre || cur.contains(that), false);
+  // }
+
+  // precedes(that: Node): boolean {
+  //   if (this.parent() === that.parent()) return this.index() <= that.index();
+  //   if (this.prevSiblings().reduceRight((pre, cur) => pre || cur === that, false)) return true;
+  //   // parent prev?
+  // }
+
+  // precedes(that: Node): boolean {
+  //   if (this.parent() === that.parent()) return this.index() <= that.index();
+  //   return this.prevSiblings().reduceRight((pre, cur) => pre || cur === that, false);
+  // }
+
+  // precedes2(that: Node): Node {
+  //   const lastLeafInPrev = this.prevSiblings().reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
+  //   if (lastLeafInPrev) return lastLeafInPrev;
+  //   const parentWithPrev = this.parent(parent => !!parent && !!parent.prev());
+  //   if (parentWithPrev) return parentWithPrev.prevLeaf(condition);
+  //   return null;
+  // }
+
+  // succeeds(that: Node): boolean {
+  //   if (this.parent() === that.parent()) return this.index() > that.index();
+  //   return this.nextSiblings().reduce((pre, cur) => pre || cur === that, false);
+  // }
+
   __dangerouslyMutateParent(parent: Node): Node {
     this._parent = parent;
     return this;

@@ -28,8 +28,9 @@ export default () => (next: Function) => (action: InputAction) => {
   }
 
   if (str === 'Delete') {
-    console.warn('This should handle Delete input');
-    return;
+    if (selection.isCollapsed()) selection.moveFocus(1);
+    const deleteSelectionAction: DeleteSelectionAction = { type: 'delete_selection', selection };
+    return next(deleteSelectionAction);
   }
 
   const insertTextAction: InsertTextAction = { type: 'insert_text', selection, str };

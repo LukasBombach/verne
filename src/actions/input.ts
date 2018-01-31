@@ -1,9 +1,8 @@
 import Selection from "../selection";
-import Range from "../range";
 
 export const TYPE_INPUT = 'input';
 export const TYPE_INSERT_TEXT = 'insert_text';
-export const DELETE_RANGE = 'delete_range';
+export const DELETE_SELECTION = 'delete_selection';
 
 export interface InputAction {
   type: 'input';
@@ -17,7 +16,7 @@ export interface InsertTextAction {
   str: string
 }
 
-export interface DeleteRangeAction {
-  type: 'delete_range';
-  range: Range;
+export interface DeleteSelectionAction {
+  type: 'delete_selection';
+  selection: Selection;
 }

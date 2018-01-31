@@ -3,8 +3,8 @@ import { default as LibNode } from "./node";
 import BlockNode from "./block";
 import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
-import deleteRangeTransformation from './transformations/delete_range';
-import {DELETE_RANGE, TYPE_INSERT_TEXT} from "../actions/input";
+import deleteSelectionTransformation from './transformations/delete_selection';
+import {DELETE_SELECTION, TYPE_INSERT_TEXT} from "../actions/input";
 
 export interface TransformationResult {
   doc: Doc;
@@ -26,7 +26,7 @@ export default class Doc extends LibNode {
 
   public async transform(action: any): Promise<TransformationResult> {
     if (action.type === TYPE_INSERT_TEXT) return await insertTextTransformation(this, action);
-    if (action.type === DELETE_RANGE) return await deleteRangeTransformation(this, action);
+    if (action.type === DELETE_SELECTION) return await deleteSelectionTransformation(this, action);
     console.warn(`Could not find transformation for action "${action.type}"`, action);
     return { doc: this, selection: null };
   }

@@ -128,24 +128,17 @@ export default class Node {
 
   static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
 
-
-    // if (firstNode === lastNode) return [];
-
     const firstParent = firstNode.parent();
     const lastParent = lastNode.parent();
 
-
     if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node !== lastNode);
-
 
     const firstPath = firstNode.path();
     const lastPath = lastNode.path();
 
-
     const firstCommonParentIndex = firstPath.findIndex((node, index) => node === lastPath[index]);
     const firstComparableNode = firstPath[firstCommonParentIndex - 1];
     const lastComparableNode = lastPath[firstCommonParentIndex - 1];
-
 
     const firstParentSiblings = firstPath
       .slice(0, firstCommonParentIndex - 1)
@@ -157,36 +150,10 @@ export default class Node {
       .map(parent => parent.prevSiblings())
       .reduce((acc, cur) => [...cur, ...acc], []);
 
-
     const nodesBetweenParents = firstComparableNode.nextSiblingsUntil(node => node === lastComparableNode);
 
     return [...firstParentSiblings, ...nodesBetweenParents, ...lastParentSiblings];
 
-    //const firstParent = firstNode.parent();
-    //const lastParent = lastNode.parent();
-    //if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node !== lastNode);
-    // const node = firstNode;
-
-
-    /*const firstSiblings = firstNode.nextSiblings();
-    const lastSiblings = lastNode.prevSiblings();
-    const firstPath = firstNode.path();
-    const lastPath = lastNode.path();
-
-
-    const commonParent = firstPath.find((node, index) => node === lastPath[index]);
-
-    const firstCommonParentIndex = firstPath.findIndex((node, index) => node === lastPath[index]);
-    const comparableNodes = firstPath[firstCommonParentIndex].children();
-    const thisComparableNode = firstPath[firstCommonParentIndex - 1];
-    const thatComparableNode = lastPath[firstCommonParentIndex - 1];
-
-    const x = firstNode.nextSiblingsUntil(node => node !== thisComparableNode);*/
-
-    // const nodes: Node[] = [];
-    // while () {
-    // }
-    // return nodes;
   }
 
 }

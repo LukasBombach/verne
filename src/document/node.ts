@@ -144,19 +144,23 @@ export default class Node {
 
     const firstCommonParentIndex = firstPath.findIndex((node, index) => node === lastPath[index]);
     const firstComparableNode = firstPath[firstCommonParentIndex - 1];
+    const lastComparableNode = lastPath[firstCommonParentIndex - 1];
 
 
-    const parentSiblings = firstPath
+    const firstParentSiblings = firstPath
       .slice(0, firstCommonParentIndex - 1)
       .map(parent => parent.nextSiblings())
       .reduce((acc, cur) => [...acc, ...cur], []);
 
+    const lastParentSiblings = lastPath
+      .slice(0, firstCommonParentIndex - 1)
+      .map(parent => parent.prevSiblings())
+      .reduce((acc, cur) => [...cur, ...acc], []);
 
-    const nodesBetweenParents = firstComparableNode.nextSiblingsUntil(node => node !== lastNode);
 
-    debugger;
+    const nodesBetweenParents = firstComparableNode.nextSiblingsUntil(node => node === lastComparableNode);
 
-    return [...parentSiblings, ...nodesBetweenParents];
+    return [...firstParentSiblings, ...nodesBetweenParents, ...lastParentSiblings];
 
     //const firstParent = firstNode.parent();
     //const lastParent = lastNode.parent();

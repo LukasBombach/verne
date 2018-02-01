@@ -63,10 +63,10 @@ export default class Selection {
 
   getContainedNodes(): ContainedNodes {
     const anchorNodePosition = this.anchorNode.comparePositionWith(this.focusNode);
-    const firstNode = anchorNodePosition === -1 ? this.anchorNode : this.focusNode;
-    const lastNode = anchorNodePosition === -1 ? this.focusNode : this.anchorNode;
-    const firstOffset = anchorNodePosition === -1 ? this.anchorOffset : this.focusOffset;
-    const lastOffset = anchorNodePosition === -1 ? this.focusOffset : this.anchorOffset;
+    const firstNode = anchorNodePosition <= 0 ? this.anchorNode : this.focusNode;
+    const lastNode = anchorNodePosition <= 0 ? this.focusNode : this.anchorNode;
+    const firstOffset = anchorNodePosition <= 0 ? this.anchorOffset : this.focusOffset;
+    const lastOffset = anchorNodePosition <= 0 ? this.focusOffset : this.anchorOffset;
     const containedNodes = Node.nodesBetween(firstNode, lastNode);
     return { firstNode, lastNode, firstOffset, lastOffset, containedNodes };
   }

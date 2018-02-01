@@ -131,7 +131,7 @@ export default class Node {
     const firstParent = firstNode.parent();
     const lastParent = lastNode.parent();
 
-    if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node !== lastNode);
+    if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node === lastNode);
 
     const firstPath = firstNode.path();
     const lastPath = lastNode.path();

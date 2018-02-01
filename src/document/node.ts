@@ -90,6 +90,11 @@ export default class Node {
     return this.siblings(condition).slice(this.index() + 1);
   }
 
+  nextSiblingsUntil(condition = (node: Node) => false): Node[] {
+    const nextSiblings = this.nextSiblings();
+    return nextSiblings.slice(0, nextSiblings.findIndex(condition));
+  }
+
   children(condition = (node: Node) => true): Node[] {
     return this._children ? this._children.filter(condition) : [];
   }
@@ -149,6 +154,7 @@ export default class Node {
 
     const nodesBetweenParents = firstComparableNode.nextSiblingsUntil(node => node !== lastNode);
 
+    debugger;
 
     return [...parentSiblings, ...nodesBetweenParents];
 

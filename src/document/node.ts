@@ -122,13 +122,43 @@ export default class Node {
   }
 
   static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
+
+
+    // if (firstNode === lastNode) return [];
+
+    const firstParent = firstNode.parent();
+    const lastParent = lastNode.parent();
+
+
+    if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node !== lastNode);
+
+
+    const firstPath = firstNode.path();
+    const lastPath = lastNode.path();
+
+
+    const firstCommonParentIndex = firstPath.findIndex((node, index) => node === lastPath[index]);
+    const firstComparableNode = firstPath[firstCommonParentIndex - 1];
+
+
+    const parentSiblings = firstPath
+      .slice(0, firstCommonParentIndex - 1)
+      .map(parent => parent.nextSiblings())
+      .reduce((acc, cur) => [...acc, ...cur], []);
+
+
+    const nodesBetweenParents = firstComparableNode.nextSiblingsUntil(node => node !== lastNode);
+
+
+    return [...parentSiblings, ...nodesBetweenParents];
+
     //const firstParent = firstNode.parent();
     //const lastParent = lastNode.parent();
     //if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node !== lastNode);
     // const node = firstNode;
 
 
-    const firstSiblings = firstNode.nextSiblings();
+    /*const firstSiblings = firstNode.nextSiblings();
     const lastSiblings = lastNode.prevSiblings();
     const firstPath = firstNode.path();
     const lastPath = lastNode.path();
@@ -141,13 +171,12 @@ export default class Node {
     const thisComparableNode = firstPath[firstCommonParentIndex - 1];
     const thatComparableNode = lastPath[firstCommonParentIndex - 1];
 
-    const x = firstNode.nextSiblingsUntil(node => node !== thisComparableNode);
+    const x = firstNode.nextSiblingsUntil(node => node !== thisComparableNode);*/
 
-    const nodes: Node[] = [];
+    // const nodes: Node[] = [];
     // while () {
-//
     // }
-    return nodes;
+    // return nodes;
   }
 
 }

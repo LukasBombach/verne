@@ -5,8 +5,8 @@ export default class Text extends Node {
   private _text: string;
   private _attrs: string[];
 
-  constructor(text: string = '', attrs: string[] = [], parent: Node) {
-    super(parent, null);
+  constructor(text: string = '', attrs: string[] = [], parent: Node, originId?: number) {
+    super(parent, null, originId);
     this._text = text;
     this._attrs = attrs;
   }
@@ -26,7 +26,7 @@ export default class Text extends Node {
   insertString(offset: number, str: string): Text {
     const text = this.text().substr(0, offset) + str + this.text().substr(offset);
     const attrs = this.attrs().slice(0);
-    return new Text(text, attrs, this.parent());
+    return new Text(text, attrs, this.parent(), this.originId());
   }
 
   removeString(startOffset: number, endOffset: number): Text {
@@ -34,7 +34,7 @@ export default class Text extends Node {
     const higherOffset = Math.max(startOffset, endOffset);
     const text = this.text().substr(0, lowerOffset)  + this.text().substr(higherOffset);
     const attrs = this.attrs().slice(0);
-    return new Text(text, attrs, this.parent());
+    return new Text(text, attrs, this.parent(), this.originId());
   }
 
   prevTextLeaf(): Text {

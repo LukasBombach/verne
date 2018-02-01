@@ -16,8 +16,8 @@ export default class Block extends React.Component<BlockProps, undefined> {
   }
 
   renderChild(node: Node): JSX.Element {
-    if (node instanceof BlockNode) return <Block key={node.id()} node={node} />;
-    if (node instanceof TextNode) return <Inline key={node.id()} node={node} />;
+    if (node instanceof BlockNode) return <Block key={node.originId()} node={node} />;
+    if (node instanceof TextNode) return <Inline key={node.originId()} node={node} />;
     console.warn('Could not find React Component to render node', node);
     return null;
   }
@@ -25,7 +25,7 @@ export default class Block extends React.Component<BlockProps, undefined> {
   render() {
     const { node } = this.props;
     const BlockTag = node.tagName();
-    if (debug.log.nodeRendering) console.info('Rendering Block ', node.id());
+    if (debug.log.nodeRendering) console.info('Rendering Block ', node.originId(), node.id());
     return (
       <BlockTag>
         {node.children().map(child => this.renderChild(child))}

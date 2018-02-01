@@ -10,6 +10,8 @@ interface TextProps {
 
 export default class Text extends React.Component<TextProps, undefined> {
 
+  private domNode: Node = null;
+
   componentDidMount() {
       NodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
   }
@@ -22,8 +24,13 @@ export default class Text extends React.Component<TextProps, undefined> {
     NodeMap.delete(ReactDOM.findDOMNode(this));
   }
 
+  componentDidUpdate() {
+    NodeMap.delete(this.domNode);
+    NodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
+  }
+
   render() {
-    if (debug.log.nodeRendering) console.info('Rendering Text  ', this.props.node.id());
+    if (debug.log.nodeRendering) console.info('Rendering Text  ', this.props.node.originId(), this.props.node.id());
     return this.props.node.text();
   }
 

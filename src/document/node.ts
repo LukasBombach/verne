@@ -1,21 +1,25 @@
-import first from "rollup/dist/typings/utils/first";
-
 export default class Node {
 
   private static nextNodeId = 0;
 
   private _id: number;
+  private _originId: number;
   private _parent: Node;
   private _children: Node[];
 
-  constructor(parent: Node = null, children: Node[] = []) {
+  constructor(parent: Node = null, children: Node[] = [], originId: number = null) {
     this._id = ++Node.nextNodeId;
+    this._originId = originId || this._id;
     this._parent = parent;
     this._children = children;
   }
 
   id(): number {
     return this._id;
+  }
+
+  originId(): number {
+    return this._originId;
   }
 
   index(): number {

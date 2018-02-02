@@ -153,11 +153,11 @@ export default class Node {
 
   }
 
-  private static closestParents(a: Node, b: Node): [Node, Node, Node] {
+  private static closestParents(a: Node, b: Node): [Node, Node] {
     const aPath = a.path();
     const bPath = b.path();
     const index = aPath.findIndex((node, index) => node === bPath[index]);
-    return [aPath[index - 1], bPath[index - 1], aPath[index]];
+    return [aPath[index - 1], bPath[index - 1]];
   }
 
 }

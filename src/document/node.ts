@@ -108,7 +108,13 @@ export default class Node {
     return parent ? [this, ...parent.path()] : [this];
   }
 
+  pathUntil(condition = (node: Node) => true): Node[] {
+    const parent = this.parent(condition);
+    return parent ? [this, ...parent.path()] : [this];
+  }
+
   comparePositionWith(that: Node): number {
+    if (this === that) return 0;
     const [thisIndex, thatIndex] = Node.closestParents(this, that).map(node => node.index());
     return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
   }
@@ -124,40 +130,25 @@ export default class Node {
   }
 
   static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
-
-    const firstParent = firstNode.parent();
-    const lastParent = lastNode.parent();
-
-    if (firstParent === lastParent) return firstNode.nextSiblingsUntil(node => node === lastNode);
-
-    const firstPath = firstNode.path();
-    const lastPath = lastNode.path();
-
-    const firstCommonParentIndex = firstPath.findIndex((node, index) => node === lastPath[index]);
-    const firstComparableNode = firstPath[firstCommonParentIndex - 1];
-    const lastComparableNode = lastPath[firstCommonParentIndex - 1];
-
-    const firstParentSiblings = firstPath
-      .slice(0, firstCommonParentIndex - 1)
+    if (firstNode.parent() === lastNode.parent()) return firstNode.nextSiblingsUntil(node => node === lastNode);
+    const [firstParent, lastParent] = Node.closestParents(firstNode, lastNode);
+    const firstParentSiblings = firstNode
+      .pathUntil(node => node === lastParent)
       .map(parent => parent.nextSiblings())
       .reduce((acc, cur) => [...acc, ...cur], []);
-
-    const lastParentSiblings = lastPath
-      .slice(0, firstCommonParentIndex - 1)
+    const lastParentSiblings = lastNode
+      .pathUntil(node => node === firstParent)
       .map(parent => parent.prevSiblings())
       .reduce((acc, cur) => [...cur, ...acc], []);
-
-    const nodesBetweenParents = firstComparableNode.nextSiblingsUntil(node => node === lastComparableNode);
-
+    const nodesBetweenParents = firstParent.nextSiblingsUntil(node => node === lastParent);
     return [...firstParentSiblings, ...nodesBetweenParents, ...lastParentSiblings];
-
   }
 
   private static closestParents(a: Node, b: Node): [Node, Node] {
-    const aPath = a.path();
-    const bPath = b.path();
-    const index = aPath.findIndex((node, index) => node === bPath[index]);
-    return [aPath[index - 1], bPath[index - 1]];
+    const pathA = a.path();
+    const pathB = b.path();
+    const index = pathA.findIndex((node, index) => node === pathB[index]);
+    return [pathA[index - 1], pathB[index - 1]];
   }
 
 }

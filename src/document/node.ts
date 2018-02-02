@@ -109,14 +109,7 @@ export default class Node {
   }
 
   comparePositionWith(that: Node): number {
-    const thisPath = this.path();
-    const thatPath = that.path();
-    const firstCommonParentIndex = thisPath.findIndex((node, index) => node === thatPath[index]);
-    const comparableNodes = thisPath[firstCommonParentIndex].children();
-    const thisComparableNode = thisPath[firstCommonParentIndex - 1];
-    const thatComparableNode = thatPath[firstCommonParentIndex - 1];
-    const thisIndex = comparableNodes.indexOf(thisComparableNode);
-    const thatIndex = comparableNodes.indexOf(thatComparableNode);
+    const [thisIndex, thatIndex] = Node.closestParents(this, that).map(node => node.index());
     return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
   }
 
@@ -158,6 +151,13 @@ export default class Node {
 
     return [...firstParentSiblings, ...nodesBetweenParents, ...lastParentSiblings];
 
+  }
+
+  private static closestParents(a: Node, b: Node): [Node, Node, Node] {
+    const aPath = a.path();
+    const bPath = b.path();
+    const index = aPath.findIndex((node, index) => node === bPath[index]);
+    return [aPath[index - 1], bPath[index - 1], aPath[index]];
   }
 
 }

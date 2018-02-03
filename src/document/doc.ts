@@ -13,7 +13,7 @@ export interface TransformationResult {
 
 export default class Doc extends LibNode {
 
-  public static fromElement(el: Node): Doc {
+  static fromElement(el: Node): Doc {
     const nodes = DomParser.getChildrenFor(el);
     const doc = new Doc(nodes);
     doc.children().forEach(child => child.__dangerouslyMutateParent(doc));
@@ -24,21 +24,21 @@ export default class Doc extends LibNode {
     super(null, children)
   }
 
-  public async transform(action: any): Promise<TransformationResult> {
+  async transform(action: any): Promise<TransformationResult> {
     if (action.type === TYPE_INSERT_TEXT) return await insertTextTransformation(this, action);
     if (action.type === DELETE_SELECTION) return await deleteSelectionTransformation(this, action);
     console.warn(`Could not find transformation for action "${action.type}"`, action);
     return { doc: this, selection: null };
   }
 
-  public replaceBlock(oldBlockNode: BlockNode, newBlockNode: BlockNode): Doc {
+  replaceBlock(oldBlockNode: BlockNode, newBlockNode: BlockNode): Doc {
     const children = this.children().slice(0);
     const index = children.indexOf(oldBlockNode);
     children[index] = newBlockNode;
     return new Doc(children);
   }
 
-  public replaceBlocks(oldBlocks: BlockNode[], newBlocks: BlockNode[]): Doc {
+  replaceBlocks(oldBlocks: BlockNode[], newBlocks: BlockNode[]): Doc {
     const children = this.children().slice(0);
     oldBlocks.forEach((oldBlock, index) => children[children.indexOf(oldBlock)] = newBlocks[index]);
     return new Doc(children);

@@ -22,10 +22,8 @@ export default class Block extends Node {
     return new Block(this.tagName(), this.parent(), children, this.originId());
   }
 
-  deleteChild(node: Node): Block {
-    const children = this.children().slice(0);
-    const index = children.indexOf(node);
-    children.splice(index, 1);
+  deleteChildren(childrenToRemove: Node[]): Block {
+    const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
     return new Block(this.tagName(), this.parent(), children, this.originId());
   }
 

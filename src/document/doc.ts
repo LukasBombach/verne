@@ -16,7 +16,7 @@ export default class Doc extends LibNode {
   public static fromElement(el: Node): Doc {
     const nodes = DomParser.getChildrenFor(el);
     const doc = new Doc(nodes);
-    doc.children().forEach(child => child.__dangerouslyMutateParent(doc)); // todo this sucks
+    doc.children().forEach(child => child.__dangerouslyMutateParent(doc));
     return doc;
   }
 
@@ -31,11 +31,17 @@ export default class Doc extends LibNode {
     return { doc: this, selection: null };
   }
 
-  public replaceBlock(oldBlockNode: BlockNode, newBlockNode: BlockNode) {
-    const nodes = this.children().slice(0);
-    const index = nodes.indexOf(oldBlockNode);
-    nodes[index] = newBlockNode;
-    return new Doc(nodes);
+  public replaceBlock(oldBlockNode: BlockNode, newBlockNode: BlockNode): Doc {
+    const children = this.children().slice(0);
+    const index = children.indexOf(oldBlockNode);
+    children[index] = newBlockNode;
+    return new Doc(children);
+  }
+
+  public replaceBlocks(oldBlocks: BlockNode[], newBlocks: BlockNode[]): Doc {
+    const children = this.children().slice(0);
+    oldBlocks.forEach((oldBlock, index) => children[children.indexOf(oldBlock)] = newBlocks[index]);
+    return new Doc(children);
   }
 
 }

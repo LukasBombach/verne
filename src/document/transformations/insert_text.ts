@@ -7,7 +7,7 @@ export default function (doc: Doc, action: InsertTextAction): TransformationResu
   const { selection: { focusNode: node, focusOffset: offset }, str} = action;
   const oldBlockNode = node.parent() as Block;
   const newTextNode = node.insertString(offset, str);
-  const newBlockNode = oldBlockNode.replaceText(node, newTextNode);
+  const newBlockNode = oldBlockNode.replaceChild(node, newTextNode);
   const newDoc = doc.replaceBlock(oldBlockNode, newBlockNode);
   const newOffset = offset + 1;
   const newSelection = Selection.caret(newTextNode, newOffset);

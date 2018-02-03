@@ -4,11 +4,6 @@ import Block from "../block";
 import { DeleteSelectionAction } from "../../actions/input";
 import Selection from "../../selection";
 
-/*interface DeletionTuple {
-  parent: Node;
-  children: Node[];
-}*/
-
 export default function (doc: Doc, action: DeleteSelectionAction): TransformationResult {
 
   const { focusNode, anchorNode, focusOffset, anchorOffset, firstNode, firstOffset } = action.selection;
@@ -23,19 +18,6 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
     const newSelection = Selection.caret(newTextNode, lowerOffset);
     return { doc: newDoc, selection: newSelection };
   }
-
-  // const { firstNode, lastNode } = action.selection;
-  // const nodesToDelete = Node.nodesBetween(firstNode, lastNode);
-  // const oldBlocks = nodesToDelete.map(node => (node.parent() as Block));
-  // const newBlocks = nodesToDelete.map(node => (node.parent() as Block).deleteChild(node));
-  // const newDoc = doc.replaceBlocks(oldBlocks, newBlocks);
-  // return { doc: newDoc, selection: action.selection };
-
-  // const nodesToDelete = getNodesToDelete(action.selection);
-  // const oldBlocks = Array.from(nodesToDelete.keys());
-  // const newBlocks = nodesToDelete.map(node => (node.parent() as Block).deleteChild(node));
-  // const newDoc = doc.replaceBlocks(oldBlocks, newBlocks);
-  // return { doc: newDoc, selection: action.selection };
 
   const [oldBlocks, newBlocks] = Array.from(getNodesToDelete(action.selection).entries())
     .map(([parent, children]) => [(parent as Block), (parent as Block).deleteChildren(children)])

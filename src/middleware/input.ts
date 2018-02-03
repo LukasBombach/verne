@@ -22,14 +22,14 @@ export default () => (next: Function) => (action: InputAction) => {
   }
 
   if (str === 'Backspace') {
-    if (selection.isCollapsed) selection.moveFocus(-1);
-    const deleteSelectionAction: DeleteSelectionAction = { type: 'delete_selection', selection };
+    const newSelection = selection.isCollapsed ? selection.moveFocus(-1) : selection;
+    const deleteSelectionAction: DeleteSelectionAction = { type: 'delete_selection', selection: newSelection };
     return next(deleteSelectionAction);
   }
 
   if (str === 'Delete') {
-    if (selection.isCollapsed) selection.moveFocus(1);
-    const deleteSelectionAction: DeleteSelectionAction = { type: 'delete_selection', selection };
+    const newSelection = selection.isCollapsed ? selection.moveFocus(1) : selection;
+    const deleteSelectionAction: DeleteSelectionAction = { type: 'delete_selection', selection: newSelection };
     return next(deleteSelectionAction);
   }
 

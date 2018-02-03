@@ -29,6 +29,7 @@ export default class Selection {
     return new Selection(anchorNode, focusNode, anchorOffset, focusOffset);
   }
 
+  // todo the getter properties in these class are inconsistent with the getter functions in the Node class
   constructor(anchorNode: TextNode, focusNode: TextNode, anchorOffset: number, focusOffset: number) {
     this._focusNode = focusNode;
     this._anchorNode = anchorNode;
@@ -72,24 +73,20 @@ export default class Selection {
     return this._anchorNode === this._focusNode && this._anchorOffset === this._focusOffset;
   }
 
+  get containedNodes(): Node[] {
+    const firstNode = this.firstNode;
+    const lastNode = this.lastNode;
+    return [firstNode, ...Node.nodesBetween(firstNode, lastNode), lastNode];
+  }
+
   moveFocus(numChars: number): Selection {
     const { node, offset} = Selection.walkBy(this._focusNode, this._focusOffset, numChars);
-    this._focusNode = node;
-    this._focusOffset = offset;
-    return this;
+    return new Selection(this.anchorNode, node, this.anchorOffset, offset);
   }
 
   moveAnchor(numChars: number): Selection {
     const { node, offset} = Selection.walkBy(this._anchorNode, this._anchorOffset, numChars);
-    this._anchorNode = node;
-    this._anchorOffset = offset;
-    return this;
-  }
-
-  getContainedNodes(): Node[] {
-    const firstNode = this.firstNode;
-    const lastNode = this.lastNode;
-    return [firstNode, ...Node.nodesBetween(firstNode, lastNode), lastNode];
+    return new Selection(node, this.focusNode, offset, this.focusOffset);
   }
 
   private static walkBy(node: TextNode, startOffset: number, numChars: number): WalkResult {

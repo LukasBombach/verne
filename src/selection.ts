@@ -13,20 +13,13 @@ interface WalkResult {
   offset: number;
 }
 
-export interface ContainedNodes {
-  firstNode: TextNode;
-  lastNode: TextNode;
-  firstOffset: number;
-  lastOffset: number;
-  containedNodes: Node[];
-}
-
 export default class Selection {
 
-  public focusNode: TextNode;
-  public anchorNode: TextNode;
-  public focusOffset: number;
-  public anchorOffset: number;
+  private _anchorNode: TextNode;
+  private _focusNode: TextNode;
+  private _anchorOffset: number;
+  private _focusOffset: number;
+  private _nodeOrder: number;
 
   static caret(node: TextNode, offset: number): Selection {
     return new Selection(node, node, offset, offset);
@@ -37,38 +30,66 @@ export default class Selection {
   }
 
   constructor(anchorNode: TextNode, focusNode: TextNode, anchorOffset: number, focusOffset: number) {
-    this.focusNode = focusNode;
-    this.anchorNode = anchorNode;
-    this.focusOffset = focusOffset;
-    this.anchorOffset = anchorOffset;
+    this._focusNode = focusNode;
+    this._anchorNode = anchorNode;
+    this._focusOffset = focusOffset;
+    this._anchorOffset = anchorOffset;
   }
 
-  isCollapsed() {
-    return this.anchorNode === this.focusNode && this.anchorOffset === this.focusOffset;
+  get anchorNode(): TextNode {
+    return this._anchorNode;
+  }
+
+  get focusNode(): TextNode {
+    return this._focusNode;
+  }
+
+  get anchorOffset(): number {
+    return this._anchorOffset;
+  }
+
+  get focusOffset(): number {
+    return this._focusOffset;
+  }
+
+  get firstNode(): TextNode {
+    return this.nodeOrder() <= 0 ? this._anchorNode : this._focusNode;
+  }
+
+  get lastNode(): TextNode {
+    return this.nodeOrder() <= 0 ? this._focusNode : this._anchorNode;
+  }
+
+  get firstOffset(): number {
+    return this.nodeOrder() <= 0 ? this._anchorOffset : this._focusOffset;
+  }
+
+  get lastOffset(): number {
+    return this.nodeOrder() <= 0 ? this._focusOffset : this._anchorOffset;
+  }
+
+  get isCollapsed() {
+    return this._anchorNode === this._focusNode && this._anchorOffset === this._focusOffset;
   }
 
   moveFocus(numChars: number): Selection {
-    const { node, offset} = Selection.walkBy(this.focusNode, this.focusOffset, numChars);
-    this.focusNode = node;
-    this.focusOffset = offset;
+    const { node, offset} = Selection.walkBy(this._focusNode, this._focusOffset, numChars);
+    this._focusNode = node;
+    this._focusOffset = offset;
     return this;
   }
 
   moveAnchor(numChars: number): Selection {
-    const { node, offset} = Selection.walkBy(this.anchorNode, this.anchorOffset, numChars);
-    this.anchorNode = node;
-    this.anchorOffset = offset;
+    const { node, offset} = Selection.walkBy(this._anchorNode, this._anchorOffset, numChars);
+    this._anchorNode = node;
+    this._anchorOffset = offset;
     return this;
   }
 
-  getContainedNodes(): ContainedNodes {
-    const anchorNodePosition = this.anchorNode.comparePositionWith(this.focusNode);
-    const firstNode = anchorNodePosition <= 0 ? this.anchorNode : this.focusNode;
-    const lastNode = anchorNodePosition <= 0 ? this.focusNode : this.anchorNode;
-    const firstOffset = anchorNodePosition <= 0 ? this.anchorOffset : this.focusOffset;
-    const lastOffset = anchorNodePosition <= 0 ? this.focusOffset : this.anchorOffset;
-    const containedNodes = Node.nodesBetween(firstNode, lastNode);
-    return { firstNode, lastNode, firstOffset, lastOffset, containedNodes };
+  getContainedNodes(): Node[] {
+    const firstNode = this.firstNode;
+    const lastNode = this.lastNode;
+    return [firstNode, ...Node.nodesBetween(firstNode, lastNode), lastNode];
   }
 
   private static walkBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
@@ -89,6 +110,11 @@ export default class Selection {
     if (startOffset + numChars < text.length) return { node, offset: startOffset + numChars };
     const nextText = node.nextTextLeaf();
     return Selection.walkBackwardsBy(nextText, 0, numChars - length);
+  }
+
+  private nodeOrder() {
+    if (this._nodeOrder === undefined) this._nodeOrder = this._anchorNode.comparePositionWith(this._focusNode);
+    return this._nodeOrder;
   }
 
 }

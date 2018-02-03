@@ -6,27 +6,39 @@ import Selection from "../../selection";
 
 export default function (doc: Doc, action: DeleteSelectionAction): TransformationResult {
 
-  const { focusNode, anchorNode, focusOffset, anchorOffset, firstNode, firstOffset } = action.selection;
+  const { firstNode, lastNode, firstOffset, lastOffset } = action.selection;
 
-  if (focusNode === anchorNode) {
-    const lowerOffset = Math.min(focusOffset, anchorOffset);
-    const higherOffset = Math.max(focusOffset, anchorOffset);
-    const oldBlockNode = focusNode.parent() as Block;
-    const newTextNode = focusNode.removeString(lowerOffset, higherOffset);
-    const newBlockNode = oldBlockNode.replaceChild(focusNode, newTextNode);
+  if (firstNode === lastNode) {
+    const oldBlockNode = firstNode.parent() as Block;
+    const newTextNode = firstNode.removeString(firstOffset, lastOffset);
+    const newBlockNode = oldBlockNode.replaceChild(firstNode, newTextNode);
     const newDoc = doc.replaceBlock(oldBlockNode, newBlockNode);
-    const newSelection = Selection.caret(newTextNode, lowerOffset);
+    const newSelection = Selection.caret(newTextNode, firstOffset);
     return { doc: newDoc, selection: newSelection };
   }
 
-  const [oldBlocks, newBlocks] = Array.from(getNodesToDelete(action.selection).entries())
+  const [oldBlocks, newBlocks] = deleteNodesContainedInSelection(action.selection);
+
+  // debugger;
+
+  // if (oldBlocks[0] === firstNode.parent()) {
+    const newFirstTextNode = firstNode.removeString(firstOffset);
+    newBlocks[0] = newBlocks[0].replaceChild(firstNode, newFirstTextNode);
+  // }
+
+  const newLastTextNode = lastNode.removeString(0, lastOffset);
+  newBlocks[newBlocks.length - 1] = newBlocks[newBlocks.length - 1].replaceChild(lastNode, newLastTextNode);
+
+  const docAfterDeletions = doc.replaceBlocks(oldBlocks, newBlocks);
+  const newSelection = Selection.caret(newFirstTextNode, firstOffset);
+  return { doc: docAfterDeletions, selection: newSelection };
+
+}
+
+function deleteNodesContainedInSelection(selection: Selection): [Block[], Block[]] {
+  return Array.from(getNodesToDelete(selection).entries())
     .map(([parent, children]) => [(parent as Block), (parent as Block).deleteChildren(children)])
-    .reduce((acc, [oldBlock, newBlock]) => [[...acc[0], oldBlock], [...acc[1], newBlock]], [[], []]);
-
-  const newDoc = doc.replaceBlocks(oldBlocks, newBlocks);
-  const newSelection = Selection.caret(firstNode, firstOffset);
-  return { doc: newDoc, selection: newSelection };
-
+    .reduce((acc, [oldBlock, newBlock]) => [[...acc[0], oldBlock], [...acc[1], newBlock]], [[], []]) as [Block[], Block[]];
 }
 
 function getNodesToDelete({ firstNode, lastNode }: Selection): Map<Node, Node[]> {

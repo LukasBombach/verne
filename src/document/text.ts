@@ -1,4 +1,5 @@
 import Node from "./node";
+import Block from "./block";
 
 export default class Text extends Node {
 
@@ -23,13 +24,17 @@ export default class Text extends Node {
     return this.text().length;
   }
 
+  setParent(newParent: Block): Text {
+    return new Text(this.text(), this.attrs(), newParent, this.originId());
+  }
+
   insertString(offset: number, str: string): Text {
     const text = this.text().substr(0, offset) + str + this.text().substr(offset);
     const attrs = this.attrs().slice(0);
     return new Text(text, attrs, this.parent(), this.originId());
   }
 
-  removeString(startOffset: number, endOffset: number): Text {
+  removeString(startOffset: number, endOffset: number = this.length()): Text {
     const lowerOffset = Math.min(startOffset, endOffset);
     const higherOffset = Math.max(startOffset, endOffset);
     const text = this.text().substr(0, lowerOffset)  + this.text().substr(higherOffset);

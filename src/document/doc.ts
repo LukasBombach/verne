@@ -39,5 +39,4 @@ export default class Doc extends LibNode {
     return new (Doc as any)(children, originId);
   }
 
-
 }

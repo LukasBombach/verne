@@ -1,5 +1,4 @@
 import Node from "./node";
-import TextNode from "./text";
 
 interface CloneProperties {
   tagName?: string;

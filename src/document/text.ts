@@ -58,5 +58,4 @@ export default class Text extends Node {
     return new (Text as any)(text, attrs, parent, originId);
   }
 
-
 }

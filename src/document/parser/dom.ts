@@ -24,7 +24,7 @@ export default class DomParser {
     del: 'del',
   };
 
-  static getChildrenFor(domNode: Node, attrs: string[] = [], parent: Block = null): Array<Block|Text> {
+  static getChildrenFor(domNode: Element, attrs: string[] = [], parent: Block = null): Array<Block|Text> {
     let nodeList: Array<Block|Text> = [];
     [].forEach.call(domNode.childNodes, (childNode: Element) => {
       if (DomParser.isBlockNode(childNode)) nodeList.push(DomParser.getBlockNode(childNode, attrs, parent));

@@ -1,12 +1,13 @@
 import DomParser from './parser/dom';
-import { default as LibNode } from "./node";
+import HtmlParser from './parser/html';
+import Node from "./node";
 import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
 import deleteSelectionTransformation from './transformations/delete_selection';
 import {DELETE_SELECTION, TYPE_INSERT_TEXT} from "../actions/input";
 
 interface CloneProperties {
-  children?: LibNode[];
+  children?: Node[];
   originId?: number;
 }
 
@@ -15,14 +16,19 @@ export interface TransformationResult {
   selection: Selection
 }
 
-export default class Doc extends LibNode {
+export default class Doc extends Node {
 
-  static fromElement(el: Node): Doc {
+  static fromHtml(html: string): Doc {
+    const nodes = HtmlParser.getChildrenFor(html);
+    return new Doc(nodes);
+  }
+
+  static fromElement(el: Element): Doc {
     const nodes = DomParser.getChildrenFor(el);
     return new Doc(nodes);
   }
 
-  constructor(children: LibNode[] = [], originId?: number) {
+  constructor(children: Node[] = [], originId?: number) {
     super(null, children, originId);
   }
 

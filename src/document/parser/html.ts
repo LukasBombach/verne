@@ -1,10 +1,13 @@
 import DomParser from './dom';
-import Doc from "../doc";
+import Block from "../block";
+import Text from "../text";
 
 export default class HtmlParser {
 
-  static getChildren(html: string): Doc {
-
+  static getChildrenFor(html: string): (Block|Text)[] {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    return DomParser.getChildrenFor(template.content);
   }
 
 }

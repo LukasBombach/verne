@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Editor from './io/react/';
 
-const html = document.getElementById('editable-area').innerHTML;
-const root = document.getElementById('render-area');
+const root = document.getElementById('editable-area');
+const html = root.innerHTML;
 
-document.getElementById('editable-area').remove();
+root.innerHTML = '';
 ReactDOM.render(<Editor html={html} />, root);

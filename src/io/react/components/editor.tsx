@@ -28,8 +28,6 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
   renderNode(node: Node): JSX.Element {
     if (node instanceof BlockNode) return <Block key={node.originId} node={node} />;
     if (node instanceof TextNode) return <Inline key={node.originId} node={node} />;
-    console.warn('Could not find React Component to render node', node);
-    return null;
   }
 
   render() {

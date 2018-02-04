@@ -1,3 +1,9 @@
+interface CloneProperties {
+  parent?: Node;
+  children?: Node[];
+  originId?: number;
+}
+
 export default class Node {
 
   private static nextNodeId = 0;
@@ -11,19 +17,28 @@ export default class Node {
     this._id = ++Node.nextNodeId;
     this._originId = originId || this._id;
     this._parent = parent;
-    this._children = children;
+    this._children = children.map(child => child.clone({ parent: this }));
   }
 
-  id(): number {
+  get id(): number {
     return this._id;
   }
 
-  originId(): number {
+  get originId(): number {
     return this._originId;
   }
 
-  index(): number {
+  get index(): number {
     return this.parent() ? this.siblings().indexOf(this) : 0;
+  }
+
+  get path(): Node[] {
+    const parent = this.parent();
+    return parent ? [this, ...parent.path] : [this];
+  }
+
+  children(condition = (node: Node) => true): Node[] {
+    return this._children ? this._children.filter(condition) : [];
   }
 
   parent(condition = (node: Node) => true): Node {
@@ -87,11 +102,11 @@ export default class Node {
   }
 
   prevSiblings(condition = (node: Node) => true): Node[] {
-    return this.siblings(condition).slice(0, this.index());
+    return this.siblings(condition).slice(0, this.index);
   }
 
   nextSiblings(condition = (node: Node) => true): Node[] {
-    return this.siblings(condition).slice(this.index() + 1);
+    return this.siblings(condition).slice(this.index + 1);
   }
 
   nextSiblingsUntil(condition = (node: Node) => false): Node[] {
@@ -99,34 +114,36 @@ export default class Node {
     return nextSiblings.slice(0, nextSiblings.findIndex(condition));
   }
 
-  children(condition = (node: Node) => true): Node[] {
-    return this._children ? this._children.filter(condition) : [];
-  }
-
-  path(): Node[] {
-    const parent = this.parent();
-    return parent ? [this, ...parent.path()] : [this];
-  }
-
   pathUntil(condition = (node: Node) => true): Node[] {
     const parent = this.parent(condition);
-    return parent ? [this, ...parent.path()] : [this];
+    return parent ? [this, ...parent.path] : [this];
   }
 
   comparePositionWith(that: Node): number {
     if (this === that) return 0;
-    const [thisIndex, thatIndex] = Node.closestParents(this, that).map(node => node.index());
+    const [thisIndex, thatIndex] = Node.closestParents(this, that).map(node => node.index);
     return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
   }
 
-  __dangerouslyMutateParent(parent: Node): Node {
-    this._parent = parent;
-    return this;
+  replaceChild(oldChild: Node, newChild: Node): this {
+    return this.replaceChildren([oldChild], [newChild]);
   }
 
-  __dangerouslyMutateChildren(children: Node[]): Node {
-    this._children = children;
-    return this;
+  replaceChildren(oldChildren: Node[], newChildren: Node[]): this {
+    const children = this.children().map(child => newChildren[oldChildren.indexOf(child)] || child);
+    return this.clone({ children });
+  }
+
+  deleteChildren(childrenToRemove: Node[]): this {
+    const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
+    return this.clone({ children });
+  }
+
+  clone(properties: CloneProperties = {}): this {
+    const parent = properties.parent || this.parent();
+    const children = properties.children || this.children().slice(0);
+    const originId = properties.originId || this.originId;
+    return new (Node as any)(parent, children, originId);
   }
 
   static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
@@ -145,8 +162,8 @@ export default class Node {
   }
 
   private static closestParents(a: Node, b: Node): [Node, Node] {
-    const pathA = a.path();
-    const pathB = b.path();
+    const pathA = a.path;
+    const pathB = b.path;
     const index = pathA.findIndex((node, index) => node === pathB[index]);
     return [pathA[index - 1], pathB[index - 1]];
   }

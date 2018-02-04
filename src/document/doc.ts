@@ -1,10 +1,14 @@
 import DomParser from './parser/dom';
 import { default as LibNode } from "./node";
-import BlockNode from "./block";
 import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
 import deleteSelectionTransformation from './transformations/delete_selection';
 import {DELETE_SELECTION, TYPE_INSERT_TEXT} from "../actions/input";
+
+interface CloneProperties {
+  children?: LibNode[];
+  originId?: number;
+}
 
 export interface TransformationResult {
   doc: Doc;
@@ -15,13 +19,11 @@ export default class Doc extends LibNode {
 
   static fromElement(el: Node): Doc {
     const nodes = DomParser.getChildrenFor(el);
-    const doc = new Doc(nodes);
-    doc.children().forEach(child => child.__dangerouslyMutateParent(doc));
-    return doc;
+    return new Doc(nodes);
   }
 
-  constructor(children: LibNode[] = []) {
-    super(null, children)
+  constructor(children: LibNode[] = [], originId?: number) {
+    super(null, children, originId);
   }
 
   async transform(action: any): Promise<TransformationResult> {
@@ -31,17 +33,11 @@ export default class Doc extends LibNode {
     return { doc: this, selection: null };
   }
 
-  replaceBlock(oldBlockNode: BlockNode, newBlockNode: BlockNode): Doc {
-    const children = this.children().slice(0);
-    const index = children.indexOf(oldBlockNode);
-    children[index] = newBlockNode;
-    return new Doc(children);
+  clone(properties: CloneProperties = {}): this {
+    const children = properties.children || this.children().slice(0);
+    const originId = properties.originId || this.originId;
+    return new (Doc as any)(children, originId);
   }
 
-  replaceBlocks(oldBlocks: BlockNode[], newBlocks: BlockNode[]): Doc {
-    const children = this.children().slice(0);
-    oldBlocks.forEach((oldBlock, index) => children[children.indexOf(oldBlock)] = newBlocks[index]);
-    return new Doc(children);
-  }
 
 }

@@ -23,12 +23,12 @@ export default class Inline extends React.Component<InlineProps, undefined> {
   };
 
   shouldComponentUpdate(nextProps: InlineProps): boolean {
-    return nextProps.node.id() !== this.props.node.id();
+    return nextProps.node.id !== this.props.node.id;
   }
 
   render() {
-    if (debug.log.nodeRendering) console.info('Rendering Inline', this.props.node.originId(), this.props.node.id());
-    return this.props.node.attrs()
+    if (debug.log.nodeRendering) console.info('Rendering Inline', this.props.node.originId, this.props.node.id);
+    return this.props.node.attrs
       .map(attr => Inline.attrElMap[attr] || 'span')
       .reduce((Prev, Cur) => <Cur>{Prev}</Cur>, <WriteJsText node={this.props.node} />);
   }

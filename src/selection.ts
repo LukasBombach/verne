@@ -54,19 +54,21 @@ export default class Selection {
   }
 
   get firstNode(): TextNode {
-    return this.nodeOrder() <= 0 ? this._anchorNode : this._focusNode;
+    return this.nodeOrder <= 0 ? this._anchorNode : this._focusNode;
   }
 
   get lastNode(): TextNode {
-    return this.nodeOrder() <= 0 ? this._focusNode : this._anchorNode;
+    return this.nodeOrder <= 0 ? this._focusNode : this._anchorNode;
   }
 
   get firstOffset(): number {
-    return this.nodeOrder() <= 0 ? this._anchorOffset : this._focusOffset;
+    const nodeOrder = this.nodeOrder;
+    return nodeOrder === 0 ? Math.min(this._anchorOffset, this._focusOffset) : nodeOrder <= 0 ? this._anchorOffset : this._focusOffset;
   }
 
   get lastOffset(): number {
-    return this.nodeOrder() <= 0 ? this._focusOffset : this._anchorOffset;
+    const nodeOrder = this.nodeOrder;
+    return nodeOrder === 0 ? Math.max(this._anchorOffset, this._focusOffset) : nodeOrder <= 0 ? this._focusOffset : this._anchorOffset;
   }
 
   get isCollapsed() {
@@ -77,6 +79,11 @@ export default class Selection {
     const firstNode = this.firstNode;
     const lastNode = this.lastNode;
     return [firstNode, ...Node.nodesBetween(firstNode, lastNode), lastNode];
+  }
+
+  private get nodeOrder() {
+    if (this._nodeOrder === undefined) this._nodeOrder = this._anchorNode.comparePositionWith(this._focusNode);
+    return this._nodeOrder;
   }
 
   moveFocus(numChars: number): Selection {
@@ -97,21 +104,16 @@ export default class Selection {
     if (numChars < 0) throw new Error(`numChars must be greater than 0. You gave ${numChars}`);
     if (startOffset - numChars >= 0) return { node, offset: startOffset - numChars };
     const prevText = node.prevTextLeaf();
-    return Selection.walkBackwardsBy(prevText, prevText.text().length, numChars - startOffset);
+    return Selection.walkBackwardsBy(prevText, prevText.length, numChars - startOffset);
   }
 
   private static walkForwardsBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
     if (numChars < 0) throw new Error(`numChars must be greater than 0. You gave ${numChars}`);
-    const text = node.text();
+    const text = node.text;
     const length = text.length;
     if (startOffset + numChars < text.length) return { node, offset: startOffset + numChars };
     const nextText = node.nextTextLeaf();
     return Selection.walkBackwardsBy(nextText, 0, numChars - length);
-  }
-
-  private nodeOrder() {
-    if (this._nodeOrder === undefined) this._nodeOrder = this._anchorNode.comparePositionWith(this._focusNode);
-    return this._nodeOrder;
   }
 
 }

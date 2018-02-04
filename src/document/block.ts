@@ -1,6 +1,13 @@
 import Node from "./node";
 import TextNode from "./text";
 
+interface CloneProperties {
+  tagName?: string;
+  parent?: Node;
+  children?: Node[];
+  originId?: number;
+}
+
 export default class Block extends Node {
 
   private _tagName: string;
@@ -8,23 +15,18 @@ export default class Block extends Node {
   constructor(tagName: string, parent: Node, children: Node[], originId?: number) {
     super(parent, children, originId);
     this._tagName = tagName;
-    this.children().forEach(child => child.__dangerouslyMutateParent(this));
   }
 
-  tagName() {
+  get tagName() {
     return this._tagName;
   }
 
-  replaceChild(oldTextNode: TextNode, newTextNode: TextNode): Block {
-    const children = this.children().slice(0);
-    const index = children.indexOf(oldTextNode);
-    children[index] = newTextNode;
-    return new Block(this.tagName(), this.parent(), children, this.originId());
-  }
-
-  deleteChildren(childrenToRemove: Node[]): Block {
-    const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
-    return new Block(this.tagName(), this.parent(), children, this.originId());
+  clone(properties: CloneProperties = {}): this {
+    const tagName = properties.tagName || this.tagName;
+    const parent = properties.parent || this.parent();
+    const children = properties.children || this.children().slice(0);
+    const originId = properties.originId || this.originId;
+    return new (Block as any)(tagName, parent, children, originId);
   }
 
 }

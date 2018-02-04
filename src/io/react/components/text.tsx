@@ -17,7 +17,7 @@ export default class Text extends React.Component<TextProps, undefined> {
   }
 
   shouldComponentUpdate(nextProps: TextProps): boolean {
-    return nextProps.node.id() !== this.props.node.id();
+    return nextProps.node.id !== this.props.node.id;
   }
 
   componentWillUnmount() {
@@ -30,8 +30,8 @@ export default class Text extends React.Component<TextProps, undefined> {
   }
 
   render() {
-    if (debug.log.nodeRendering) console.info('Rendering Text  ', this.props.node.originId(), this.props.node.id());
-    return this.props.node.text();
+    if (debug.log.nodeRendering) console.info('Rendering Text  ', this.props.node.originId, this.props.node.id);
+    return this.props.node.text;
   }
 
 }

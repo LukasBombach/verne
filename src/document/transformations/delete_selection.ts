@@ -12,7 +12,7 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
     const oldBlockNode = firstNode.parent() as Block;
     const newTextNode = firstNode.removeString(firstOffset, lastOffset);
     const newBlockNode = oldBlockNode.replaceChild(firstNode, newTextNode);
-    const newDoc = doc.replaceBlock(oldBlockNode, newBlockNode);
+    const newDoc = doc.replaceChild(oldBlockNode, newBlockNode);
     const newSelection = Selection.caret(newTextNode, firstOffset);
     return { doc: newDoc, selection: newSelection };
   }
@@ -29,7 +29,7 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
   const newLastTextNode = lastNode.removeString(0, lastOffset);
   newBlocks[newBlocks.length - 1] = newBlocks[newBlocks.length - 1].replaceChild(lastNode, newLastTextNode);
 
-  const docAfterDeletions = doc.replaceBlocks(oldBlocks, newBlocks);
+  const docAfterDeletions = doc.replaceChildren(oldBlocks, newBlocks);
   const newSelection = Selection.caret(newFirstTextNode, firstOffset);
   return { doc: docAfterDeletions, selection: newSelection };
 

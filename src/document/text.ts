@@ -1,5 +1,11 @@
 import Node from "./node";
-import Block from "./block";
+
+interface CloneProperties {
+  text?: string;
+  attrs?: string[];
+  parent?: Node;
+  originId?: number;
+}
 
 export default class Text extends Node {
 
@@ -7,39 +13,33 @@ export default class Text extends Node {
   private _attrs: string[];
 
   constructor(text: string = '', attrs: string[] = [], parent: Node, originId?: number) {
-    super(parent, null, originId);
+    super(parent, [], originId);
     this._text = text;
     this._attrs = attrs;
   }
 
-  text(): string {
+  get text(): string {
     return this._text;
   }
 
-  attrs(): string[] {
+  get attrs(): string[] {
     return this._attrs;
   }
 
-  length(): number {
-    return this.text().length;
-  }
-
-  setParent(newParent: Block): Text {
-    return new Text(this.text(), this.attrs(), newParent, this.originId());
+  get length(): number {
+    return this.text.length;
   }
 
   insertString(offset: number, str: string): Text {
-    const text = this.text().substr(0, offset) + str + this.text().substr(offset);
-    const attrs = this.attrs().slice(0);
-    return new Text(text, attrs, this.parent(), this.originId());
+    const text = this.text.substr(0, offset) + str + this.text.substr(offset);
+    return this.clone({ text });
   }
 
-  removeString(startOffset: number, endOffset: number = this.length()): Text {
+  removeString(startOffset: number, endOffset: number = this.length): Text {
     const lowerOffset = Math.min(startOffset, endOffset);
     const higherOffset = Math.max(startOffset, endOffset);
-    const text = this.text().substr(0, lowerOffset)  + this.text().substr(higherOffset);
-    const attrs = this.attrs().slice(0);
-    return new Text(text, attrs, this.parent(), this.originId());
+    const text = this.text.substr(0, lowerOffset)  + this.text.substr(higherOffset);
+    return this.clone({ text });
   }
 
   prevTextLeaf(): Text {
@@ -49,5 +49,14 @@ export default class Text extends Node {
   nextTextLeaf(): Text {
     return this.nextLeaf(node => node instanceof Text) as Text;
   }
+
+  clone(properties: CloneProperties = {}): this {
+    const text = properties.text || this.text;
+    const attrs = properties.attrs || this.attrs.slice(0);
+    const parent = properties.parent || this.parent();
+    const originId = properties.originId || this.originId;
+    return new (Text as any)(text, attrs, parent, originId);
+  }
+
 
 }

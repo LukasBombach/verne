@@ -7,6 +7,7 @@ import Inline from './inline';
 import getEventHandlers from '../eventHandlers';
 import Node from "../../../document/node";
 import Doc from "../../../document/doc";
+import { debug } from "../../../config";
 
 interface EditorProps {
   html?: string;
@@ -32,6 +33,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
   }
 
   render() {
+    if (debug.log.docRendering) console.info('Rendering Doc ', this.state.doc.id, ' ', this.state.doc);
     return (
       <div contentEditable={true} suppressContentEditableWarning={true} spellCheck={false} {...this.eventHandlers}>
         {this.state.doc.children().map(node => this.renderNode(node))}

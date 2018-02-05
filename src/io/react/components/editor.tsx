@@ -6,13 +6,14 @@ import Block from './block';
 import Inline from './inline';
 import getEventHandlers from '../eventHandlers';
 import Node from "../../../document/node";
+import Doc from "../../../document/doc";
 
 interface EditorProps {
   html?: string;
 }
 
 interface EditorState {
-  nodes: Node[];
+  doc: Doc;
 }
 
 interface EventHandlers {
@@ -22,7 +23,7 @@ interface EventHandlers {
 export default class Editor extends React.Component<EditorProps, EditorState> {
 
   public core: Readonly<WriteEditor> = WriteEditor.fromHtml(this.props.html);
-  public state: Readonly<EditorState> = { nodes: this.core.doc.children() };
+  public state: Readonly<EditorState> = { doc: this.core.doc };
   private eventHandlers: EventHandlers = getEventHandlers(this);
 
   renderNode(node: Node): JSX.Element {
@@ -33,7 +34,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
   render() {
     return (
       <div contentEditable={true} suppressContentEditableWarning={true} spellCheck={false} {...this.eventHandlers}>
-        {this.state.nodes.map(node => this.renderNode(node))}
+        {this.state.doc.children().map(node => this.renderNode(node))}
       </div>
     );
   }

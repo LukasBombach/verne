@@ -5,9 +5,9 @@ import Text from "../text";
 export default class HtmlParser {
 
   static getChildrenFor(html: string): (Block|Text)[] {
-    const template = document.createElement('template');
-    template.innerHTML = html;
-    return DomParser.getChildrenFor(template.content);
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return DomParser.getChildrenFor(div);
   }
 
 }

@@ -8,7 +8,7 @@ const eventHandlers: [string, Function][] = [
   // ['onKeyDown', handleKeyDown],
   // ['onKeyDown', (e: Event) => console.log('onKeyDown', e)],
   ['onBeforeInput', handleBeforeInput],
-  // ['onInput', (e: Event) => console.log('onInput', e)],
+  ['onInput', (editor: Editor, e: any) => console.log('onInput', e.data)],
 ];
 
 /**

@@ -1,5 +1,5 @@
 import handleBeforeInput from './onBeforeInput';
-// import handleKeyDown from './onKeyDown';
+import handleKeyDown from './onKeyDown';
 // import handleOnClick from './onClick';
 import Editor from "../components/editor";
 
@@ -8,7 +8,7 @@ const eventHandlers: [string, Function][] = [
   // ['onKeyDown', handleKeyDown],
   // ['onKeyDown', (e: Event) => console.log('onKeyDown', e)],
   ['onBeforeInput', handleBeforeInput],
-  ['onInput', (editor: Editor, e: any) => console.log('onInput', e.data)],
+  ['onKeyDown', handleKeyDown],
 ];
 
 /**

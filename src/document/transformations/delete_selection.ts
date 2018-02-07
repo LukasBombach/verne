@@ -26,6 +26,7 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
     newDoc = newDoc.replaceNode(firstNode, newFirstNode);
   }*/
 
+  // todo think about the concept of a transactions in which node IDs are mapped
   const newFirstNode = firstNode.removeString(firstOffset);
   const newLastNode = firstNode.removeString(0, lastOffset);
   const encapsulatedNodes = Node.nodesBetween(firstNode, lastNode);

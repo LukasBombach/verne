@@ -134,11 +134,16 @@ export default class Node {
   }
 
   replaceNodes(oldNodes: Node[], newNodes: Node[]): this {
-
+    return this;
   }
 
   deleteNodes(nodesToRemove: Node[]): this {
-
+    const [oldParents, newParents]: [Node[], Node[]] = [[], []];
+    Node.groupNodesByParent(nodesToRemove).forEach((children, parent) => {
+      oldParents.push(parent);
+      newParents.push(parent.deleteChildren(children));
+    });
+    return this.replaceNodes(oldParents, newParents);
   }
 
   clone(properties: CloneProperties = {}): this {
@@ -146,6 +151,16 @@ export default class Node {
     const children = properties.children || this.children().slice(0);
     const originId = properties.originId || this.originId;
     return new (Node as any)(parent, children, originId);
+  }
+
+  private replaceChildren(oldChildren: Node[], newChildren: Node[]): this {
+    const children = this.children().map(a => newChildren[oldChildren.findIndex(b => b.originId === a.originId)] || a); // todo WIP!!! using the originId is probably the worst idea ever || please come back to // const children = this.children().map(child => newChildren[oldChildren.indexOf(child)] || child);
+    return this.clone({ children });
+  }
+
+  private deleteChildren(childrenToRemove: Node[]): this {
+    const children = this.children().filter(a => childrenToRemove.findIndex(b => b.originId === a.originId) === -1); // todo WIP!!! using the originId is probably the worst idea ever || please come back to // const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
+    return this.clone({ children });
   }
 
   static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
@@ -170,14 +185,12 @@ export default class Node {
     return [pathA[index - 1], pathB[index - 1]];
   }
 
-  private replaceChildren(oldChildren: Node[], newChildren: Node[]): this {
-    const children = this.children().map(child => newChildren[oldChildren.indexOf(child)] || child);
-    return this.clone({ children });
-  }
-
-  private deleteChildren(childrenToRemove: Node[]): this {
-    const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
-    return this.clone({ children });
+  private static groupNodesByParent(nodes: Node[]): Map<Node, Node[]> {
+    const map = new Map<Node, Node[]>();
+    const tuples = nodes.map(node => [node.parent(), node]);
+    tuples.forEach(([parent]) => map.set(parent, []));
+    tuples.forEach(([parent, node]) => map.get(parent).push(node));
+    return map;
   }
 
 }

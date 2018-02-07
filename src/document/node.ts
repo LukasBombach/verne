@@ -125,18 +125,20 @@ export default class Node {
     return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
   }
 
-  replaceChild(oldChild: Node, newChild: Node): this {
-    return this.replaceChildren([oldChild], [newChild]);
+  replaceNode(oldNode: Node, newNode: Node): this {
+      return this.replaceNodes([oldNode], [newNode]);
   }
 
-  replaceChildren(oldChildren: Node[], newChildren: Node[]): this {
-    const children = this.children().map(child => newChildren[oldChildren.indexOf(child)] || child);
-    return this.clone({ children });
+  deleteNode(nodeToRemove: Node): this {
+      return this.deleteNodes([nodeToRemove]);
   }
 
-  deleteChildren(childrenToRemove: Node[]): this {
-    const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
-    return this.clone({ children });
+  replaceNodes(oldNodes: Node[], newNodes: Node[]): this {
+
+  }
+
+  deleteNodes(nodesToRemove: Node[]): this {
+
   }
 
   clone(properties: CloneProperties = {}): this {
@@ -166,6 +168,16 @@ export default class Node {
     const pathB = b.path;
     const index = pathA.findIndex((node, index) => node === pathB[index]);
     return [pathA[index - 1], pathB[index - 1]];
+  }
+
+  private replaceChildren(oldChildren: Node[], newChildren: Node[]): this {
+    const children = this.children().map(child => newChildren[oldChildren.indexOf(child)] || child);
+    return this.clone({ children });
+  }
+
+  private deleteChildren(childrenToRemove: Node[]): this {
+    const children = this.children().filter(child => childrenToRemove.indexOf(child) === -1);
+    return this.clone({ children });
   }
 
 }

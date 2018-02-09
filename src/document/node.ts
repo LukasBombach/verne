@@ -131,11 +131,11 @@ export default class Node<C> {
   }
 
   replaceNode(oldNode: Node<any>, newNode: Node<any>): this {
-      return this.replaceNodes([oldNode], [newNode]);
+    return this.replaceNodes([oldNode], [newNode]);
   }
 
   deleteNode(nodeToRemove: Node<any>): this {
-      return this.deleteNodes([nodeToRemove]);
+    return this.deleteNodes([nodeToRemove]);
   }
 
   replaceNodes(oldNodes: Node<any>[], newNodes: Node<any>[]): this {

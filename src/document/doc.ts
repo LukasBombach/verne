@@ -1,48 +1,24 @@
-import DomParser from './parser/dom';
-import HtmlParser from './parser/html';
 import Node from "./node";
-import Selection from "../selection";
-import insertTextTransformation from './transformations/insert_text';
-import deleteSelectionTransformation from './transformations/delete_selection';
-import {DELETE_SELECTION, TYPE_INSERT_TEXT} from "../actions/input";
+import NodeMap from "./node_map";
 
-interface CloneProperties {
-  children?: Node[];
-  originId?: number;
-}
+export default class Doc {
 
-export interface TransformationResult {
-  doc: Doc;
-  selection: Selection
-}
+  private nodeMap: NodeMap;
 
-export default class Doc extends Node {
-
-  static fromHtml(html: string): Doc {
-    const nodes = HtmlParser.getChildrenFor(html);
-    return new Doc(nodes);
+  constructor(nodeMap: NodeMap = new NodeMap()) {
+    this.nodeMap = nodeMap;
   }
 
-  static fromElement(el: Element): Doc {
-    const nodes = DomParser.getChildrenFor(el);
-    return new Doc(nodes);
+  replaceNodes(oldNodes: Node[], newNodes: Node[]): Doc {
+    const nodeMap = this.nodeMap.clone();
+    oldNodes.forEach((oldNode, index) => nodeMap.replace(oldNode, newNodes[index]));
+    return new Doc(nodeMap);
   }
 
-  constructor(children: Node[] = [], originId?: number) {
-    super(null, children, originId);
-  }
-
-  async transform(action: any): Promise<TransformationResult> {
-    if (action.type === TYPE_INSERT_TEXT) return await insertTextTransformation(this, action);
-    if (action.type === DELETE_SELECTION) return await deleteSelectionTransformation(this, action);
-    console.warn(`Could not find transformation for action "${action.type}"`, action);
-    return { doc: this, selection: null };
-  }
-
-  clone(properties: CloneProperties = {}): this {
-    const children = properties.children || this.children().slice(0);
-    const originId = properties.originId || this.originId;
-    return new (Doc as any)(children, originId);
+  deleteNodes(nodesToRemove: Node[]): Doc {
+    const nodeMap = this.nodeMap.clone();
+    nodesToRemove.forEach(node => nodeMap.remove(node));
+    return new Doc(nodeMap);
   }
 
 }

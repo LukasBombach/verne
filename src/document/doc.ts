@@ -9,7 +9,7 @@ export default class Doc {
     this.nodeMap = nodeMap;
   }
 
-  getChildren(node: Node): Node[] {
+  getChildrenForNode(node: Node): Node[] {
     const entry = this.nodeMap.get(node);
     return entry ? entry.children : null;
   }

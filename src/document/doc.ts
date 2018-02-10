@@ -26,7 +26,7 @@ export default class Doc {
   }
 
   nodes(): Node[] {
-    return [new Node(this.editor)];
+    return [new Node()];
   }
 
   replaceNode(node: Node, newNode: Node): Doc {

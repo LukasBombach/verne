@@ -3,15 +3,14 @@ import WriteEditor from "../write_editor";
 export default class Node {
 
   private static nextNodeId = 0;
+  public static editor: WriteEditor;
 
   public id: Readonly<number>;
   public originId: Readonly<number>;
-  protected editor: WriteEditor;
 
-  constructor(editor: WriteEditor, originId: number = null) {
+  constructor(originId: number = null) {
     this.id = ++Node.nextNodeId;
     this.originId = originId || this.id;
-    this.editor = editor;
   }
 
   get index(): number {
@@ -19,13 +18,13 @@ export default class Node {
   }
 
   parent(condition = (node: Node) => true): Node {
-    const parent = this.editor.doc.nodeMap.getParent(this);
+    const parent = Node.editor.doc.nodeMap.getParent(this);
     if (condition(parent)) return parent;
     return parent ? parent.parent(condition) : null;
   }
 
   children(condition = (node: Node) => true): Node[] {
-    const children = this.editor.doc.nodeMap.getChildren(this);
+    const children = Node.editor.doc.nodeMap.getChildren(this);
     return children ? children.filter(condition) : [];
   }
 

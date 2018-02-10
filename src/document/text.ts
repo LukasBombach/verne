@@ -1,5 +1,4 @@
 import Node from "./node";
-import WriteEditor from "../write_editor";
 
 interface CloneProperties {
   text?: string;
@@ -13,8 +12,8 @@ export default class Text extends Node {
   private _text: string;
   private _attrs: string[];
 
-  constructor(editor: WriteEditor, text: string = '', attrs: string[] = [], originId?: number) {
-    super(editor, originId);
+  constructor(text: string = '', attrs: string[] = [], originId?: number) {
+    super(originId);
     this._text = text;
     this._attrs = attrs;
   }
@@ -51,12 +50,11 @@ export default class Text extends Node {
     return this.nextLeaf(node => node instanceof Text) as Text;
   }
 
-  clone(properties: CloneProperties = {}): this {
+  clone(properties: CloneProperties = {}): Text {
     const text = properties.text || this.text;
     const attrs = properties.attrs || this.attrs.slice(0);
-    const parent = properties.parent || this.parent();
     const originId = properties.originId || this.originId;
-    return new (Text as any)(text, attrs, parent, originId);
+    return new Text(text, attrs, originId);
   }
 
 }

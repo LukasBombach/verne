@@ -1,4 +1,5 @@
 import Node from "./node";
+import WriteEditor from "../write_editor";
 
 interface CloneProperties {
   text?: string;
@@ -12,8 +13,8 @@ export default class Text extends Node {
   private _text: string;
   private _attrs: string[];
 
-  constructor(text: string = '', attrs: string[] = [], parent: Node, originId?: number) {
-    super(parent, [], originId);
+  constructor(editor: WriteEditor, text: string = '', attrs: string[] = [], originId?: number) {
+    super(editor, originId);
     this._text = text;
     this._attrs = attrs;
   }

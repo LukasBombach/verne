@@ -26,6 +26,16 @@ export default class NodeMap {
     return this.map[node.id.toString()];
   }
 
+  getParent(node: Node): Node {
+    const entry = this.get(node);
+    return entry ? entry.parent : null;
+  }
+
+  getChildren(node: Node): Node[] {
+    const entry = this.get(node);
+    return entry ? entry.children : null;
+  }
+
   replace(currentNode: Node, newNode: Node): this {
     const entry = this.get(currentNode);
     if (entry.parent) this.replaceChildInParent(entry.parent, currentNode, newNode);

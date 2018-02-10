@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextNode from '../../../document/text';
-import WriteJsText from './text';
+import Text from './text';
 import { debug } from '../../../config';
 
 interface InlineProps {
@@ -31,7 +31,7 @@ export default class Inline extends React.Component<InlineProps, undefined> {
     if (debug.log.nodeRendering) console.info('Rendering Inline', this.props.node.originId, this.props.node.id);
     return this.props.node.attrs
       .map(attr => Inline.attrElMap[attr] || 'span')
-      .reduce((Prev, Cur) => <Cur>{Prev}</Cur>, <WriteJsText node={this.props.node} />);
+      .reduce((Prev, Cur) => <Cur>{Prev}</Cur>, <Text node={this.props.node} />);
   }
 
 }

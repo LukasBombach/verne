@@ -15,7 +15,7 @@ export default class Block extends React.Component<BlockProps, undefined> {
     return nextProps.node.id !== this.props.node.id;
   }
 
-  renderChild(node: Node): JSX.Element {
+  static renderChild(node: Node): JSX.Element {
     if (node instanceof BlockNode) return <Block key={node.originId} node={node} />;
     if (node instanceof TextNode) return <Inline key={node.originId} node={node} />;
   }
@@ -25,7 +25,7 @@ export default class Block extends React.Component<BlockProps, undefined> {
     if (debug.log.nodeRendering) console.info('Rendering Block ', node.originId, node.id);
     return (
       <BlockTag>
-        {node.children().map(child => this.renderChild(child))}
+        {node.children().map(child => Block.renderChild(child))}
       </BlockTag>
     );
   }

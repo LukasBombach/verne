@@ -25,7 +25,7 @@ export default class Doc {
     this.editor = editor;
   }
 
-  nodes(): Node[] {
+  children(): Node[] {
     return [new Node()];
   }
 

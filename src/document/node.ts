@@ -17,6 +17,11 @@ export default class Node {
     return this.parent() ? this.siblings().indexOf(this) : 0;
   }
 
+  get path(): Node[] {
+    const parent = this.parent();
+    return parent ? [this, ...parent.path] : [this];
+  }
+
   parent(condition = (node: Node) => true): Node {
     const parent = Node.editor.doc.nodeMap.getParent(this);
     if (condition(parent)) return parent;
@@ -51,6 +56,16 @@ export default class Node {
     return this.siblings(condition).slice(this.index + 1);
   }
 
+  nextSiblingsUntil(condition = (node: Node) => false): Node[] {
+    const nextSiblings = this.nextSiblings();
+    return nextSiblings.slice(0, nextSiblings.findIndex(condition));
+  }
+
+  pathUntil(condition = (node: Node) => true): Node[] {
+    const parent = this.parent(condition);
+    return parent ? [this, ...parent.path] : [this];
+  }
+
   prevLeaf(condition = (node: Node) => true): Node {
     const lastLeafInPrev = this.prevSiblings().reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
     if (lastLeafInPrev) return lastLeafInPrev;
@@ -79,6 +94,34 @@ export default class Node {
     if (!children.length) return condition(this) ? this : null;
     const lastLeaf = children.reduceRight((pre, cur) => pre || cur.lastLeaf(condition), null);
     return lastLeaf || null;
+  }
+
+  comparePositionWith(that: Node): number {
+    if (this === that) return 0;
+    const [thisIndex, thatIndex] = Node.closestParents(this, that).map(node => node.index);
+    return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
+  }
+
+  static nodesBetween(firstNode: Node, lastNode: Node): Node[] {
+    if (firstNode.parent() === lastNode.parent()) return firstNode.nextSiblingsUntil(node => node === lastNode);
+    const [firstParent, lastParent] = Node.closestParents(firstNode, lastNode);
+    const firstParentSiblings = firstNode
+      .pathUntil(node => node === lastParent)
+      .map(parent => parent.nextSiblings())
+      .reduce((acc, cur) => [...acc, ...cur], []);
+    const lastParentSiblings = lastNode
+      .pathUntil(node => node === firstParent)
+      .map(parent => parent.prevSiblings())
+      .reduce((acc, cur) => [...cur, ...acc], []);
+    const nodesBetweenParents = firstParent.nextSiblingsUntil(node => node === lastParent);
+    return [...firstParentSiblings, ...nodesBetweenParents, ...lastParentSiblings];
+  }
+
+  private static closestParents(a: Node, b: Node): [Node, Node] {
+    const pathA = a.path;
+    const pathB = b.path;
+    const index = pathA.findIndex((node, index) => node === pathB[index]);
+    return [pathA[index - 1], pathB[index - 1]];
   }
 
 }

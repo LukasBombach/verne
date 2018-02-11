@@ -1,8 +1,8 @@
 import Doc, { TransformationResult } from "../doc";
 import Node from "../node";
-// import Block from "../block";
 import { DeleteSelectionAction } from "../../actions/input";
 import Selection from "../../selection";
+// import Block from "../block";
 
 export default function (doc: Doc, action: DeleteSelectionAction): TransformationResult {
 

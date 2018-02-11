@@ -37,7 +37,7 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
     if (debug.log.docRendering) console.info('Rendering Doc ', this.state.doc.id, ' ', this.state.doc);
     return (
       <div {...this.contentEditableProps} {...this.eventHandlers}>
-        {this.state.doc.nodes().map(node => Editor.renderNode(node))}
+        {this.state.doc.children().map(node => Editor.renderNode(node))}
       </div>
     );
   }

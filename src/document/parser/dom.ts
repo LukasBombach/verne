@@ -22,7 +22,7 @@ export default class DomParser {
 
   static getNodeMapFor(element: Element): NodeMap {
     const nodeMap = new NodeMap();
-    nodeMap.set(nodeMap.rootNode, null, DomParser.getChildrenAndAddToNodeMap(nodeMap, element, nodeMap.rootNode));
+    nodeMap.setChildren(nodeMap.rootNode, DomParser.getChildrenAndAddToNodeMap(nodeMap, element, nodeMap.rootNode));
     return nodeMap;
   }
 
@@ -40,7 +40,7 @@ export default class DomParser {
         children.push(text);
       }
       if (DomParser.isAttributeNode(childNode)) {
-        const newAttrs = [DomParser.getAttr(childNode), ...attrs];
+        const newAttrs = [...attrs, DomParser.getAttr(childNode)];
         children.push(...DomParser.getChildrenAndAddToNodeMap(nodeMap, childNode, parent, newAttrs));
       }
     });
@@ -56,9 +56,8 @@ export default class DomParser {
   }
 
   static isAttributeNode(domNode: Element): boolean {
-    const attributeMap = DomParser.tagAttributeMap;
     const tagName = domNode.tagName ? domNode.tagName.toLowerCase() : null;
-    return !!(tagName && attributeMap[tagName]);
+    return !!(tagName && DomParser.tagAttributeMap[tagName]);
   }
 
   static getAttr(element: Element): string {

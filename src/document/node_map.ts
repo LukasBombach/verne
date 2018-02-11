@@ -25,6 +25,11 @@ export default class NodeMap {
     return this;
   }
 
+  setChildren(node: Node, children: Node[] = null): this {
+    this.map[node.id.toString()].children = children;
+    return this;
+  }
+
   get(node: Node): MapEntry {
     return this.map[node.id.toString()];
   }

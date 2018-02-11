@@ -9,7 +9,7 @@ export default async function handleKeyDown(editor: Editor, e: KeyboardEvent<Nod
     e.preventDefault();
     const selectionJson = Selection.getUserSelection().toJson();
     const action = { type: 'input', selection: selectionJson, str: e.key };
-    const { doc, selection } = await editor.core.actions.dispatch(action);
+    const { doc, selection } = await editor.editor.actions.dispatch(action);
     editor.setState(() => ({ doc }));
     if (selection) Selection.setCaret(selection.focusNode, selection.focusOffset);
   }

@@ -7,7 +7,7 @@ export default async function handleBeforeInput(editor: Editor, e: KeyboardEvent
   e.preventDefault();
   const selectionJson = Selection.getUserSelection().toJson();
   const action = { type: 'input', selection: selectionJson, str: e.data };
-  const { doc, selection } = await editor.core.actions.dispatch(action);
+  const { doc, selection } = await editor.editor.actions.dispatch(action);
   editor.setState(() => ({ doc }));
   if (selection) Selection.setCaret(selection.focusNode, selection.focusOffset);
 }

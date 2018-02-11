@@ -1,10 +1,9 @@
 import Node from "./node";
 import NodeMap from "./node_map";
-import WriteEditor from "../write_editor";
 import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
 import deleteSelectionTransformation from './transformations/delete_selection';
-import {DELETE_SELECTION, TYPE_INSERT_TEXT} from "../actions/input";
+import { DELETE_SELECTION, TYPE_INSERT_TEXT } from "../actions/input";
 
 export interface TransformationResult {
   doc: Doc;
@@ -17,12 +16,22 @@ export default class Doc {
 
   public id: Readonly<number>;
   public nodeMap: Readonly<NodeMap>;
-  private editor: Readonly<WriteEditor>;
 
-  constructor(editor: WriteEditor, nodeMap: NodeMap = new NodeMap()) {
+  static fromHtml(html: string): Doc {
+    // const nodes = HtmlParser.getChildrenFor(html);
+    // return new Doc(nodes);
+    return new Doc();
+  }
+
+  static fromElement(el: Element): Doc {
+    // const nodes = DomParser.getChildrenFor(el);
+    // return new Doc(nodes);
+    return new Doc();
+  }
+
+  constructor(nodeMap: NodeMap = new NodeMap()) {
     this.id = ++Doc.nextDocId;
     this.nodeMap = nodeMap;
-    this.editor = editor;
   }
 
   children(): Node[] {
@@ -40,13 +49,13 @@ export default class Doc {
   replaceNodes(nodes: Node[], newNodes: Node[]): Doc {
     const nodeMap = this.nodeMap.clone();
     nodes.forEach((node, index) => nodeMap.replace(node, newNodes[index]));
-    return new Doc(this.editor, nodeMap);
+    return new Doc(nodeMap);
   }
 
   deleteNodes(nodes: Node[]): Doc {
     const nodeMap = this.nodeMap.clone();
     nodes.forEach(node => nodeMap.remove(node));
-    return new Doc(this.editor, nodeMap);
+    return new Doc(nodeMap);
   }
 
   async transform(action: any): Promise<TransformationResult> {

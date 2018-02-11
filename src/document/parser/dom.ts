@@ -1,5 +1,6 @@
 import Block from '../block';
 import Text from '../text';
+import NodeMap from "../node_map";
 
 interface TagAttributeMap {
   [key: string]: string;
@@ -24,7 +25,15 @@ export default class DomParser {
     del: 'del',
   };
 
-  static getChildrenFor(domNode: Element, attrs: string[] = [], parent: Block = null): Array<Block|Text> {
+  static getNodeMapFor(element: Element): NodeMap {
+    const nodeMap = new NodeMap();
+    [...element.childNodes].forEach(childNode => {
+
+    });
+    return nodeMap;
+  }
+
+  /*static getChildrenFor(domNode: Element, attrs: string[] = [], parent: Block = null): Array<Block|Text> {
     let nodeList: Array<Block|Text> = [];
     [].forEach.call(domNode.childNodes, (childNode: Element) => {
       if (DomParser.isBlockNode(childNode)) nodeList.push(DomParser.getBlockNode(childNode, attrs, parent));
@@ -60,6 +69,6 @@ export default class DomParser {
 
   static getTextNode(domNode: Element, attrs: string[] = [], parent: Block) {
     return new Text(domNode.nodeValue, attrs, parent);
-  }
+  }*/
 
 }

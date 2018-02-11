@@ -35,7 +35,7 @@ export default class Doc {
   }
 
   children(): Node[] {
-    return [new Node()];
+    return this.nodeMap.getRoot().children;
   }
 
   replaceNode(node: Node, newNode: Node): Doc {

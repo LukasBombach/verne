@@ -11,19 +11,26 @@ interface MapEntry {
 
 export default class NodeMap {
 
+  public rootNode: Readonly<Node>;
   private map: Map;
 
-  constructor(map: Map = {}) {
-    this.map = map;
+  constructor(map: Map = null, rootNode: Node = null) {
+    this.map = map || {};
+    this.rootNode = rootNode || new Node();
+    if (!map || !rootNode) this.set(rootNode, null, []);
   }
 
-  set(node: Node, parent: Node = null, children: Node[] = null): this {
+  set(node: Node, parent: Node = null, children: Node[] = null): this { // todo add to children when setting parent?
     this.map[node.id.toString()] = { parent, children };
     return this;
   }
 
   get(node: Node): MapEntry {
     return this.map[node.id.toString()];
+  }
+
+  getRoot(): MapEntry {
+    return this.get(this.rootNode);
   }
 
   getParent(node: Node): Node {
@@ -54,8 +61,8 @@ export default class NodeMap {
 
   clone() {
     const map = Object.assign({}, this.map);
-    Object.keys(map).forEach(key => map[key].children.slice(0));
-    return new NodeMap(map);
+    Object.keys(map).forEach(nodeId => map[nodeId].children.slice(0));
+    return new NodeMap(map, this.rootNode);
   }
 
   private replaceChildInParent(parent: Node, currentNode: Node, newNode: Node): this {

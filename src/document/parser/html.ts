@@ -1,13 +1,12 @@
 import DomParser from './dom';
-import Block from "../block";
-import Text from "../text";
+import NodeMap from "../node_map";
 
 export default class HtmlParser {
 
-  static getChildrenFor(html: string): (Block|Text)[] {
+  static getNodeMapFor(html: string): NodeMap {
     const div = document.createElement('div');
     div.innerHTML = html;
-    return DomParser.getChildrenFor(div);
+    return DomParser.getNodeMapFor(div);
   }
 
 }

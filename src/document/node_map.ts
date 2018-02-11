@@ -17,7 +17,7 @@ export default class NodeMap {
   constructor(map: Map = null, rootNode: Node = null) {
     this.map = map || {};
     this.rootNode = rootNode || new Node();
-    if (!map || !rootNode) this.set(rootNode, null, []);
+    if (!map && !rootNode) this.set(this.rootNode, null, []);
   }
 
   set(node: Node, parent: Node = null, children: Node[] = null): this { // todo add to children when setting parent?

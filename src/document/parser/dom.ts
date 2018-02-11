@@ -1,15 +1,10 @@
 import Block from '../block';
 import Text from '../text';
 import NodeMap from "../node_map";
+import Node from "../node";
 
 interface TagAttributeMap {
   [key: string]: string;
-  strong: string;
-  b: string;
-  em: string;
-  i: string;
-  u: string;
-  del: string;
 }
 
 export default class DomParser {
@@ -27,24 +22,29 @@ export default class DomParser {
 
   static getNodeMapFor(element: Element): NodeMap {
     const nodeMap = new NodeMap();
-    [...element.childNodes].forEach(childNode => {
-
-    });
+    nodeMap.set(nodeMap.rootNode, null, DomParser.getChildrenAndAddToNodeMap(nodeMap, element, nodeMap.rootNode));
     return nodeMap;
   }
 
-  /*static getChildrenFor(domNode: Element, attrs: string[] = [], parent: Block = null): Array<Block|Text> {
-    let nodeList: Array<Block|Text> = [];
-    [].forEach.call(domNode.childNodes, (childNode: Element) => {
-      if (DomParser.isBlockNode(childNode)) nodeList.push(DomParser.getBlockNode(childNode, attrs, parent));
-      else if (DomParser.isTextNodeWithContents(childNode)) nodeList.push(DomParser.getTextNode(childNode, attrs, parent));
-      else if (DomParser.isAttributeNode(childNode)) {
-        const newAttrs = [DomParser.tagAttributeMap[childNode.tagName.toLowerCase()], ...attrs];
-        const children = this.getChildrenFor(childNode, newAttrs, parent);
-        nodeList = [...nodeList, ...children];
+  static getChildrenAndAddToNodeMap(nodeMap: NodeMap, element: Element, parent: Node, attrs: string[] = []): Node[] {
+    const children: Node[] = [];
+    [...element.childNodes].forEach((childNode: Element) => {
+      if (DomParser.isBlockNode(childNode)) {
+        const block = new Block(childNode.tagName.toLowerCase());
+        nodeMap.set(block, parent, DomParser.getChildrenAndAddToNodeMap(nodeMap, childNode, block, attrs));
+        children.push(block);
+      }
+      if (DomParser.isTextNodeWithContents(childNode)) {
+        const text = new Text(childNode.nodeValue, attrs);
+        nodeMap.set(text, parent, []);
+        children.push(text);
+      }
+      if (DomParser.isAttributeNode(childNode)) {
+        const newAttrs = [DomParser.getAttr(childNode), ...attrs];
+        children.push(...DomParser.getChildrenAndAddToNodeMap(nodeMap, childNode, parent, newAttrs));
       }
     });
-    return nodeList;
+    return children;
   }
 
   static isBlockNode(domNode: Element): boolean {
@@ -52,7 +52,7 @@ export default class DomParser {
   }
 
   static isTextNodeWithContents(domNode: Element): boolean {
-    return domNode.nodeType === Node.TEXT_NODE && /[^\t\n\r ]/.test(domNode.textContent);
+    return domNode.nodeType === 3 && /[^\t\n\r ]/.test(domNode.textContent);
   }
 
   static isAttributeNode(domNode: Element): boolean {
@@ -61,14 +61,8 @@ export default class DomParser {
     return !!(tagName && attributeMap[tagName]);
   }
 
-  static getBlockNode(domNode: Element, attrs: string[] = [], parent: Block) {
-    const tagName = domNode.tagName.toLowerCase();
-    const children = DomParser.getChildrenFor(domNode, attrs);
-    return new Block(tagName, parent, children);
+  static getAttr(element: Element): string {
+    return DomParser.tagAttributeMap[element.tagName.toLowerCase()];
   }
-
-  static getTextNode(domNode: Element, attrs: string[] = [], parent: Block) {
-    return new Text(domNode.nodeValue, attrs, parent);
-  }*/
 
 }

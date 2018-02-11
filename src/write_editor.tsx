@@ -1,5 +1,6 @@
 import Doc from './document/doc';
 import Actions from './actions';
+import Node from "./document/node";
 
 export default class WriteEditor {
 
@@ -18,5 +19,6 @@ export default class WriteEditor {
 
   constructor(doc: Doc = new Doc()) {
     this.doc = doc;
+    Node.editor = this;
   }
 }

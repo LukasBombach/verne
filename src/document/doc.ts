@@ -4,6 +4,8 @@ import Selection from "../selection";
 import insertTextTransformation from './transformations/insert_text';
 import deleteSelectionTransformation from './transformations/delete_selection';
 import { DELETE_SELECTION, TYPE_INSERT_TEXT } from "../actions/input";
+import DomParser from "./parser/dom";
+import HtmlParser from "./parser/html";
 
 export interface TransformationResult {
   doc: Doc;
@@ -18,15 +20,13 @@ export default class Doc {
   public nodeMap: Readonly<NodeMap>;
 
   static fromHtml(html: string): Doc {
-    // const nodes = HtmlParser.getChildrenFor(html);
-    // return new Doc(nodes);
-    return new Doc();
+    const nodeMap = HtmlParser.getNodeMapFor(html);
+    return new Doc(nodeMap);
   }
 
-  static fromElement(el: Element): Doc {
-    // const nodes = DomParser.getChildrenFor(el);
-    // return new Doc(nodes);
-    return new Doc();
+  static fromElement(element: Element): Doc {
+    const nodeMap = DomParser.getNodeMapFor(element);
+    return new Doc(nodeMap);
   }
 
   constructor(nodeMap: NodeMap = new NodeMap()) {

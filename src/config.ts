@@ -3,5 +3,6 @@ export const debug = {
     docRendering: false,
     nodeRendering: false,
     middlewareCalls: false,
+    transformations: true,
   }
 };

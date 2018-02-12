@@ -2,6 +2,7 @@ import WriteEditor from "./write_editor";
 import Doc from "./document/doc";
 import Selection from "./selection";
 import middlewares from './middleware';
+import { debug } from './config';
 
 export interface ActionResult {
   doc: Doc;
@@ -28,6 +29,13 @@ export default class Actions {
 
   private async applyAction(action: any): Promise<ActionResult> {
     const { doc, selection } = await this.editor.doc.transform(action);
+    if (debug.log.transformations) {
+      console.group('%c Log transformation%c %s', 'color: gray; font-weight: lighter;', 'color: inherit;', action.type);
+      console.log('%c prev doc: %O', 'color: #9E9E9E;', this.editor.doc);
+      console.log('%c action:   %O', 'color: #03A9F4;', action);
+      console.log('%c next doc: %O', 'color: #4CAF50;', doc);
+      console.groupEnd();
+    }
     this.editor.doc = doc;
     return { doc, selection };
   }

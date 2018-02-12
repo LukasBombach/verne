@@ -1,7 +1,7 @@
 export const debug = {
   log: {
-    docRendering: true,
-    nodeRendering: true,
+    docRendering: false,
+    nodeRendering: false,
     middlewareCalls: false,
     transformations: true,
   }

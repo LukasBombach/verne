@@ -29,6 +29,7 @@ export default class Actions {
 
   private async applyAction(action: any): Promise<ActionResult> {
     const { doc, selection } = await this.editor.doc.transform(action);
+    // todo make this logger a middleware like redux-logger please
     if (debug.log.transformations) {
       console.group('%c Log transformation%c %s', 'color: gray; font-weight: lighter;', 'color: inherit;', action.type);
       console.log('%c prev doc: %O', 'color: #9E9E9E;', this.editor.doc);

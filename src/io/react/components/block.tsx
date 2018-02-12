@@ -18,7 +18,11 @@ export default class Block extends React.Component<BlockProps, undefined> {
 
   render() {
     const { node, node: { tagName: BlockTag } } = this.props;
-    if (debug.log.docRendering) console.info('%cRendering %cBlock  %c%d %d', 'color: gray; font-weight: lighter;', 'color: black; font-weight: bold;', 'color: blue;', node.originId, node.id);
+    if (debug.log.docRendering) { // todo put this in a logger class
+      console.groupCollapsed('%cRendering %cBlock  %c%d %c%s', 'color: gray; font-weight: lighter;', 'color: black; font-weight: bold;', 'color: blue;', node.id, 'color: gray; font-weight: lighter;', node.tagName);
+      console.log(node);
+      console.groupEnd();
+    }
     return (
       <BlockTag>
         {node.children().map(child => Block.renderChild(child))}

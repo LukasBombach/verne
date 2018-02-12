@@ -30,7 +30,11 @@ export default class Text extends React.Component<TextProps, undefined> {
   }
 
   render() {
-    if (debug.log.docRendering) console.info('%cRendering %cText   %c%d %d', 'color: gray; font-weight: lighter;', 'color: black; font-weight: bold;', 'color: blue;', this.props.node.originId, this.props.node.id);
+    if (debug.log.docRendering) { // todo put this in a logger class
+      console.groupCollapsed('%cRendering %cText   %c%d %c%s', 'color: gray; font-weight: lighter;', 'color: black; font-weight: bold;', 'color: blue;', this.props.node.id, 'color: gray; font-weight: lighter;', this.props.node.text);
+      console.log(this.props.node.text);
+      console.groupEnd();
+    }
     return this.props.node.text;
   }
 

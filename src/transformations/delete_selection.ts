@@ -1,7 +1,7 @@
-import Doc, { TransformationResult } from "../doc";
-import Node from "../node";
-import { DeleteSelectionAction } from "../../actions/input";
-import Selection from "../../selection";
+import Doc, { TransformationResult } from "../document/doc";
+import Node from "../document/node";
+import { DeleteSelectionAction } from "../actions/input";
+import Selection from "../selection";
 // import Block from "../block";
 
 export default function (doc: Doc, action: DeleteSelectionAction): TransformationResult {
@@ -33,7 +33,8 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
   const newSelection = Selection.caret(newFirstNode, firstOffset);
   const newDoc = doc
     .replaceNodes([firstNode, lastNode], [newFirstNode, newLastNode])
-    .deleteNodes(encapsulatedNodes);
+    .deleteNodes(encapsulatedNodes)
+    .mergeRight(newFirstNode.parent(), newLastNode.parent());
   return { doc: newDoc, selection: newSelection };
 
 

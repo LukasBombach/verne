@@ -64,6 +64,11 @@ export default class NodeMap {
     return this;
   }
 
+  mergeRight(leftNode: Node, rightNode: Node): this {
+    leftNode.append(...rightNode.children());
+    return this;
+  }
+
   clone() {
     const map = Object.assign({}, this.map);
     Object.keys(map).forEach(nodeId => map[nodeId].children.slice(0));

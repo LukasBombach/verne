@@ -1,11 +1,11 @@
 import Node from "./node";
 import NodeMap from "./node_map";
 import Selection from "../selection";
-import insertTextTransformation from './transformations/insert_text';
-import deleteSelectionTransformation from './transformations/delete_selection';
+import insertTextTransformation from '../transformations/insert_text';
+import deleteSelectionTransformation from '../transformations/delete_selection';
 import { DELETE_SELECTION, TYPE_INSERT_TEXT } from "../actions/input";
-import DomParser from "./parser/dom";
-import HtmlParser from "./parser/html";
+import DomParser from "../parser/dom";
+import HtmlParser from "../parser/html";
 
 export interface TransformationResult {
   doc: Doc;
@@ -55,6 +55,12 @@ export default class Doc {
   deleteNodes(nodes: Node[]): Doc {
     const nodeMap = this.nodeMap.clone();
     nodes.forEach(node => nodeMap.remove(node));
+    return new Doc(nodeMap);
+  }
+
+  mergeRight(leftNode: Node, rightNode: Node): Doc {
+    const nodeMap = this.nodeMap.clone();
+    nodeMap.mergeRight(leftNode, rightNode);
     return new Doc(nodeMap);
   }
 

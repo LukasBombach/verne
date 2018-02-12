@@ -29,8 +29,8 @@ export default class Editor extends React.Component<EditorProps, EditorState> {
   private contentEditableProps = { contentEditable: true, suppressContentEditableWarning: true, spellCheck: false };
 
   static renderNode(node: Node): JSX.Element {
-    if (node instanceof BlockNode) return <Block key={node.originId} node={node} />;
-    if (node instanceof TextNode) return <Inline key={node.originId} node={node} />;
+    if (node instanceof BlockNode) return <Block key={node.id} node={node} />;
+    if (node instanceof TextNode) return <Inline key={node.id} node={node} />;
   }
 
   render() {

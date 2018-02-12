@@ -11,13 +11,9 @@ interface BlockProps {
 
 export default class Block extends React.Component<BlockProps, undefined> {
 
-  shouldComponentUpdate(nextProps: BlockProps): boolean {
-    return nextProps.node.id !== this.props.node.id;
-  }
-
   static renderChild(node: Node): JSX.Element {
-    if (node instanceof BlockNode) return <Block key={node.originId} node={node} />;
-    if (node instanceof TextNode) return <Inline key={node.originId} node={node} />;
+    if (node instanceof BlockNode) return <Block key={node.id} node={node} />;
+    if (node instanceof TextNode) return <Inline key={node.id} node={node} />;
   }
 
   render() {

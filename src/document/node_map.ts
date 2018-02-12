@@ -65,7 +65,9 @@ export default class NodeMap {
   }
 
   mergeRight(leftNode: Node, rightNode: Node): this {
-    leftNode.append(...rightNode.children());
+    const newLeftNode = leftNode.append(...rightNode.children());
+    this.replace(leftNode, newLeftNode);
+    this.remove(rightNode);
     return this;
   }
 

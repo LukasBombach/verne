@@ -30,7 +30,7 @@ export default class Text extends React.Component<TextProps, undefined> {
   }
 
   render() {
-    if (debug.log.nodeRendering) console.info('Rendering Text  ', this.props.node.originId, this.props.node.id);
+    if (debug.log.docRendering) console.info('%cRendering %cText   %c%d %d', 'color: gray; font-weight: lighter;', 'color: black; font-weight: bold;', 'color: blue;', this.props.node.originId, this.props.node.id);
     return this.props.node.text;
   }
 

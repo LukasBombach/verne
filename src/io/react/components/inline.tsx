@@ -28,7 +28,7 @@ export default class Inline extends React.Component<InlineProps, undefined> {
   }
 
   render() {
-    if (debug.log.nodeRendering) console.info('Rendering Inline', this.props.node.originId, this.props.node.id);
+    if (debug.log.docRendering) console.info('%cRendering %cInline %c%d %d', 'color: gray; font-weight: lighter;', 'color: black; font-weight: bold;', 'color: blue;', this.props.node.originId, this.props.node.id);
     return this.props.node.attrs
       .map(attr => Inline.attrElMap[attr] || 'span')
       .reduce((Prev, Cur) => <Cur>{Prev}</Cur>, <Text node={this.props.node} />);

@@ -2,7 +2,7 @@ import {DeleteSelectionAction, InputAction, InsertTextAction, TYPE_INPUT} from "
 import Selection from "../selection";
 import {debug} from "../config";
 
-export default () => (next: Function) => (action: InputAction) => {
+export default () => (next: Function) => async (action: InputAction) => {
 
   const { type, selection: selectionJson, str} = action;
   const selection = Selection.fromJson(selectionJson);
@@ -34,6 +34,10 @@ export default () => (next: Function) => (action: InputAction) => {
   }
 
   const insertTextAction: InsertTextAction = { type: 'insert_text', selection, str };
-  return next(insertTextAction);
+  const returnValue = await next(insertTextAction);
+
+  console.log('returnValue', returnValue);
+
+  return returnValue;
 
 }

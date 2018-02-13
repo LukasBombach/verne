@@ -58,10 +58,16 @@ export default class Doc {
     return new Doc(nodeMap);
   }
 
-  mergeRight(leftNode: Node, rightNode: Node): Doc {
+  merge(leftNode: Node, rightNode: Node): Doc {
     const nodeMap = this.nodeMap.clone();
-    nodeMap.mergeRight(leftNode, rightNode);
+    nodeMap.merge(leftNode, rightNode);
     return new Doc(nodeMap);
+  }
+
+  mergeParents(leftNode: Node, rightNode: Node): Doc {
+    const leftParent = this.nodeMap.getParent(leftNode);
+    const rightParent = this.nodeMap.getParent(rightNode);
+    return this.merge(leftParent, rightParent);
   }
 
   async transform(action: any): Promise<TransformationResult> {

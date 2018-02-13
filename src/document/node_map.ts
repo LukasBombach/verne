@@ -62,7 +62,7 @@ export default class NodeMap {
     return this;
   }
 
-  mergeRight(leftNode: Node, rightNode: Node): this { // todo make immutable?
+  merge(leftNode: Node, rightNode: Node): this { // todo make immutable?
     const leftChildren = this.get(leftNode).children;
     const rightChildren = this.get(rightNode).children;
     leftChildren.push(...rightChildren);

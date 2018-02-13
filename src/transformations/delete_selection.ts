@@ -27,15 +27,19 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
   }*/
 
   // todo think about the concept of a transactions in which node IDs are mapped
-  const newFirstNode = firstNode.removeString(firstOffset);
-  const newLastNode = firstNode.removeString(0, lastOffset);
+
+  const nodesHaveSameParent = firstNode.parent() === lastNode.parent();
+  const newFirstNode = firstNode
+    .removeString(firstOffset)
+    .appendString(lastNode.removeString(0, lastOffset).text);
   const encapsulatedNodes = Node.nodesBetween(firstNode, lastNode);
   const newSelection = Selection.caret(newFirstNode, firstOffset);
-  const newDoc = doc
-    .replaceNodes([firstNode, lastNode], [newFirstNode, newLastNode])
-    .deleteNodes(encapsulatedNodes)
-    .mergeRight(newFirstNode.parent(), newLastNode.parent());
-  return { doc: newDoc, selection: newSelection };
+  const replacedDoc = doc
+    .replaceNode(firstNode, newFirstNode)
+    .deleteNode(lastNode)
+    .deleteNodes(encapsulatedNodes);
+  const mergedDoc = nodesHaveSameParent ? replacedDoc: replacedDoc.mergeParents(newFirstNode, lastNode);
+  return { doc: mergedDoc, selection: newSelection };
 
 
   /*const [oldBlocks, newBlocks] = deleteNodesContainedInSelection(action.selection);

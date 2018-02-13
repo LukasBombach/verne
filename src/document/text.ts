@@ -35,6 +35,11 @@ export default class Text extends Node {
     return this.clone({ text });
   }
 
+  appendString(str: string): Text {
+    const text = this.text + str;
+    return this.clone({ text });
+  }
+
   removeString(startOffset: number, endOffset: number = this.length): Text {
     const lowerOffset = Math.min(startOffset, endOffset);
     const higherOffset = Math.max(startOffset, endOffset);

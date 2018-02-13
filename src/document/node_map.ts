@@ -48,6 +48,7 @@ export default class NodeMap {
     return entry ? entry.children : null;
   }
 
+  // todo make immutable?
   replace(currentNode: Node, newNode: Node): this {
     const entry = this.get(currentNode);
     if (entry.parent) this.replaceChildInParent(entry.parent, currentNode, newNode);
@@ -56,6 +57,7 @@ export default class NodeMap {
     return this;
   }
 
+  // todo make immutable?
   remove(node: Node): this {
     const entry = this.get(node);
     if (!entry) return this;
@@ -64,9 +66,11 @@ export default class NodeMap {
     return this;
   }
 
+  // todo make immutable?
   mergeRight(leftNode: Node, rightNode: Node): this {
-    const newLeftNode = leftNode.append(...rightNode.children());
-    this.replace(leftNode, newLeftNode);
+    const leftChildren = this.get(leftNode).children;
+    const rightChildren = this.get(rightNode).children;
+    leftChildren.push(...rightChildren);
     this.remove(rightNode);
     return this;
   }

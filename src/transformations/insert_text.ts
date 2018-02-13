@@ -1,6 +1,6 @@
-import Doc, {TransformationResult} from "../doc";
-import {InsertTextAction} from "../../actions/input";
-import Selection from "../../selection";
+import Doc, {TransformationResult} from "../document/doc";
+import {InsertTextAction} from "../actions/input";
+import Selection from "../selection";
 
 export default function (doc: Doc, action: InsertTextAction): TransformationResult {
   const { selection: { focusNode, focusOffset }, str} = action;

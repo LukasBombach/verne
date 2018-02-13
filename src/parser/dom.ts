@@ -1,7 +1,7 @@
-import Block from '../block';
-import Text from '../text';
-import NodeMap from "../node_map";
-import Node from "../node";
+import Block from '../document/block';
+import Text from '../document/text';
+import NodeMap from "../document/node_map";
+import Node from "../document/node";
 
 interface TagAttributeMap {
   [key: string]: string;

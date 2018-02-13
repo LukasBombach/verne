@@ -1,5 +1,5 @@
 import DomParser from './dom';
-import NodeMap from "../node_map";
+import NodeMap from "../document/node_map";
 
 export default class HtmlParser {
 

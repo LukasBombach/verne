@@ -20,16 +20,6 @@ export default class NodeMap {
     if (!map && !rootNode) this.set(this.rootNode, null, []);
   }
 
-  set(node: Node, parent: Node = null, children: Node[] = null): this { // todo add to children when setting parent?
-    this.map[node.id.toString()] = { parent, children };
-    return this;
-  }
-
-  setChildren(node: Node, children: Node[] = null): this {
-    this.map[node.id.toString()].children = children;
-    return this;
-  }
-
   get(node: Node): MapEntry {
     return this.map[node.id.toString()];
   }
@@ -46,8 +36,17 @@ export default class NodeMap {
     return this.get(node).children;
   }
 
-  // todo make immutable?
-  replace(currentNode: Node, newNode: Node): this {
+  set(node: Node, parent: Node = null, children: Node[] = null): this { // todo add to children when setting parent?
+    this.map[node.id.toString()] = { parent, children };
+    return this;
+  }
+
+  setChildren(node: Node, children: Node[] = null): this {
+    this.map[node.id.toString()].children = children;
+    return this;
+  }
+
+  replace(currentNode: Node, newNode: Node): this { // todo make immutable?
     const entry = this.get(currentNode);
     if (entry.parent) this.replaceChildInParent(entry.parent, currentNode, newNode);
     this.set(newNode, entry.parent, entry.children);
@@ -55,8 +54,7 @@ export default class NodeMap {
     return this;
   }
 
-  // todo make immutable?
-  remove(node: Node): this {
+  remove(node: Node): this { // todo make immutable?
     const entry = this.get(node);
     if (!entry) return this;
     if (entry.parent) this.removeChildFromParent(entry.parent, node);
@@ -64,8 +62,7 @@ export default class NodeMap {
     return this;
   }
 
-  // todo make immutable?
-  mergeRight(leftNode: Node, rightNode: Node): this {
+  mergeRight(leftNode: Node, rightNode: Node): this { // todo make immutable?
     const leftChildren = this.get(leftNode).children;
     const rightChildren = this.get(rightNode).children;
     leftChildren.push(...rightChildren);

@@ -39,13 +39,11 @@ export default class NodeMap {
   }
 
   getParent(node: Node): Node {
-    const entry = this.get(node);
-    return entry ? entry.parent : null;
+    return this.get(node).parent;
   }
 
   getChildren(node: Node): Node[] {
-    const entry = this.get(node);
-    return entry ? entry.children : null;
+    return this.get(node).children;
   }
 
   // todo make immutable?

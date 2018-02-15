@@ -4,8 +4,8 @@ import Node from "./document/node";
 
 export default class WriteEditor {
 
-  public doc: Doc = new Doc();
-  public actions: Readonly<Actions> = new Actions(this);
+  public doc: Doc = null;
+  public actions: Readonly<Actions> = null;
 
   public static fromHtml(html: string): WriteEditor  {
     const doc = Doc.fromHtml(html);
@@ -19,6 +19,7 @@ export default class WriteEditor {
 
   constructor(doc: Doc = new Doc()) {
     this.doc = doc;
+    this.actions = new Actions(this);
     Node.editor = this;
   }
 }

@@ -34,10 +34,6 @@ export default () => (next: Function) => async (action: InputAction) => {
   }
 
   const insertTextAction: InsertTextAction = { type: 'insert_text', selection, str };
-  const returnValue = await next(insertTextAction);
-
-  console.log('returnValue', returnValue);
-
-  return returnValue;
+  return await next(insertTextAction);
 
 }

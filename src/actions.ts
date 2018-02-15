@@ -12,49 +12,28 @@ export interface ActionResult {
 export default class Actions {
 
   private editor: WriteEditor;
-  private composedMiddlewares: Function = this.composeMiddlewares(middlewares);
+  private composedMiddlewares: Function;
 
   constructor(editor: WriteEditor) {
     this.editor = editor;
+    this.composedMiddlewares = this.composeMiddlewares(middlewares);
   }
 
-  public async dispatch(action: any): Promise<ActionResult> {
-    // const actionAfterMiddlewares = await this.applyMiddlewares(action);
-    // return await this.applyAction(actionAfterMiddlewares);
-    return new Promise<ActionResult>(resolve => {
-      this.composedMiddlewares(async (finalAction: any) => {
-        const { doc, selection } = await this.editor.doc.transform(finalAction);
-        this.editor.doc = doc;
-        resolve({ doc, selection });
-        return { doc, selection };
-      })(action);
-    });
-  }
-
-  private applyMiddlewares(originalAction: any): Promise<any> {
-    return new Promise(resolve => this.composedMiddlewares((action: any) => { resolve(action); return 'x'; })(originalAction));
-  }
-
-  private async applyAction(action: any): Promise<ActionResult> {
-    const { doc, selection } = await this.editor.doc.transform(action);
-    // todo make this logger a middleware like redux-logger please
-    if (debug.log.transformations) {
-      console.group('%cTransformation%c %s', 'color: gray; font-weight: lighter;', 'color: inherit;', action.type);
-      console.log('%c prev doc: %O', 'color: #9E9E9E;', this.editor.doc);
-      console.log('%c action:   %O', 'color: #03A9F4;', action);
-      console.log('%c next doc: %O', 'color: #4CAF50;', doc);
-      console.groupEnd();
-    }
-    this.editor.doc = doc;
-    return { doc, selection };
+  public dispatch(originalAction: any): Promise<ActionResult> {
+    return new Promise(resolve => this.composedMiddlewares(async (finalAction: any) => {
+      const { doc, selection } = await this.editor.doc.transform(finalAction);
+      this.editor.doc = doc;
+      resolve({ doc, selection });
+      return { doc, selection };
+    })(originalAction));
   }
 
   private composeMiddlewares(middlewares: Function[]): Function {
     if (middlewares.length === 0) return (arg: any) => arg;
-    if (middlewares.length === 1) return middlewares[0]();
+    if (middlewares.length === 1) return middlewares[0];
     return middlewares
       .map(middleware => middleware(this.editor))
-      .reduce((a, b) => (...args: any[]) => a(b(...args)))();
+      .reduce((a, b) => (...args: any[]) => a(b(...args)));
   }
 
 }

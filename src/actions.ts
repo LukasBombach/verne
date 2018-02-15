@@ -2,7 +2,6 @@ import WriteEditor from "./write_editor";
 import Doc from "./document/doc";
 import Selection from "./selection";
 import middlewares from './middleware';
-import { debug } from './config';
 
 export interface ActionResult {
   doc: Doc;
@@ -15,8 +14,8 @@ export default class Actions {
   private composedMiddlewares: Function;
 
   constructor(editor: WriteEditor) {
+    this.composedMiddlewares = this.composeMiddlewares(middlewares, editor);
     this.editor = editor;
-    this.composedMiddlewares = this.composeMiddlewares(middlewares);
   }
 
   public dispatch(originalAction: any): Promise<ActionResult> {
@@ -28,11 +27,11 @@ export default class Actions {
     })(originalAction));
   }
 
-  private composeMiddlewares(middlewares: Function[]): Function {
+  private composeMiddlewares(middlewares: Function[], editor: WriteEditor): Function {
     if (middlewares.length === 0) return (arg: any) => arg;
     if (middlewares.length === 1) return middlewares[0];
     return middlewares
-      .map(middleware => middleware(this.editor))
+      .map(middleware => middleware(editor))
       .reduce((a, b) => (...args: any[]) => a(b(...args)));
   }
 

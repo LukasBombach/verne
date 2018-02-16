@@ -47,6 +47,13 @@ export default class Text extends Node {
     return this.clone({ text });
   }
 
+  attrsEqual(that: Text): boolean {
+    if (this.attrs.length != that.attrs.length) return false;
+    const [a, b] = [this.attrs.sort(), that.attrs.sort()];
+    for (let i = 0, len = a.length; i < len; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+
   prevTextLeaf(): Text {
     return this.prevLeaf(node => node instanceof Text) as Text;
   }

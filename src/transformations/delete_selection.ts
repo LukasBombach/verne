@@ -14,17 +14,28 @@ export default function (doc: Doc, action: DeleteSelectionAction): Transformatio
     return { doc: newDoc, selection: newSelection };
   }
 
-  const nodesHaveSameParent = firstNode.parent() === lastNode.parent();
-  const lastText = lastNode.removeString(0, lastOffset).text;
-  const newFirstNode = firstNode.removeString(firstOffset).appendString(lastText);
-  const encapsulatedNodes = Node.nodesBetween(firstNode, lastNode);
-  const replacedDoc = doc
-    .replaceNode(firstNode, newFirstNode)
-    .deleteNode(lastNode)
-    .deleteNodes(encapsulatedNodes);
-  const mergedDoc = nodesHaveSameParent ? replacedDoc : replacedDoc.mergeParents(newFirstNode, lastNode);
-  const newSelection = Selection.caret(newFirstNode, firstOffset);
+  let newDoc, newFirstNode,newLastNode, newSelection;
 
-  return { doc: mergedDoc, selection: newSelection };
+  const nodesHaveSameParent = firstNode.parent() === lastNode.parent();
+  const encapsulatedNodes = Node.nodesBetween(firstNode, lastNode);
+
+  newFirstNode = firstNode.removeString(firstOffset);
+  newLastNode = lastNode.removeString(0, lastOffset);
+
+  if (firstNode.attrsEqual(lastNode)) {
+    newFirstNode = newFirstNode.appendString(lastNode.text);
+    newDoc = doc
+      .replaceNode(firstNode, newFirstNode)
+      .deleteNode(lastNode);
+  } else {
+    newDoc = doc
+      .replaceNodes([firstNode, lastNode], [newFirstNode, newLastNode])
+  }
+
+  newDoc = newDoc.deleteNodes(encapsulatedNodes);
+  newDoc = nodesHaveSameParent ? newDoc : newDoc.mergeParents(newFirstNode, lastNode);
+  newSelection = Selection.caret(newFirstNode, firstOffset);
+
+  return { doc: newDoc, selection: newSelection };
 
 }

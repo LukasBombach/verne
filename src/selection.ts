@@ -109,11 +109,9 @@ export default class Selection {
 
   private static walkForwardsBy(node: TextNode, startOffset: number, numChars: number): WalkResult {
     if (numChars < 0) throw new Error(`numChars must be greater than 0. You gave ${numChars}`);
-    const text = node.text;
-    const length = text.length;
-    if (startOffset + numChars < text.length) return { node, offset: startOffset + numChars };
+    if (startOffset + numChars < node.length) return { node, offset: startOffset + numChars };
     const nextText = node.nextTextLeaf();
-    return Selection.walkBackwardsBy(nextText, 0, numChars - length);
+    return Selection.walkBackwardsBy(nextText, 0, numChars - node.length);
   }
 
 }

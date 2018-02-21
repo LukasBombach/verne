@@ -21,6 +21,7 @@ module.exports = {
     loaders: [
       { test: /\.tsx?$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ },
       { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.vue?$/, loader: 'vue-loader', exclude: /node_modules/ },
     ],
   },
   plugins: [
@@ -28,7 +29,7 @@ module.exports = {
   ],
   devServer: {
     quiet: true,
-    contentBase: [path.join(__dirname, "public"), path.join(__dirname, "dist")],
+    contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'dist')],
     open: true,
     overlay: true,
     clientLogLevel: 'none',

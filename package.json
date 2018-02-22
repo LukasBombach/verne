@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "workspaces": [
+    "verne",
+    "verne-react",
+    "verne-vue"
+  ]
+}

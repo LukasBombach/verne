@@ -1,4 +1,4 @@
-import WriteEditor from "../write_editor";
+import WriteEditor from "../verne";
 
 export default class Node {
 

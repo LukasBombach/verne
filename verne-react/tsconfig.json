@@ -10,7 +10,10 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@verne/*": ["../verne"]
+    }
   },
   "include": [
     "src/**/*",

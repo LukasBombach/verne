@@ -1,4 +1,4 @@
-import WriteEditor from "./write_editor";
+import WriteEditor from "./verne";
 import Doc from "./document/doc";
 import Selection from "./selection";
 import middlewares from './middleware';

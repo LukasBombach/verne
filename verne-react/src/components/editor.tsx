@@ -1,5 +1,5 @@
 import * as React from 'react';
-import WriteEditor from "../../../write_editor";
+import Verne from "@verne/verne";
 import BlockNode from '../../../document/block';
 import TextNode from '../../../document/text';
 import Block from './block';
@@ -23,7 +23,7 @@ interface EventHandlers {
 
 export default class Editor extends React.Component<EditorProps, EditorState> {
 
-  public editor: Readonly<WriteEditor> = WriteEditor.fromHtml(this.props.html);
+  public editor: Readonly<Verne> = Verne.fromHtml(this.props.html);
   public state: Readonly<EditorState> = { doc: this.editor.doc };
   private eventHandlers: EventHandlers = getEventHandlers(this);
   private contentEditableProps = { contentEditable: true, suppressContentEditableWarning: true, spellCheck: false };

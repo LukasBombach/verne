@@ -2,19 +2,19 @@ import Doc from './document/doc';
 import Actions from './actions';
 import Node from "./document/node";
 
-export default class WriteEditor {
+export default class Verne {
 
   public doc: Doc = null;
   public actions: Readonly<Actions> = null;
 
-  public static fromHtml(html: string): WriteEditor  {
+  public static fromHtml(html: string): Verne  {
     const doc = Doc.fromHtml(html);
-    return new WriteEditor(doc);
+    return new Verne(doc);
   }
 
-  public static fromElement(el: Element): WriteEditor {
+  public static fromElement(el: Element): Verne {
     const doc = Doc.fromElement(el);
-    return new WriteEditor(doc);
+    return new Verne(doc);
   }
 
   constructor(doc: Doc = new Doc()) {

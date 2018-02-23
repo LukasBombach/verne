@@ -3,7 +3,7 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: path.join(__dirname, 'src', 'write_editor.ts')
+    index: path.join(__dirname, 'src', 'index.ts')
   },
   output: {
     path: path.join(__dirname, 'lib'),

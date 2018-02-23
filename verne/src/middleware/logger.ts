@@ -1,5 +1,5 @@
 import {debug} from "../config";
-import WriteEditor from "../write_editor";
+import WriteEditor from "../verne";
 
 export default (editor: WriteEditor) => (next: Function) => async (action: any) => {
 

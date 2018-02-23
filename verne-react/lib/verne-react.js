@@ -407,7 +407,7 @@ exports.default = editor_1.default;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(0);
-const write_editor_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../write_editor\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const verne_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"@verne/verne\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 const block_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../document/block\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 const text_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../document/text\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 const block_2 = __webpack_require__(9);
@@ -417,7 +417,7 @@ const config_1 = __webpack_require__(!(function webpackMissingModule() { var e =
 class Editor extends React.Component {
     constructor() {
         super(...arguments);
-        this.editor = write_editor_1.default.fromHtml(this.props.html);
+        this.editor = verne_1.default.fromHtml(this.props.html);
         this.state = { doc: this.editor.doc };
         this.eventHandlers = eventHandlers_1.default(this);
         this.contentEditableProps = { contentEditable: true, suppressContentEditableWarning: true, spellCheck: false };

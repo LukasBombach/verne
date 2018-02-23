@@ -1,7 +1,7 @@
 import * as React from 'react';
-import TextNode from '../../../document/text';
+import { Text as TextNode } from "@verne/verne";
 import Text from './text';
-import { debug } from '../../../config';
+import { debug } from '../config';
 
 interface InlineProps {
   node: TextNode

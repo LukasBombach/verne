@@ -3,8 +3,12 @@
   "version": "0.0.1",
   "author": "Lukas Bombach",
   "license": "MIT",
+  "main": "lib/verne-react.cjs.js",
+  "module": "lib/verne-react.esm.js",
+  "browser": "lib/verne-react.umd.js",
   "scripts": {
-    "start": "webpack --progress --colors --watch --env=development"
+    "start:webpack": "webpack --progress --colors --watch --env=development",
+    "start": "rollup -c -w"
   },
   "dependencies": {
     "@verne/verne": "0.0.1",
@@ -15,6 +19,8 @@
     "@types/react": "16.0.34",
     "@types/react-dom": "16.0.3",
     "prop-types": "15.6.0",
+    "rollup": "0.56.2",
+    "rollup-plugin-typescript": "0.8.1",
     "typescript": "^2.7.2",
     "webpack": "3.11.0"
   }

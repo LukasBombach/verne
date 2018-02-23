@@ -4,12 +4,18 @@
   "description": "A WYSIWYG library that does not suck",
   "author": "Lukas Bombach",
   "license": "MIT",
+  "main": "lib/verne.cjs.js",
+  "module": "lib/verne.esm.js",
+  "browser": "lib/verne.umd.js",
   "scripts": {
-    "start": "webpack --progress --colors --watch --env=development"
+    "start:webpack": "webpack --progress --colors --watch --env=development",
+    "start": "rollup -c -w"
   },
   "devDependencies": {
     "awesome-typescript-loader": "3.4.1",
     "friendly-errors-webpack-plugin": "1.6.1",
+    "rollup": "0.56.2",
+    "rollup-plugin-typescript": "0.8.1",
     "typescript": "2.7.2",
     "webpack": "3.11.0"
   }

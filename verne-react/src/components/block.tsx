@@ -1,9 +1,9 @@
 import * as React from 'react';
-import BlockNode from '../../../document/block';
-import TextNode from '../../../document/text';
-import Node from '../../../document/node';
+import { Node } from "@verne/verne";
+import { Block as BlockNode } from "@verne/verne";
+import { Text as TextNode } from "@verne/verne";
 import Inline from './inline';
-import { debug } from '../../../config';
+import { debug } from '../config';
 
 interface BlockProps {
   node: BlockNode;

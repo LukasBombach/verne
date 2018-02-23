@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Verne from "@verne/verne";
-import BlockNode from '../../../document/block';
-import TextNode from '../../../document/text';
+import { Doc } from "@verne/verne";
+import { Node } from "@verne/verne";
+import { Block as BlockNode } from "@verne/verne";
+import { Text as TextNode } from "@verne/verne";
 import Block from './block';
 import Inline from './inline';
 import getEventHandlers from '../eventHandlers';
-import Node from "../../../document/node";
-import Doc from "../../../document/doc";
-import { debug } from "../../../config";
+import { debug } from "../config";
 
 interface EditorProps {
   html?: string;

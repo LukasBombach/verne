@@ -1,12 +1,8 @@
 import handleBeforeInput from './onBeforeInput';
 import handleKeyDown from './onKeyDown';
-// import handleOnClick from './onClick';
 import Editor from "../components/editor";
 
 const eventHandlers: [string, Function][] = [
-  // ['onClick', handleOnClick],
-  // ['onKeyDown', handleKeyDown],
-  // ['onKeyDown', (e: Event) => console.log('onKeyDown', e)],
   ['onBeforeInput', handleBeforeInput],
   ['onKeyDown', handleKeyDown],
 ];
@@ -28,6 +24,10 @@ const eventHandlers: [string, Function][] = [
  */
 export default function getEventHandlers(editor: Editor) {
   return eventHandlers
-    .map(([eventName, handler]) => [eventName, (event: any): any => handler(editor, event)])
-    .reduce((acc, [eventName, handler]) => ({ ...acc, [eventName as string]: handler }), {});
+    .map(([eventName, handler]) => {
+      return [eventName, (event: any): any => handler(editor, event)];
+    })
+    .reduce((acc, [eventName, handler]) => {
+      return Object.assign({}, acc,{ [eventName as string]: handler });
+    }, {});
 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { Text as TextNode } from "@verne/verne";
+import { debug } from '../config';
 import NodeMap from '../node_map';
-import TextNode from '../../../document/text';
-import { debug } from '../../../config';
 
 interface TextProps {
   node: TextNode

@@ -1,11 +1,16 @@
 root = true
 
-[src/**.ts]
+[*.ts]
 indent_style = space
 indent_size = 2
 spaces_around_brackets = both
 
-[src/**.tsx]
+[*.tsx]
+indent_style = space
+indent_size = 2
+spaces_around_brackets = both
+
+[*.vue]
 indent_style = space
 indent_size = 2
 spaces_around_brackets = both

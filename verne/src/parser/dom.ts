@@ -28,7 +28,7 @@ export default class DomParser {
 
   static getChildrenAndAddToNodeMap(nodeMap: NodeMap, element: Element, parent: Node, attrs: string[] = []): Node[] {
     const children: Node[] = [];
-    [...element.childNodes].forEach((childNode: Element) => {
+    Array.from(element.childNodes).forEach((childNode: Element) => {
       if (DomParser.isBlockNode(childNode)) {
         const block = new Block(childNode.tagName.toLowerCase());
         nodeMap.set(block, parent, DomParser.getChildrenAndAddToNodeMap(nodeMap, childNode, block, attrs));

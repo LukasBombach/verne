@@ -3,22 +3,22 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: path.join(__dirname, 'src', 'write_editor.ts')
+    index: path.join(__dirname, 'src', 'index.ts')
   },
   output: {
     path: path.join(__dirname, 'lib'),
-    filename: 'verne.js',
-    library: 'verne',
+    filename: 'verne-react.js',
+    library: 'verne-react',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.ts', '.json']
+    extensions: ['.ts', '.tsx', '.json']
   },
   module: {
     loaders: [
-      { test: /\.ts$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ }
+      { test: /\.tsx?$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ }
     ]
   },
   plugins: [

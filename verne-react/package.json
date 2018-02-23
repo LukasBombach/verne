@@ -1,13 +1,21 @@
 {
   "name": "@verne/verne-react",
+  "version": "0.0.1",
+  "author": "Lukas Bombach",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack --progress --colors --watch --env=development"
+  },
   "dependencies": {
     "@verne/verne": "0.0.1",
-    "prop-types": "15.6.0",
     "react": "16.2.0",
     "react-dom": "16.2.0"
   },
   "devDependencies": {
     "@types/react": "16.0.34",
-    "@types/react-dom": "16.0.3"
+    "@types/react-dom": "16.0.3",
+    "prop-types": "15.6.0",
+    "typescript": "^2.7.2",
+    "webpack": "3.11.0"
   }
 }

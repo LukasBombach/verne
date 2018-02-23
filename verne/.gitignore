@@ -1,5 +1,5 @@
 .DS_Store
 .idea
-dist/*.js
-dist/*.map
+lib/*.js
+lib/*.map
 node_modules

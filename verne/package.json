@@ -2,75 +2,15 @@
   "name": "@verne/verne",
   "version": "0.0.1",
   "description": "A WYSIWYG library that does not suck",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
   "author": "Lukas Bombach",
   "license": "MIT",
   "scripts": {
-    "build-rollup": "rollup -c",
-    "start-parcel": "parcel demo/index.html",
-    "start-webpack": "webpack --progress --colors --watch --env=development",
-    "start-vue": "vue-cli-service serve --open",
-    "start": "webpack-dev-server",
-    "build": "webpack --optimize-minimize --define process.env.NODE_ENV=\"production\"",
-    "lint": "eslint src *.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack --progress --colors --watch --env=development"
   },
   "devDependencies": {
     "awesome-typescript-loader": "3.4.1",
-    "babel-core": "6.24.1",
-    "babel-loader": "7.0.0",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-react-jsx": "6.24.1",
-    "babel-preset-env": "1.5.1",
-    "babel-preset-react": "6.24.1",
-    "eslint": "3.19.0",
-    "eslint-config-airbnb": "15.0.1",
-    "eslint-plugin-class-property": "1.0.6",
-    "eslint-plugin-import": "2.3.0",
-    "eslint-plugin-jsx-a11y": "5.0.3",
-    "eslint-plugin-react": "7.0.1",
     "friendly-errors-webpack-plugin": "1.6.1",
-    "parcel-bundler": "1.4.1",
-    "rollup": "0.54.0",
-    "rollup-plugin-async": "1.2.0",
-    "rollup-plugin-commonjs": "8.2.6",
-    "rollup-plugin-jsx": "1.0.3",
-    "rollup-plugin-typescript": "0.8.1",
-    "rollup-watch": "4.3.1",
-    "typescript": "2.6.2",
-    "webpack": "2.6.1",
-    "webpack-dev-server": "2.11.1",
-    "webpack-node-externals": "1.6.0"
-  },
-  "eslintConfig": {
-    "extends": "airbnb",
-    "parser": "babel-eslint",
-    "rules": {
-      "no-underscore-dangle": "off",
-      "max-len": "off"
-    },
-    "plugins": [
-      "class-property"
-    ],
-    "env": {
-      "browser": true,
-      "node": true
-    }
-  },
-  "babel": {
-    "presets": [
-      "env",
-      "@vue/app"
-    ],
-    "plugins": [
-      "transform-class-properties",
-      "transform-react-jsx"
-    ]
-  },
-  "dependencies": {
-    "babel-eslint": "7.2.3",
-    "debounce": "1.0.2"
+    "typescript": "2.7.2",
+    "webpack": "3.11.0"
   }
 }

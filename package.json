@@ -4,5 +4,8 @@
     "verne",
     "verne-react",
     "verne-vue"
-  ]
+  ],
+  "scripts": {
+    "build:all": "webpack --progress --colors --config webpack.config.js"
+  }
 }

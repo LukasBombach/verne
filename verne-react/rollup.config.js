@@ -1,4 +1,4 @@
-import typescript from 'rollup-plugin-typescript';
+import typescript from 'rollup-plugin-typescript-ts-update';
 import pkg from './package.json';
 
 export default [

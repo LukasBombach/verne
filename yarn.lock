@@ -2156,6 +2156,16 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^2.0.0"
     inherits "^2.0.1"
 
+rollup-plugin-typescript-ts-update@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript-ts-update/-/rollup-plugin-typescript-ts-update-0.8.2.tgz#bea13ba2b36016554f7b6f43c1b0b6604e853ceb"
+  dependencies:
+    compare-versions "2.0.1"
+    object-assign "^4.0.1"
+    rollup-pluginutils "^1.3.1"
+    tippex "^2.1.1"
+    typescript "^2.7.2"
+
 rollup-plugin-typescript@0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/rollup-plugin-typescript/-/rollup-plugin-typescript-0.8.1.tgz#2ff7eecc21cf6bb2b43fc27e5b688952ce71924a"

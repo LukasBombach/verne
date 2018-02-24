@@ -13,7 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "",
     "paths": {
-      "@verne/verne": ["../verne/src/index"]
+      "@verne/verne": ["../verne/lib/verne.cjs"]
     }
   },
   "include": [
@@ -21,7 +21,6 @@
     "tests/**/*"
   ],
   "exclude": [
-    "node_modules",
     "**/*.spec.ts"
   ]
 }

@@ -7,18 +7,6 @@ var ReactDOM = require('react-dom');
 var Verne = require('@verne/verne');
 var Verne__default = _interopDefault(Verne);
 
-const __assign = Object.assign || function (target) {
-    for (var source, i = 1; i < arguments.length; i++) {
-        source = arguments[i];
-        for (var prop in source) {
-            if (Object.prototype.hasOwnProperty.call(source, prop)) {
-                target[prop] = source[prop];
-            }
-        }
-    }
-    return target;
-};
-
 function __awaiter(thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -61,8 +49,8 @@ class NodeMap {
 NodeMap.map = new Map();
 
 class Text extends React.Component {
-    constructor(...args) {
-        super(...args);
+    constructor() {
+        super(...arguments);
         this.domNode = null;
     }
     componentDidMount() {
@@ -100,7 +88,7 @@ class Inline extends React.Component {
         }
         return this.props.node.attrs
             .map(attr => Inline.attrElMap[attr] || 'span')
-            .reduce((Prev, Cur) => React.createElement(Cur, null, Prev), React.createElement(Text, {node: this.props.node}));
+            .reduce((Prev, Cur) => React.createElement(Cur, null, Prev), React.createElement(Text, { node: this.props.node }));
     }
 }
 Inline.attrElMap = {
@@ -112,9 +100,9 @@ Inline.attrElMap = {
 class Block extends React.Component {
     static renderChild(node) {
         if (node instanceof Verne.Block)
-            return React.createElement(Block, {key: node.id, node: node});
+            return React.createElement(Block, { key: node.id, node: node });
         if (node instanceof Verne.Text)
-            return React.createElement(Inline, {key: node.id, node: node});
+            return React.createElement(Inline, { key: node.id, node: node });
     }
     render() {
         const { node, node: { tagName: BlockTag } } = this.props;
@@ -128,12 +116,6 @@ class Block extends React.Component {
 }
 
 class Selection {
-    constructor(anchorNode, focusNode, anchorOffset, focusOffset) {
-        this.anchorNode = anchorNode;
-        this.focusNode = focusNode;
-        this.anchorOffset = anchorOffset;
-        this.focusOffset = focusOffset;
-    }
     static getUserSelection() {
         const nativeSelection = window.getSelection();
         const anchorNode = NodeMap.getTextNode(nativeSelection.anchorNode);
@@ -150,6 +132,12 @@ class Selection {
         nativeRange.setEnd(domNode, offset);
         nativeSelection.removeAllRanges();
         nativeSelection.addRange(nativeRange);
+    }
+    constructor(anchorNode, focusNode, anchorOffset, focusOffset) {
+        this.anchorNode = anchorNode;
+        this.focusNode = focusNode;
+        this.anchorOffset = anchorOffset;
+        this.focusOffset = focusOffset;
     }
     toJson() {
         return {
@@ -203,8 +191,8 @@ function getEventHandlers(editor) {
 }
 
 class Editor extends React.Component {
-    constructor(...args) {
-        super(...args);
+    constructor() {
+        super(...arguments);
         this.editor = Verne__default.fromHtml(this.props.html);
         this.state = { doc: this.editor.doc };
         this.eventHandlers = getEventHandlers(this);
@@ -212,9 +200,9 @@ class Editor extends React.Component {
     }
     static renderNode(node) {
         if (node instanceof Verne.Block)
-            return React.createElement(Block, {key: node.id, node: node});
+            return React.createElement(Block, { key: node.id, node: node });
         if (node instanceof Verne.Text)
-            return React.createElement(Inline, {key: node.id, node: node});
+            return React.createElement(Inline, { key: node.id, node: node });
     }
     render() {
         if (debug.log.docRendering) {
@@ -222,7 +210,7 @@ class Editor extends React.Component {
             console.log(this.state.doc);
             console.groupEnd();
         }
-        return (React.createElement("div", __assign({}, this.contentEditableProps, this.eventHandlers), this.state.doc.children().map(node => Editor.renderNode(node))));
+        return (React.createElement("div", Object.assign({}, this.contentEditableProps, this.eventHandlers), this.state.doc.children().map(node => Editor.renderNode(node))));
     }
 }
 

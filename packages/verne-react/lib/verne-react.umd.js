@@ -1,18 +1,10 @@
-import { Component, createElement } from 'react';
-import { findDOMNode } from 'react-dom';
-import Verne, { Block, Text } from '@verne/verne';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react'), require('react-dom'), require('@verne/verne')) :
+	typeof define === 'function' && define.amd ? define(['react', 'react-dom', '@verne/verne'], factory) :
+	(global.Verne = factory(global.React,global.ReactDOM,global.Verne));
+}(this, (function (React,ReactDOM,Verne) { 'use strict';
 
-const __assign = Object.assign || function (target) {
-    for (var source, i = 1; i < arguments.length; i++) {
-        source = arguments[i];
-        for (var prop in source) {
-            if (Object.prototype.hasOwnProperty.call(source, prop)) {
-                target[prop] = source[prop];
-            }
-        }
-    }
-    return target;
-};
+var Verne__default = 'default' in Verne ? Verne['default'] : Verne;
 
 function __awaiter(thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -55,23 +47,23 @@ class NodeMap {
 }
 NodeMap.map = new Map();
 
-class Text$1 extends Component {
-    constructor(...args) {
-        super(...args);
+class Text extends React.Component {
+    constructor() {
+        super(...arguments);
         this.domNode = null;
     }
     componentDidMount() {
-        NodeMap.set(findDOMNode(this), this.props.node);
+        NodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
     }
     shouldComponentUpdate(nextProps) {
         return nextProps.node.id !== this.props.node.id;
     }
     componentWillUnmount() {
-        NodeMap.delete(findDOMNode(this));
+        NodeMap.delete(ReactDOM.findDOMNode(this));
     }
     componentDidUpdate() {
         NodeMap.delete(this.domNode);
-        NodeMap.set(findDOMNode(this), this.props.node);
+        NodeMap.set(ReactDOM.findDOMNode(this), this.props.node);
     }
     render() {
         if (debug.log.docRendering) {
@@ -83,7 +75,7 @@ class Text$1 extends Component {
     }
 }
 
-class Inline extends Component {
+class Inline extends React.Component {
     shouldComponentUpdate(nextProps) {
         return nextProps.node.id !== this.props.node.id;
     }
@@ -95,7 +87,7 @@ class Inline extends Component {
         }
         return this.props.node.attrs
             .map(attr => Inline.attrElMap[attr] || 'span')
-            .reduce((Prev, Cur) => createElement(Cur, null, Prev), createElement(Text$1, {node: this.props.node}));
+            .reduce((Prev, Cur) => React.createElement(Cur, null, Prev), React.createElement(Text, { node: this.props.node }));
     }
 }
 Inline.attrElMap = {
@@ -104,12 +96,12 @@ Inline.attrElMap = {
     del: 'del',
 };
 
-class Block$1 extends Component {
+class Block extends React.Component {
     static renderChild(node) {
-        if (node instanceof Block)
-            return createElement(Block$1, {key: node.id, node: node});
-        if (node instanceof Text)
-            return createElement(Inline, {key: node.id, node: node});
+        if (node instanceof Verne.Block)
+            return React.createElement(Block, { key: node.id, node: node });
+        if (node instanceof Verne.Text)
+            return React.createElement(Inline, { key: node.id, node: node });
     }
     render() {
         const { node, node: { tagName: BlockTag } } = this.props;
@@ -118,17 +110,11 @@ class Block$1 extends Component {
             console.log(node);
             console.groupEnd();
         }
-        return (createElement(BlockTag, null, node.children().map(child => Block$1.renderChild(child))));
+        return (React.createElement(BlockTag, null, node.children().map(child => Block.renderChild(child))));
     }
 }
 
 class Selection {
-    constructor(anchorNode, focusNode, anchorOffset, focusOffset) {
-        this.anchorNode = anchorNode;
-        this.focusNode = focusNode;
-        this.anchorOffset = anchorOffset;
-        this.focusOffset = focusOffset;
-    }
     static getUserSelection() {
         const nativeSelection = window.getSelection();
         const anchorNode = NodeMap.getTextNode(nativeSelection.anchorNode);
@@ -145,6 +131,12 @@ class Selection {
         nativeRange.setEnd(domNode, offset);
         nativeSelection.removeAllRanges();
         nativeSelection.addRange(nativeRange);
+    }
+    constructor(anchorNode, focusNode, anchorOffset, focusOffset) {
+        this.anchorNode = anchorNode;
+        this.focusNode = focusNode;
+        this.anchorOffset = anchorOffset;
+        this.focusOffset = focusOffset;
     }
     toJson() {
         return {
@@ -197,19 +189,19 @@ function getEventHandlers(editor) {
     }, {});
 }
 
-class Editor extends Component {
-    constructor(...args) {
-        super(...args);
-        this.editor = Verne.fromHtml(this.props.html);
+class Editor extends React.Component {
+    constructor() {
+        super(...arguments);
+        this.editor = Verne__default.fromHtml(this.props.html);
         this.state = { doc: this.editor.doc };
         this.eventHandlers = getEventHandlers(this);
         this.contentEditableProps = { contentEditable: true, suppressContentEditableWarning: true, spellCheck: false };
     }
     static renderNode(node) {
-        if (node instanceof Block)
-            return createElement(Block$1, {key: node.id, node: node});
-        if (node instanceof Text)
-            return createElement(Inline, {key: node.id, node: node});
+        if (node instanceof Verne.Block)
+            return React.createElement(Block, { key: node.id, node: node });
+        if (node instanceof Verne.Text)
+            return React.createElement(Inline, { key: node.id, node: node });
     }
     render() {
         if (debug.log.docRendering) {
@@ -217,8 +209,10 @@ class Editor extends Component {
             console.log(this.state.doc);
             console.groupEnd();
         }
-        return (createElement("div", __assign({}, this.contentEditableProps, this.eventHandlers), this.state.doc.children().map(node => Editor.renderNode(node))));
+        return (React.createElement("div", Object.assign({}, this.contentEditableProps, this.eventHandlers), this.state.doc.children().map(node => Editor.renderNode(node))));
     }
 }
 
-export default Editor;
+return Editor;
+
+})));

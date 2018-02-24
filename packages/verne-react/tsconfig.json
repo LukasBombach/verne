@@ -10,11 +10,7 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "",
-    "paths": {
-      "@verne/verne": ["../verne/lib/verne.cjs"]
-    }
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*",

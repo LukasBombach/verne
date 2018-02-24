@@ -8,7 +8,7 @@
   "browser": "lib/verne-react.umd.js",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
-    "start": "rollup -c"
+    "start": "rollup -c -w"
   },
   "dependencies": {
     "@verne/verne": "0.0.1",

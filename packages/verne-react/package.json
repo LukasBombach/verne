@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@verne/verne": "0.0.1",
+    "awesome-typescript-loader": "^3.5.0",
     "react": "16.2.0",
     "react-dom": "16.2.0"
   },

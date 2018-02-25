@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -81,15 +81,791 @@ return /******/ (function(modules) { // webpackBootstrap
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(7);
+  module.exports = __webpack_require__(9);
 } else {
-  module.exports = __webpack_require__(8);
+  module.exports = __webpack_require__(10);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global, factory) {
+	 true ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.Verne = {})));
+}(this, (function (exports) { 'use strict';
+
+function __extends(d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+}
+
+var Node = /** @class */ (function () {
+    function Node(originId) {
+        if (originId === void 0) { originId = null; }
+        this.id = ++Node.nextNodeId;
+        this.originId = originId || this.id;
+    }
+    Object.defineProperty(Node.prototype, "index", {
+        get: function () {
+            return this.parent() ? this.siblings().indexOf(this) : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Node.prototype, "path", {
+        get: function () {
+            var parent = this.parent();
+            return parent ? [this].concat(parent.path) : [this];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Node.prototype.parent = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var parent = Node.editor.doc.nodeMap.getParent(this);
+        if (condition(parent))
+            return parent;
+        return parent ? parent.parent(condition) : null;
+    };
+    Node.prototype.children = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var children = Node.editor.doc.nodeMap.getChildren(this);
+        return children ? children.filter(condition) : [];
+    };
+    Node.prototype.prev = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var sibling = this.prevSiblings().reverse().find(condition);
+        return sibling || null;
+    };
+    Node.prototype.next = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var sibling = this.nextSiblings().find(condition);
+        return sibling || null;
+    };
+    Node.prototype.siblings = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var parent = this.parent();
+        return parent ? parent.children(condition) : condition(this) ? [this] : [];
+    };
+    Node.prototype.prevSiblings = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        return this.siblings(condition).slice(0, this.index);
+    };
+    Node.prototype.nextSiblings = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        return this.siblings(condition).slice(this.index + 1);
+    };
+    Node.prototype.nextSiblingsUntil = function (condition) {
+        if (condition === void 0) { condition = function (node) { return false; }; }
+        var nextSiblings = this.nextSiblings();
+        return nextSiblings.slice(0, nextSiblings.findIndex(condition));
+    };
+    Node.prototype.pathUntil = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var parent = this.parent(condition);
+        return parent ? [this].concat(parent.path) : [this];
+    };
+    Node.prototype.prevLeaf = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var lastLeafInPrev = this.prevSiblings().reduceRight(function (pre, cur) { return pre || cur.lastLeaf(condition); }, null);
+        if (lastLeafInPrev)
+            return lastLeafInPrev;
+        var parentWithPrev = this.parent(function (parent) { return !!parent && !!parent.prev(); });
+        if (parentWithPrev)
+            return parentWithPrev.prevLeaf(condition);
+        return null;
+    };
+    Node.prototype.nextLeaf = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var firstLeafInNext = this.nextSiblings().reduce(function (pre, cur) { return pre || cur.firstLeaf(condition); }, null);
+        if (firstLeafInNext)
+            return firstLeafInNext;
+        var parentWithNext = this.parent(function (parent) { return !!parent && !!parent.next(); });
+        if (parentWithNext)
+            return parentWithNext.nextLeaf(condition);
+        return null;
+    };
+    Node.prototype.firstLeaf = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var children = this.children();
+        if (!children.length)
+            return condition(this) ? this : null;
+        var firstLeaf = children.reduce(function (pre, cur) { return pre || cur.firstLeaf(condition); }, null);
+        return firstLeaf || null;
+    };
+    Node.prototype.lastLeaf = function (condition) {
+        if (condition === void 0) { condition = function (node) { return true; }; }
+        var children = this.children();
+        if (!children.length)
+            return condition(this) ? this : null;
+        var lastLeaf = children.reduceRight(function (pre, cur) { return pre || cur.lastLeaf(condition); }, null);
+        return lastLeaf || null;
+    };
+    Node.prototype.comparePositionWith = function (that) {
+        if (this === that)
+            return 0;
+        var _a = Node.closestParents(this, that).map(function (node) { return node.index; }), thisIndex = _a[0], thatIndex = _a[1];
+        return thisIndex < thatIndex ? -1 : thisIndex === thatIndex ? 0 : 1;
+    };
+    Node.nodesBetween = function (firstNode, lastNode) {
+        if (firstNode.parent() === lastNode.parent())
+            return firstNode.nextSiblingsUntil(function (node) { return node === lastNode; });
+        var _a = Node.closestParents(firstNode, lastNode), firstParent = _a[0], lastParent = _a[1];
+        var firstParentSiblings = firstNode
+            .pathUntil(function (node) { return node === lastParent; })
+            .map(function (parent) { return parent.nextSiblings(); })
+            .reduce(function (acc, cur) { return acc.concat(cur); }, []);
+        var lastParentSiblings = lastNode
+            .pathUntil(function (node) { return node === firstParent; })
+            .map(function (parent) { return parent.prevSiblings(); })
+            .reduce(function (acc, cur) { return cur.concat(acc); }, []);
+        var nodesBetweenParents = firstParent.nextSiblingsUntil(function (node) { return node === lastParent; });
+        return firstParentSiblings.concat(nodesBetweenParents, lastParentSiblings);
+    };
+    Node.closestParents = function (a, b) {
+        var pathA = a.path;
+        var pathB = b.path;
+        var index = pathA.findIndex(function (node, index) { return node === pathB[index]; });
+        return [pathA[index - 1], pathB[index - 1]];
+    };
+    Node.nextNodeId = 0;
+    return Node;
+}());
+
+var NodeMap = /** @class */ (function () {
+    function NodeMap(map, rootNode) {
+        if (map === void 0) { map = null; }
+        if (rootNode === void 0) { rootNode = null; }
+        this.map = map || {};
+        this.rootNode = rootNode || new Node();
+        if (!map && !rootNode)
+            this.set(this.rootNode, null, []);
+    }
+    NodeMap.prototype.get = function (node) {
+        return this.map[node.id.toString()];
+    };
+    NodeMap.prototype.getRoot = function () {
+        return this.get(this.rootNode);
+    };
+    NodeMap.prototype.getParent = function (node) {
+        return this.get(node).parent;
+    };
+    NodeMap.prototype.getChildren = function (node) {
+        return this.get(node).children;
+    };
+    NodeMap.prototype.set = function (node, parent, children) {
+        if (parent === void 0) { parent = null; }
+        if (children === void 0) { children = null; }
+        this.map[node.id.toString()] = { parent: parent, children: children };
+        return this;
+    };
+    NodeMap.prototype.setChildren = function (node, children) {
+        if (children === void 0) { children = null; }
+        this.map[node.id.toString()].children = children;
+        return this;
+    };
+    NodeMap.prototype.replace = function (currentNode, newNode) {
+        var entry = this.get(currentNode);
+        if (entry.parent)
+            this.replaceChildInParent(entry.parent, currentNode, newNode);
+        this.set(newNode, entry.parent, entry.children);
+        this.removeRecursively([currentNode]);
+        return this;
+    };
+    NodeMap.prototype.remove = function (node) {
+        var entry = this.get(node);
+        if (!entry)
+            return this;
+        if (entry.parent)
+            this.removeChildFromParent(entry.parent, node);
+        if (entry.children)
+            this.removeRecursively(entry.children);
+        return this;
+    };
+    NodeMap.prototype.merge = function (leftNode, rightNode) {
+        var leftChildren = this.get(leftNode).children;
+        var rightChildren = this.get(rightNode).children;
+        leftChildren.push.apply(leftChildren, rightChildren);
+        this.remove(rightNode);
+        return this;
+    };
+    NodeMap.prototype.clone = function () {
+        var map = Object.assign({}, this.map);
+        Object.keys(map).forEach(function (nodeId) { return map[nodeId].children.slice(0); });
+        return new NodeMap(map, this.rootNode);
+    };
+    NodeMap.prototype.replaceChildInParent = function (parent, currentNode, newNode) {
+        var entry = this.get(parent);
+        if (!entry.children)
+            return this;
+        var index = entry.children.indexOf(currentNode);
+        if (index === -1)
+            return this;
+        entry.children[index] = newNode;
+        return this;
+    };
+    NodeMap.prototype.removeChildFromParent = function (parent, child) {
+        var siblings = this.get(parent).children;
+        var index = siblings.indexOf(child);
+        if (index !== -1)
+            siblings.splice(index, 1);
+        return this;
+    };
+    NodeMap.prototype.removeRecursively = function (nodes) {
+        var _this = this;
+        nodes.forEach(function (node) {
+            _this.removeRecursively(_this.get(node).children);
+            delete _this.map[node.id.toString()];
+        });
+        return this;
+    };
+    return NodeMap;
+}());
+
+var Selection = /** @class */ (function () {
+    // todo the getter properties in these class are inconsistent with the getter functions in the Node class
+    function Selection(anchorNode, focusNode, anchorOffset, focusOffset) {
+        this._focusNode = focusNode;
+        this._anchorNode = anchorNode;
+        this._focusOffset = focusOffset;
+        this._anchorOffset = anchorOffset;
+    }
+    Selection.caret = function (node, offset) {
+        return new Selection(node, node, offset, offset);
+    };
+    Selection.fromJson = function (_a) {
+        var anchorNode = _a.anchorNode, focusNode = _a.focusNode, anchorOffset = _a.anchorOffset, focusOffset = _a.focusOffset;
+        return new Selection(anchorNode, focusNode, anchorOffset, focusOffset);
+    };
+    Object.defineProperty(Selection.prototype, "anchorNode", {
+        get: function () {
+            return this._anchorNode;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "focusNode", {
+        get: function () {
+            return this._focusNode;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "anchorOffset", {
+        get: function () {
+            return this._anchorOffset;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "focusOffset", {
+        get: function () {
+            return this._focusOffset;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "firstNode", {
+        get: function () {
+            return this.nodeOrder <= 0 ? this._anchorNode : this._focusNode;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "lastNode", {
+        get: function () {
+            return this.nodeOrder <= 0 ? this._focusNode : this._anchorNode;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "firstOffset", {
+        get: function () {
+            var nodeOrder = this.nodeOrder;
+            return nodeOrder === 0 ? Math.min(this._anchorOffset, this._focusOffset) : nodeOrder <= 0 ? this._anchorOffset : this._focusOffset;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "lastOffset", {
+        get: function () {
+            var nodeOrder = this.nodeOrder;
+            return nodeOrder === 0 ? Math.max(this._anchorOffset, this._focusOffset) : nodeOrder <= 0 ? this._focusOffset : this._anchorOffset;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "isCollapsed", {
+        get: function () {
+            return this._anchorNode === this._focusNode && this._anchorOffset === this._focusOffset;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "containedNodes", {
+        get: function () {
+            var firstNode = this.firstNode;
+            var lastNode = this.lastNode;
+            return [firstNode].concat(Node.nodesBetween(firstNode, lastNode), [lastNode]);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Selection.prototype, "nodeOrder", {
+        get: function () {
+            if (this._nodeOrder === undefined)
+                this._nodeOrder = this._anchorNode.comparePositionWith(this._focusNode);
+            return this._nodeOrder;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Selection.prototype.moveFocus = function (numChars) {
+        var _a = Selection.walkBy(this._focusNode, this._focusOffset, numChars), node = _a.node, offset = _a.offset;
+        return new Selection(this.anchorNode, node, this.anchorOffset, offset);
+    };
+    Selection.prototype.moveAnchor = function (numChars) {
+        var _a = Selection.walkBy(this._anchorNode, this._anchorOffset, numChars), node = _a.node, offset = _a.offset;
+        return new Selection(node, this.focusNode, offset, this.focusOffset);
+    };
+    Selection.walkBy = function (node, startOffset, numChars) {
+        return numChars < 0 ? Selection.walkBackwardsBy(node, startOffset, Math.abs(numChars)) : Selection.walkForwardsBy(node, startOffset, numChars);
+    };
+    Selection.walkBackwardsBy = function (node, startOffset, numChars) {
+        if (numChars < 0)
+            throw new Error("numChars must be greater than 0. You gave " + numChars);
+        if (startOffset - numChars >= 0)
+            return { node: node, offset: startOffset - numChars };
+        var prevText = node.prevTextLeaf();
+        return Selection.walkBackwardsBy(prevText, prevText.length, numChars - startOffset);
+    };
+    Selection.walkForwardsBy = function (node, startOffset, numChars) {
+        if (numChars < 0)
+            throw new Error("numChars must be greater than 0. You gave " + numChars);
+        if (startOffset + numChars < node.length)
+            return { node: node, offset: startOffset + numChars };
+        var nextText = node.nextTextLeaf();
+        return Selection.walkBackwardsBy(nextText, 0, numChars - node.length);
+    };
+    return Selection;
+}());
+
+function insertTextTransformation (doc, action) {
+    var _a = action.selection, focusNode = _a.focusNode, focusOffset = _a.focusOffset, str = action.str;
+    var newNode = focusNode.insertString(focusOffset, str);
+    var newDoc = doc.replaceNode(focusNode, newNode);
+    var newSelection = Selection.caret(newNode, focusOffset + 1);
+    return { doc: newDoc, selection: newSelection };
+}
+
+function deleteSelectionTransformation (doc, action) {
+    var _a = action.selection, firstNode = _a.firstNode, lastNode = _a.lastNode, firstOffset = _a.firstOffset, lastOffset = _a.lastOffset;
+    if (firstNode === lastNode) {
+        var newTextNode = firstNode.removeString(firstOffset, lastOffset);
+        var newDoc_1 = doc.replaceNode(firstNode, newTextNode);
+        var newSelection_1 = Selection.caret(newTextNode, firstOffset);
+        return { doc: newDoc_1, selection: newSelection_1 };
+    }
+    var newDoc, newFirstNode, newLastNode, newSelection;
+    var nodesHaveSameParent = firstNode.parent() === lastNode.parent();
+    var encapsulatedNodes = Node.nodesBetween(firstNode, lastNode);
+    newFirstNode = firstNode.removeString(firstOffset);
+    newLastNode = lastNode.removeString(0, lastOffset);
+    if (firstNode.attrsEqual(lastNode)) {
+        newFirstNode = newFirstNode.appendString(lastNode.text);
+        newDoc = doc
+            .replaceNode(firstNode, newFirstNode)
+            .deleteNode(lastNode);
+    }
+    else {
+        newDoc = doc
+            .replaceNodes([firstNode, lastNode], [newFirstNode, newLastNode]);
+    }
+    newDoc = newDoc.deleteNodes(encapsulatedNodes);
+    newDoc = nodesHaveSameParent ? newDoc : newDoc.mergeParents(newFirstNode, lastNode);
+    newSelection = Selection.caret(newFirstNode, firstOffset);
+    return { doc: newDoc, selection: newSelection };
+}
+
+var TYPE_INPUT = 'input';
+var TYPE_INSERT_TEXT = 'insert_text';
+var DELETE_SELECTION = 'delete_selection';
+
+var Block = /** @class */ (function (_super) {
+    __extends(Block, _super);
+    function Block(tagName, originId) {
+        var _this = _super.call(this, originId) || this;
+        _this.tagName = tagName;
+        return _this;
+    }
+    Block.prototype.clone = function (properties) {
+        if (properties === void 0) { properties = {}; }
+        var tagName = properties.tagName || this.tagName;
+        return new Block(tagName, this.originId);
+    };
+    return Block;
+}(Node));
+
+var Text = /** @class */ (function (_super) {
+    __extends(Text, _super);
+    function Text(text, attrs, originId) {
+        if (text === void 0) { text = ''; }
+        if (attrs === void 0) { attrs = []; }
+        var _this = _super.call(this, originId) || this;
+        _this._text = text;
+        _this._attrs = attrs;
+        return _this;
+    }
+    Object.defineProperty(Text.prototype, "text", {
+        get: function () {
+            return this._text;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Text.prototype, "attrs", {
+        get: function () {
+            return this._attrs;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Text.prototype, "length", {
+        get: function () {
+            return this.text.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Text.prototype.insertString = function (offset, str) {
+        var text = this.text.substr(0, offset) + str + this.text.substr(offset);
+        return this.clone({ text: text });
+    };
+    Text.prototype.appendString = function (str) {
+        var text = this.text + str;
+        return this.clone({ text: text });
+    };
+    Text.prototype.removeString = function (startOffset, endOffset) {
+        if (endOffset === void 0) { endOffset = this.length; }
+        var lowerOffset = Math.min(startOffset, endOffset);
+        var higherOffset = Math.max(startOffset, endOffset);
+        var text = this.text.substr(0, lowerOffset) + this.text.substr(higherOffset);
+        return this.clone({ text: text });
+    };
+    Text.prototype.attrsEqual = function (that) {
+        if (this.attrs.length !== that.attrs.length)
+            return false;
+        var _a = [this.attrs.sort(), that.attrs.sort()], a = _a[0], b = _a[1];
+        for (var i = 0, len = a.length; i < len; i++)
+            if (a[i] !== b[i])
+                return false;
+        return true;
+    };
+    Text.prototype.prevTextLeaf = function () {
+        return this.prevLeaf(function (node) { return node instanceof Text; });
+    };
+    Text.prototype.nextTextLeaf = function () {
+        return this.nextLeaf(function (node) { return node instanceof Text; });
+    };
+    Text.prototype.clone = function (properties) {
+        if (properties === void 0) { properties = {}; }
+        var text = properties.text || this.text;
+        var attrs = properties.attrs || this.attrs.slice(0);
+        var originId = properties.originId || this.originId;
+        return new Text(text, attrs, originId);
+    };
+    return Text;
+}(Node));
+
+var DomParser = /** @class */ (function () {
+    function DomParser() {
+    }
+    DomParser.getNodeMapFor = function (element) {
+        var nodeMap = new NodeMap();
+        nodeMap.setChildren(nodeMap.rootNode, DomParser.getChildrenAndAddToNodeMap(nodeMap, element, nodeMap.rootNode));
+        return nodeMap;
+    };
+    DomParser.getChildrenAndAddToNodeMap = function (nodeMap, element, parent, attrs) {
+        if (attrs === void 0) { attrs = []; }
+        var children = [];
+        Array.from(element.childNodes).forEach(function (childNode) {
+            if (DomParser.isBlockNode(childNode)) {
+                var block = new Block(childNode.tagName.toLowerCase());
+                nodeMap.set(block, parent, DomParser.getChildrenAndAddToNodeMap(nodeMap, childNode, block, attrs));
+                children.push(block);
+            }
+            if (DomParser.isTextNodeWithContents(childNode)) {
+                var text = new Text(childNode.nodeValue, attrs);
+                nodeMap.set(text, parent, []);
+                children.push(text);
+            }
+            if (DomParser.isAttributeNode(childNode)) {
+                var newAttrs = attrs.concat([DomParser.getAttr(childNode)]);
+                children.push.apply(children, DomParser.getChildrenAndAddToNodeMap(nodeMap, childNode, parent, newAttrs));
+            }
+        });
+        return children;
+    };
+    DomParser.isBlockNode = function (domNode) {
+        return domNode.tagName && DomParser.blockTags.indexOf(domNode.tagName.toLowerCase()) !== -1;
+    };
+    DomParser.isTextNodeWithContents = function (domNode) {
+        return domNode.nodeType === 3 && /[^\t\n\r ]/.test(domNode.textContent);
+    };
+    DomParser.isAttributeNode = function (domNode) {
+        var tagName = domNode.tagName ? domNode.tagName.toLowerCase() : null;
+        return !!(tagName && DomParser.tagAttributeMap[tagName]);
+    };
+    DomParser.getAttr = function (element) {
+        return DomParser.tagAttributeMap[element.tagName.toLowerCase()];
+    };
+    DomParser.blockTags = ['p', 'ul', 'ol', 'li', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div'];
+    DomParser.tagAttributeMap = {
+        strong: 'bold',
+        b: 'bold',
+        em: 'italic',
+        i: 'italic',
+        u: 'underline',
+        del: 'del'
+    };
+    return DomParser;
+}());
+
+var HtmlParser = /** @class */ (function () {
+    function HtmlParser() {
+    }
+    HtmlParser.getNodeMapFor = function (html) {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        return DomParser.getNodeMapFor(div);
+    };
+    return HtmlParser;
+}());
+
+var Doc = /** @class */ (function () {
+    function Doc(nodeMap) {
+        if (nodeMap === void 0) { nodeMap = new NodeMap(); }
+        this.id = ++Doc.nextDocId;
+        this.nodeMap = nodeMap;
+    }
+    Doc.fromHtml = function (html) {
+        var nodeMap = HtmlParser.getNodeMapFor(html);
+        return new Doc(nodeMap);
+    };
+    Doc.fromElement = function (element) {
+        var nodeMap = DomParser.getNodeMapFor(element);
+        return new Doc(nodeMap);
+    };
+    Doc.prototype.children = function () {
+        return this.nodeMap.getRoot().children;
+    };
+    Doc.prototype.replaceNode = function (node, newNode) {
+        return this.replaceNodes([node], [newNode]);
+    };
+    Doc.prototype.deleteNode = function (node) {
+        return this.deleteNodes([node]);
+    };
+    Doc.prototype.replaceNodes = function (nodes, newNodes) {
+        var nodeMap = this.nodeMap.clone();
+        nodes.forEach(function (node, index) { return nodeMap.replace(node, newNodes[index]); });
+        return new Doc(nodeMap);
+    };
+    Doc.prototype.deleteNodes = function (nodes) {
+        var nodeMap = this.nodeMap.clone();
+        nodes.forEach(function (node) { return nodeMap.remove(node); });
+        return new Doc(nodeMap);
+    };
+    Doc.prototype.merge = function (leftNode, rightNode) {
+        var nodeMap = this.nodeMap.clone();
+        nodeMap.merge(leftNode, rightNode);
+        return new Doc(nodeMap);
+    };
+    Doc.prototype.mergeParents = function (leftNode, rightNode) {
+        var leftParent = this.nodeMap.getParent(leftNode);
+        var rightParent = this.nodeMap.getParent(rightNode);
+        return this.merge(leftParent, rightParent);
+    };
+    Doc.prototype.transform = function (action) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(action.type === TYPE_INSERT_TEXT)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, insertTextTransformation(this, action)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        if (!(action.type === DELETE_SELECTION)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, deleteSelectionTransformation(this, action)];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4:
+                        console.warn("Could not find transformation for action \"" + action.type + "\"", action);
+                        return [2 /*return*/, { doc: this, selection: null }];
+                }
+            });
+        });
+    };
+    Doc.nextDocId = 0;
+    return Doc;
+}());
+
+var debug = {
+    log: {
+        docRendering: false,
+        nodeRendering: false,
+        middlewareCalls: false,
+        transformations: true
+    }
+};
+
+var _this = undefined;
+var inputMiddleware = (function () { return function (next) { return function (action) { return __awaiter(_this, void 0, void 0, function () {
+    var type, selectionJson, str, selection, newSelection, deleteSelectionAction, newSelection, deleteSelectionAction, insertTextAction;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                type = action.type, selectionJson = action.selection, str = action.str;
+                selection = Selection.fromJson(selectionJson);
+                if (debug.log.middlewareCalls)
+                    console.log('input', action);
+                if (type !== TYPE_INPUT) {
+                    return [2 /*return*/, next(action)];
+                }
+                if (['Meta', 'Control', 'Shift', 'Alt', 'Meta'].indexOf(str) !== -1) {
+                    return [2 /*return*/, next(action)];
+                }
+                if (/F\d+/.test(str)) {
+                    return [2 /*return*/, next(action)];
+                }
+                if (str === 'Backspace') {
+                    newSelection = selection.isCollapsed ? selection.moveFocus(-1) : selection;
+                    deleteSelectionAction = { type: 'delete_selection', selection: newSelection };
+                    return [2 /*return*/, next(deleteSelectionAction)];
+                }
+                if (str === 'Delete') {
+                    newSelection = selection.isCollapsed ? selection.moveFocus(1) : selection;
+                    deleteSelectionAction = { type: 'delete_selection', selection: newSelection };
+                    return [2 /*return*/, next(deleteSelectionAction)];
+                }
+                insertTextAction = { type: 'insert_text', selection: selection, str: str };
+                return [4 /*yield*/, next(insertTextAction)];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); }; }; });
+
+var _this$1 = undefined;
+var loggerMiddleware = (function (editor) { return function (next) { return function (action) { return __awaiter(_this$1, void 0, void 0, function () {
+    var prevDoc, nextDoc;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                prevDoc = editor.doc;
+                return [4 /*yield*/, next(action)];
+            case 1:
+                nextDoc = _a.sent();
+                if (debug.log.transformations) {
+                    console.group('%cTransformation%c %s', 'color: gray; font-weight: lighter;', 'color: inherit;', action.type);
+                    console.log('%c prev doc: %O', 'color: #9E9E9E;', prevDoc);
+                    console.log('%c action:   %O', 'color: #03A9F4;', action);
+                    console.log('%c next doc: %O', 'color: #4CAF50;', nextDoc);
+                    console.groupEnd();
+                }
+                return [2 /*return*/, nextDoc];
+        }
+    });
+}); }; }; });
+
+var middlewares = [
+    inputMiddleware,
+    loggerMiddleware,
+];
+
+var Actions = /** @class */ (function () {
+    function Actions(editor) {
+        this.composedMiddlewares = this.composeMiddlewares(middlewares, editor);
+        this.editor = editor;
+    }
+    Actions.prototype.dispatch = function (originalAction) {
+        var _this = this;
+        return new Promise(function (resolve) { return _this.composedMiddlewares(function (finalAction) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, doc, selection;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.editor.doc.transform(finalAction)];
+                    case 1:
+                        _a = _b.sent(), doc = _a.doc, selection = _a.selection;
+                        this.editor.doc = doc;
+                        resolve({ doc: doc, selection: selection });
+                        return [2 /*return*/, { doc: doc, selection: selection }];
+                }
+            });
+        }); })(originalAction); });
+    };
+    Actions.prototype.composeMiddlewares = function (middlewares$$1, editor) {
+        if (middlewares$$1.length === 0)
+            return function (arg) { return arg; };
+        if (middlewares$$1.length === 1)
+            return middlewares$$1[0];
+        return middlewares$$1
+            .map(function (middleware) { return middleware(editor); })
+            .reduce(function (a, b) { return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return a(b.apply(void 0, args));
+        }; });
+    };
+    return Actions;
+}());
+
+var Verne = /** @class */ (function () {
+    function Verne(doc) {
+        if (doc === void 0) { doc = new Doc(); }
+        this.doc = null;
+        this.actions = null;
+        this.doc = doc;
+        this.actions = new Actions(this);
+        Node.editor = this;
+    }
+    Verne.fromHtml = function (html) {
+        var doc = Doc.fromHtml(html);
+        return new Verne(doc);
+    };
+    Verne.fromElement = function (el) {
+        var doc = Doc.fromElement(el);
+        return new Verne(doc);
+    };
+    return Verne;
+}());
+
+exports.default = Verne;
+exports.Doc = Doc;
+exports.Node = Node;
+exports.Block = Block;
+exports.Text = Text;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -279,15 +1055,32 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 2 */
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.debug = {
+    log: {
+        docRendering: false,
+        nodeRendering: false,
+        middlewareCalls: false,
+        transformations: true,
+    }
+};
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(0);
-const text_1 = __webpack_require__(10);
-const config_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../config\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const text_1 = __webpack_require__(12);
+const config_1 = __webpack_require__(3);
 class Inline extends React.Component {
     shouldComponentUpdate(nextProps) {
         return nextProps.node.id !== this.props.node.id;
@@ -312,7 +1105,7 @@ exports.default = Inline;
 
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -345,13 +1138,13 @@ exports.default = NodeMap;
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_map_1 = __webpack_require__(3);
+const node_map_1 = __webpack_require__(5);
 class Selection {
     static getUserSelection() {
         const nativeSelection = window.getSelection();
@@ -389,31 +1182,31 @@ exports.default = Selection;
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const editor_1 = __webpack_require__(6);
+const editor_1 = __webpack_require__(8);
 exports.default = editor_1.default;
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(0);
-const verne_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"@verne/verne\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-const block_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../document/block\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-const text_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../document/text\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-const block_2 = __webpack_require__(9);
-const inline_1 = __webpack_require__(2);
-const eventHandlers_1 = __webpack_require__(14);
-const config_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../config\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const verne_1 = __webpack_require__(1);
+const verne_2 = __webpack_require__(1);
+const verne_3 = __webpack_require__(1);
+const block_1 = __webpack_require__(11);
+const inline_1 = __webpack_require__(4);
+const eventHandlers_1 = __webpack_require__(16);
+const config_1 = __webpack_require__(3);
 class Editor extends React.Component {
     constructor() {
         super(...arguments);
@@ -423,9 +1216,9 @@ class Editor extends React.Component {
         this.contentEditableProps = { contentEditable: true, suppressContentEditableWarning: true, spellCheck: false };
     }
     static renderNode(node) {
-        if (node instanceof block_1.default)
-            return React.createElement(block_2.default, { key: node.id, node: node });
-        if (node instanceof text_1.default)
+        if (node instanceof verne_2.Block)
+            return React.createElement(block_1.default, { key: node.id, node: node });
+        if (node instanceof verne_3.Text)
             return React.createElement(inline_1.default, { key: node.id, node: node });
     }
     render() {
@@ -441,7 +1234,7 @@ exports.default = Editor;
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -469,7 +1262,7 @@ isValidElement:K,version:"16.2.0",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_F
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1831,25 +2624,25 @@ module.exports = react;
   })();
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(0);
-const block_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../document/block\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-const text_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../document/text\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-const inline_1 = __webpack_require__(2);
-const config_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../config\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const verne_1 = __webpack_require__(1);
+const verne_2 = __webpack_require__(1);
+const inline_1 = __webpack_require__(4);
+const config_1 = __webpack_require__(3);
 class Block extends React.Component {
     static renderChild(node) {
-        if (node instanceof block_1.default)
+        if (node instanceof verne_1.Block)
             return React.createElement(Block, { key: node.id, node: node });
-        if (node instanceof text_1.default)
+        if (node instanceof verne_2.Text)
             return React.createElement(inline_1.default, { key: node.id, node: node });
     }
     render() {
@@ -1866,16 +2659,16 @@ exports.default = Block;
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(0);
-const ReactDOM = __webpack_require__(11);
-const node_map_1 = __webpack_require__(3);
-const config_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../config\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const ReactDOM = __webpack_require__(13);
+const config_1 = __webpack_require__(3);
+const node_map_1 = __webpack_require__(5);
 class Text extends React.Component {
     constructor() {
         super(...arguments);
@@ -1907,7 +2700,7 @@ exports.default = Text;
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1945,15 +2738,15 @@ if (process.env.NODE_ENV === 'production') {
   // DCE check should happen before ReactDOM bundle executes so that
   // DevTools can report bad minification during injection.
   checkDCE();
-  module.exports = __webpack_require__(12);
+  module.exports = __webpack_require__(14);
 } else {
-  module.exports = __webpack_require__(13);
+  module.exports = __webpack_require__(15);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2189,7 +2982,7 @@ Z.injectIntoDevTools({findFiberByHostInstance:pb,bundleType:0,version:"16.2.0",r
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17588,31 +18381,35 @@ module.exports = reactDom;
   })();
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const onBeforeInput_1 = __webpack_require__(15);
-const onKeyDown_1 = __webpack_require__(16);
+const onBeforeInput_1 = __webpack_require__(17);
+const onKeyDown_1 = __webpack_require__(18);
 const eventHandlers = [
     ['onBeforeInput', onBeforeInput_1.default],
     ['onKeyDown', onKeyDown_1.default],
 ];
 function getEventHandlers(editor) {
     return eventHandlers
-        .map(([eventName, handler]) => [eventName, (event) => handler(editor, event)])
-        .reduce((acc, [eventName, handler]) => (Object.assign({}, acc, { [eventName]: handler })), {});
+        .map(([eventName, handler]) => {
+        return [eventName, (event) => handler(editor, event)];
+    })
+        .reduce((acc, [eventName, handler]) => {
+        return Object.assign({}, acc, { [eventName]: handler });
+    }, {});
 }
 exports.default = getEventHandlers;
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17626,7 +18423,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const selection_1 = __webpack_require__(4);
+const selection_1 = __webpack_require__(6);
 function handleBeforeInput(editor, e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
@@ -17642,7 +18439,7 @@ exports.default = handleBeforeInput;
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17656,7 +18453,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const selection_1 = __webpack_require__(4);
+const selection_1 = __webpack_require__(6);
 const keysToHandle = ['Backspace', 'Delete'];
 function handleKeyDown(editor, e) {
     return __awaiter(this, void 0, void 0, function* () {

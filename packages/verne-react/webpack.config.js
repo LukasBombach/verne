@@ -1,5 +1,5 @@
 const path = require('path');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+// const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -21,7 +21,7 @@ module.exports = {
       { test: /\.tsx?$/, loader: 'awesome-typescript-loader', exclude: /node_modules/ }
     ]
   },
-  plugins: [
-    new FriendlyErrorsWebpackPlugin()
-  ]
+//   plugins: [
+//     new FriendlyErrorsWebpackPlugin()
+//   ]
 };

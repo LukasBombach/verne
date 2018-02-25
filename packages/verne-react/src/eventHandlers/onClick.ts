@@ -1,7 +1,7 @@
 import {MouseEvent} from "react";
 import Node from '../../../document/node';
-import Selection from '../selection';
 import WriteSelection from '../../../selection';
+import Selection from '../selection';
 import Editor from "../components/editor";
 
 export default async function handleOnClick(editor: Editor, e: MouseEvent<Node>) {

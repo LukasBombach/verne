@@ -18,5 +18,9 @@
     "rollup-plugin-typescript-ts-update": "0.8.2",
     "typescript": "2.7.2",
     "webpack": "3.11.0"
+  },
+  "dependencies": {
+    "@verne/verne-react": "^0.0.1",
+    "awesome-typescript-loader": "^3.5.0"
   }
 }

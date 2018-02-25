@@ -9,14 +9,18 @@
   "browser": "lib/verne.umd.js",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
-    "start": "rollup -c -w"
+    "watch": "rollup -c -w"
   },
   "devDependencies": {
     "awesome-typescript-loader": "3.4.1",
     "friendly-errors-webpack-plugin": "1.6.1",
     "rollup": "0.56.2",
     "rollup-plugin-typescript": "0.8.1",
+    "rollup-plugin-typescript-ts-update": "0.8.2",
     "typescript": "2.7.2",
     "webpack": "3.11.0"
+  },
+  "dependencies": {
+    "verne": "^0.0.1"
   }
 }

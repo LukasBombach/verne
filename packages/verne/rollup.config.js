@@ -1,13 +1,14 @@
-import typescript from 'rollup-plugin-typescript';
-import pkg from './package.json';
+const path = require('path');
+const typescript = require('rollup-plugin-typescript');
+const pkg = require('./package.json');
 
-export default [
+module.exports = [
   {
-    input: 'src/index.ts',
+    input: path.join('src', 'index.ts'),
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.browser, format: 'umd', name: 'Verne' },
-      { file: pkg.module, format: 'es' },
+      { file: path.join(pkg.main), format: 'cjs' },
+      { file: path.join(pkg.browser), format: 'umd', name: 'Verne' },
+      { file: path.join(pkg.module), format: 'es' },
     ],
     plugins: [
       typescript(),

@@ -8,12 +8,13 @@
   "browser": "lib/verne-react.umd.js",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
-    "start": "rollup -c -w"
+    "watch": "rollup -c -w"
   },
   "dependencies": {
     "@verne/verne": "0.0.1",
     "react": "16.2.0",
-    "react-dom": "16.2.0"
+    "react-dom": "16.2.0",
+    "verne": "^0.0.1"
   },
   "devDependencies": {
     "@types/react": "16.0.34",
@@ -21,8 +22,8 @@
     "prop-types": "15.6.0",
     "rollup": "0.56.2",
     "rollup-plugin-typescript": "0.8.1",
-    "rollup-plugin-typescript-ts-update": "^0.8.2",
-    "typescript": "^2.7.2",
+    "rollup-plugin-typescript-ts-update": "0.8.2",
+    "typescript": "2.7.2",
     "webpack": "3.11.0"
   }
 }

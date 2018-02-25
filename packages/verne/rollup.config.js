@@ -1,5 +1,5 @@
 const path = require('path');
-const typescript = require('rollup-plugin-typescript-ts-update');
+const typescript = require('rollup-plugin-typescript2');
 const pkg = require('./package.json');
 
 const basePath = process.env.USE_VERNE_PACKAGES ? path.join('packages', 'verne') : '';
@@ -13,7 +13,9 @@ module.exports = [
       { exports: 'named', file: path.join(basePath, pkg.module), format: 'es' },
     ],
     plugins: [
-      typescript(),
+      typescript({
+        typescript: require('typescript')
+      }),
     ],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;

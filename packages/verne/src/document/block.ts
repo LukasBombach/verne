@@ -1,6 +1,6 @@
 import Node from "./node";
 
-interface CloneProperties {
+export interface CloneProperties {
   tagName?: string;
   parent?: Node;
   children?: Node[];

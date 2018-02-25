@@ -7,20 +7,17 @@
   "main": "lib/verne.cjs.js",
   "module": "lib/verne.esm.js",
   "browser": "lib/verne.umd.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
-    "start": "rollup -c -w"
+    "start": "rollup -c"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "3.4.1",
+    "awesome-typescript-loader": "3.5.0",
     "friendly-errors-webpack-plugin": "1.6.1",
     "rollup": "0.56.2",
-    "rollup-plugin-typescript-ts-update": "0.8.2",
+    "rollup-plugin-typescript2": "0.11.1",
     "typescript": "2.7.2",
     "webpack": "3.11.0"
-  },
-  "dependencies": {
-    "@verne/verne-react": "^0.0.1",
-    "awesome-typescript-loader": "^3.5.0"
   }
 }

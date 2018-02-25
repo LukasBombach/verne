@@ -1,6 +1,6 @@
 import Node from "./node";
 
-interface CloneProperties {
+export interface CloneProperties {
   text?: string;
   attrs?: string[];
   parent?: Node;

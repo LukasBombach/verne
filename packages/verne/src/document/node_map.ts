@@ -1,10 +1,10 @@
 import Node from "./node";
 
-interface Map {
+export interface Map {
   [key: string]: MapEntry;
 }
 
-interface MapEntry {
+export interface MapEntry {
   parent: Node;
   children: Node[];
 }

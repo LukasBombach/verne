@@ -8,20 +8,20 @@
   "browser": "lib/verne-react.umd.js",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
-    "start": "rollup -c -w"
+    "start": "rollup -c"
   },
   "dependencies": {
     "@verne/verne": "0.0.1",
-    "awesome-typescript-loader": "^3.5.0",
     "react": "16.2.0",
     "react-dom": "16.2.0"
   },
   "devDependencies": {
     "@types/react": "16.0.34",
     "@types/react-dom": "16.0.3",
+    "awesome-typescript-loader": "3.5.0",
     "prop-types": "15.6.0",
     "rollup": "0.56.2",
-    "rollup-plugin-typescript-ts-update": "0.8.2",
+    "rollup-plugin-typescript2": "0.11.1",
     "typescript": "2.7.2",
     "webpack": "3.11.0"
   }

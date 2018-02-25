@@ -3,7 +3,7 @@ import Text from '../document/text';
 import NodeMap from "../document/node_map";
 import Node from "../document/node";
 
-interface TagAttributeMap {
+export interface TagAttributeMap {
   [key: string]: string;
 }
 

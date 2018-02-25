@@ -9,15 +9,15 @@ import Inline from './inline';
 import getEventHandlers from '../eventHandlers';
 import { debug } from "../config";
 
-interface EditorProps {
+export interface EditorProps {
   html?: string;
 }
 
-interface EditorState {
+export interface EditorState {
   doc: Doc;
 }
 
-interface EventHandlers {
+export interface EventHandlers {
   [key: string]: Function
 }
 

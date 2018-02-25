@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "author": "Lukas Bombach",
   "license": "MIT",
-  "main": "lib/verne-react.cjs.js",
-  "module": "lib/verne-react.esm.js",
-  "browser": "lib/verne-react.umd.js",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/index.umd.js",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
     "start": "rollup -c"

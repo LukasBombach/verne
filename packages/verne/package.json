@@ -4,9 +4,9 @@
   "description": "A WYSIWYG library that does not suck",
   "author": "Lukas Bombach",
   "license": "MIT",
-  "main": "lib/verne.cjs.js",
-  "module": "lib/verne.esm.js",
-  "browser": "lib/verne.umd.js",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/index.umd.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",

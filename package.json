@@ -9,7 +9,7 @@
   },
   "scripts": {
     "rollup": "rollup -c -w",
-    "watch": "lerna run --parallel watch",
+    "lerna": "lerna run --parallel watch",
     "build": "node scripts/build"
   },
   "dependencies": {

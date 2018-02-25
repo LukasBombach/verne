@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react'), require('react-dom'), require('@verne/verne')) :
-	typeof define === 'function' && define.amd ? define(['react', 'react-dom', '@verne/verne'], factory) :
-	(global.Verne = factory(global.React,global.ReactDOM,global.Verne));
-}(this, (function (React,ReactDOM,Verne) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom'), require('@verne/verne')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom', '@verne/verne'], factory) :
+	(factory((global.Verne = {}),global.React,global.ReactDOM,global.Verne));
+}(this, (function (exports,React,ReactDOM,Verne) { 'use strict';
 
 var Verne__default = 'default' in Verne ? Verne['default'] : Verne;
 
@@ -213,6 +213,8 @@ class Editor extends React.Component {
     }
 }
 
-return Editor;
+exports.default = Editor;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));

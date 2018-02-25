@@ -1,5 +1,7 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var React = require('react');
@@ -214,4 +216,4 @@ class Editor extends React.Component {
     }
 }
 
-module.exports = Editor;
+exports.default = Editor;

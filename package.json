@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "USE_VERNE_PACKAGES=true rollup -c",
-    "lerna": "lerna run --parallel start",
-    "build": "node scripts/build"
+    "lerna": "lerna run --parallel start"
   }
 }

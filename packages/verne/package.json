@@ -10,7 +10,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
-    "start": "rollup -c"
+    "start": "rollup -c -w"
   },
   "devDependencies": {
     "awesome-typescript-loader": "3.5.0",

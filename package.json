@@ -2,12 +2,11 @@
   "description": "A WYSIWYG library that does not suck",
   "private": true,
   "devDependencies": {
-    "chalk": "2.3.1",
     "lerna": "2.9.0",
     "rollup": "0.56.2"
   },
   "scripts": {
-    "start": "USE_VERNE_PACKAGES=true rollup -c",
-    "lerna": "lerna run --parallel start"
+    "start": "USE_VERNE_PACKAGES=true rollup -c -w",
+    "install": "lerna bootstrap"
   }
 }

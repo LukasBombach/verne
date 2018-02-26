@@ -2,3 +2,6 @@
 .idea
 .rpt2_cache
 node_modules
+lib/**/*.js
+lib/**/*.ts
+lib/**/*.map

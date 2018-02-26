@@ -20,6 +20,6 @@ export default class Verne {
   constructor(doc: Doc = new Doc()) {
     this.doc = doc;
     this.actions = new Actions(this);
-    Node.editor = this;
+    Node.verne = this;
   }
 }

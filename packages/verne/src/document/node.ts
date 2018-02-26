@@ -1,9 +1,9 @@
-import WriteEditor from "../verne";
+import Verne from "../verne";
 
 export default class Node {
 
   private static nextNodeId = 0;
-  public static editor: WriteEditor;
+  public static verne: Verne;
 
   public id: Readonly<number>;
   public originId: Readonly<number>;
@@ -23,13 +23,13 @@ export default class Node {
   }
 
   parent(condition = (node: Node) => true): Node {
-    const parent = Node.editor.doc.nodeMap.getParent(this);
+    const parent = Node.verne.doc.nodeMap.getParent(this);
     if (condition(parent)) return parent;
     return parent ? parent.parent(condition) : null;
   }
 
   children(condition = (node: Node) => true): Node[] {
-    const children = Node.editor.doc.nodeMap.getChildren(this);
+    const children = Node.verne.doc.nodeMap.getChildren(this);
     return children ? children.filter(condition) : [];
   }
 

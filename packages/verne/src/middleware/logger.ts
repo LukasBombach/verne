@@ -1,9 +1,9 @@
 import {debug} from "../config";
-import WriteEditor from "../verne";
+import Verne from "../verne";
 
-export default (editor: WriteEditor) => (next: Function) => async (action: any) => {
+export default (verne: Verne) => (next: Function) => async (action: any) => {
 
-  const prevDoc = editor.doc;
+  const prevDoc = verne.doc;
   const nextDoc = await next(action);
 
   if (debug.log.transformations) {

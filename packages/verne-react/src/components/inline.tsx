@@ -3,11 +3,11 @@ import { Text as TextNode } from "@verne/verne";
 import Text from './text';
 import { debug } from '../config';
 
-interface InlineProps {
+export interface InlineProps {
   node: TextNode
 }
 
-interface attributeElementsMap {
+export interface attributeElementsMap {
   [key:string]: string;
   bold: string;
   italic: string;

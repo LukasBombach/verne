@@ -8,6 +8,7 @@
   "browser": "lib/index.umd.js",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
+    "build": "rollup -c",
     "start": "rollup -c -w"
   },
   "dependencies": {

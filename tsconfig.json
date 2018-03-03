@@ -14,8 +14,8 @@
     "declaration": true
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "packages/*/src/**/*",
+    "packages/*/tests/**/*"
   ],
   "exclude": [
     "node_modules",

@@ -1,4 +1,4 @@
-import TextNode from "../../document/text";
+import { Text as TextNode } from "@verne/verne";
 
 export default class NodeMap {
 

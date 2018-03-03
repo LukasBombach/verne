@@ -5,7 +5,7 @@ import { Text as TextNode } from "@verne/verne";
 import Inline from './inline';
 import { debug } from '../config';
 
-interface BlockProps {
+export interface BlockProps {
   node: BlockNode;
 }
 

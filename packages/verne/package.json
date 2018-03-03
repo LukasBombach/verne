@@ -10,6 +10,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "start:webpack": "webpack --progress --colors --watch --env=development",
+    "build": "rollup -c",
     "start": "rollup -c -w"
   },
   "devDependencies": {

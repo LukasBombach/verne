@@ -4,7 +4,7 @@ import { Text as TextNode } from "@verne/verne";
 import { debug } from '../config';
 import NodeMap from '../node_map';
 
-interface TextProps {
+export interface TextProps {
   node: TextNode
 }
 

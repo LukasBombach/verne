@@ -2,7 +2,7 @@ const path = require('path');
 const typescript = require('rollup-plugin-typescript2');
 const pkg = require('./package.json');
 
-const basePath = process.env.USE_VERNE_PACKAGES ? path.join('.', 'packages', 'verne') : '.';
+const basePath = process.env.USE_VERNE_PACKAGES ? path.join('packages', 'verne') : '';
 
 module.exports = [
   {

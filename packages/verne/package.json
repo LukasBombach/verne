@@ -9,16 +9,14 @@
   "browser": "lib/index.umd.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "start:webpack": "webpack --progress --colors --watch --env=development",
     "build": "rollup -c",
-    "start": "rollup -c -w"
+    "start": "rollup -c -w",
+    "start:webpack": "webpack --progress --colors --watch --env=development"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "3.5.0",
-    "friendly-errors-webpack-plugin": "1.6.1",
     "rollup": "0.56.2",
     "rollup-plugin-typescript2": "0.11.1",
     "typescript": "2.7.2",
-    "webpack": "3.11.0"
+    "webpack": "4.1.0"
   }
 }

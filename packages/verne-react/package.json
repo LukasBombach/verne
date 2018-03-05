@@ -7,9 +7,9 @@
   "module": "lib/index.esm.js",
   "browser": "lib/index.umd.js",
   "scripts": {
-    "start:webpack": "webpack --progress --colors --watch --env=development",
     "build": "rollup -c",
-    "start": "rollup -c -w"
+    "start": "rollup -c -w",
+    "start:webpack": "webpack --progress --colors --watch --env=development"
   },
   "dependencies": {
     "@verne/verne": "0.0.1",
@@ -19,11 +19,10 @@
   "devDependencies": {
     "@types/react": "16.0.34",
     "@types/react-dom": "16.0.3",
-    "awesome-typescript-loader": "3.5.0",
     "prop-types": "15.6.0",
     "rollup": "0.56.2",
     "rollup-plugin-typescript2": "0.11.1",
     "typescript": "2.7.2",
-    "webpack": "3.11.0"
+    "webpack": "4.1.0"
   }
 }

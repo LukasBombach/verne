@@ -14,7 +14,9 @@
   "dependencies": {
     "@verne/verne": "0.0.1",
     "react": "16.2.0",
-    "react-dom": "16.2.0"
+    "react-dom": "16.2.0",
+    "rollup-plugin-commonjs": "^9.0.0",
+    "rollup-plugin-node-resolve": "^3.2.0"
   },
   "devDependencies": {
     "@types/react": "16.0.34",

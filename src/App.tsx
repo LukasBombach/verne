@@ -1,9 +1,9 @@
 import React from "react";
 import { css } from "linaria";
-import TextField from "./components/TextField";
+import Container from "./components/Container";
 
 function App() {
-  return <TextField />;
+  return <Container />;
 }
 
 css`

@@ -14,10 +14,19 @@ const TextField: FC = ({ children, ...props }) => {
   const ref = useAutofocus<HTMLDivElement>();
 
   return (
-    <Container {...props} contentEditable={true} ref={ref}>
+    <Container
+      {...props}
+      ref={ref}
+      contentEditable={true}
+      onKeyDown={handleKeyDown}
+    >
       {children}
     </Container>
   );
 };
+
+function handleKeyDown(...args: any[]) {
+  console.log(...args);
+}
 
 export default TextField;

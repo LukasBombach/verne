@@ -1,7 +1,0 @@
-.DS_Store
-.idea
-.rpt2_cache
-lib/**/*.js
-lib/**/*.ts
-lib/**/*.map
-node_modules

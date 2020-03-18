@@ -1,6 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { FC, KeyboardEvent, useState } from "react";
 import { styled } from "linaria/react";
 import useAutofocus from "../hooks/useAutofocus";
+import useEvents from "../hooks/useEvents";
 import TextNode from "./Text";
 
 const Div = styled.div`
@@ -25,17 +26,17 @@ const initialState: Node<typeof TextNode>[] = [
 ];
 
 const Container: FC = props => {
-  const ref = useAutofocus<HTMLDivElement>();
   const [contents] = useState<Node<typeof TextNode>[]>(initialState);
+  const { emitNative } = useEvents();
+  const ref = useAutofocus<HTMLDivElement>();
 
   const children = contents.map(({ node, key, props }) => {
     const element = React.createElement(node, { ...props, key });
     return element;
   });
 
-  function handleKeyDown(...args: any[]) {
-    console.log(children);
-    console.log(...args);
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    emitNative("keyDown", event);
   }
 
   return (

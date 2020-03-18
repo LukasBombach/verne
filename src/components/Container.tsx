@@ -1,8 +1,8 @@
-import React, { FC, KeyboardEvent, useState } from "react";
+import React, { FC, KeyboardEvent } from "react";
 import { styled } from "linaria/react";
 import useAutofocus from "../hooks/useAutofocus";
 import useEvents from "../hooks/useEvents";
-import TextNode from "./Text";
+import { initialState } from "../model";
 
 const Div = styled.div`
   border: 1px solid red;
@@ -12,28 +12,9 @@ const Div = styled.div`
   max-height: 300px;
 `;
 
-type NodeType = typeof TextNode;
-type Props<T extends NodeType> = T extends NodeType ? Parameters<T>[0] : never;
-
-interface Node<T extends NodeType> {
-  node: T;
-  key: number;
-  props: Props<T>;
-}
-
-const initialState: Node<typeof TextNode>[] = [
-  { node: TextNode, key: 1, props: { text: "hello world" } }
-];
-
 const Container: FC = props => {
-  const [contents] = useState<Node<typeof TextNode>[]>(initialState);
   const { emitNative } = useEvents();
   const ref = useAutofocus<HTMLDivElement>();
-
-  const children = contents.map(({ node, key, props }) => {
-    const element = React.createElement(node, { ...props, key });
-    return element;
-  });
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     emitNative("keyDown", event);
@@ -48,7 +29,9 @@ const Container: FC = props => {
       spellCheck={false}
       onKeyDown={handleKeyDown}
     >
-      {children}
+      {initialState.map(({ node, key, props }) =>
+        React.createElement(node, { ...props, key })
+      )}
     </Div>
   );
 };

@@ -28,14 +28,12 @@ const Container: FC = props => {
   const ref = useAutofocus<HTMLDivElement>();
   const [contents] = useState<Node<typeof TextNode>[]>(initialState);
 
-  const children = contents.map(({ node, key, props }) =>
-    React.createElement(node, { ...props, key })
-  );
+  const children = contents.map(({ node, key, props }) => {
+    const element = React.createElement(node, { ...props, key });
+    return element;
+  });
 
   function handleKeyDown(...args: any[]) {
-    debugger;
-
-    // idea useRef (or use sourcecode of useRef) for each child
     console.log(children);
     console.log(...args);
   }

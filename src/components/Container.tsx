@@ -24,11 +24,19 @@ const initialState: Node<typeof TextNode>[] = [
   { node: TextNode, key: 1, props: { text: "hello world" } }
 ];
 
-const Container: FC = ({ children, ...props }) => {
+const Container: FC = props => {
   const ref = useAutofocus<HTMLDivElement>();
   const [contents] = useState<Node<typeof TextNode>[]>(initialState);
 
+  const children = contents.map(({ node, key, props }) =>
+    React.createElement(node, { ...props, key })
+  );
+
   function handleKeyDown(...args: any[]) {
+    debugger;
+
+    // idea useRef (or use sourcecode of useRef) for each child
+    console.log(children);
     console.log(...args);
   }
 
@@ -41,9 +49,7 @@ const Container: FC = ({ children, ...props }) => {
       spellCheck={false}
       onKeyDown={handleKeyDown}
     >
-      {contents.map(({ node, key, props }) =>
-        React.createElement(node, { ...props, key })
-      )}
+      {children}
     </Div>
   );
 };

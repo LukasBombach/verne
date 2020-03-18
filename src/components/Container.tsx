@@ -14,8 +14,8 @@ const Div = styled.div`
 
 const Container = () => {
   const eventHandlers = useEventHandlers();
-  const doc = useDocument();
-  const ref = useAutofocus();
+  const [doc] = useDocument();
+  const ref = useAutofocus<HTMLDivElement>();
 
   const props = {
     ...eventHandlers,

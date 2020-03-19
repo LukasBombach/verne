@@ -7,7 +7,7 @@ interface TextProps {
 }
 
 const Text = ({ text, id }: TextProps) => {
-  const ref = useDomMap(id);
+  const { ref } = useDomMap(id);
   return <span ref={ref}>{text}</span>;
 };
 

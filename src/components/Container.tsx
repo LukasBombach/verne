@@ -14,8 +14,8 @@ const Div = styled.div`
 
 const Container = () => {
   const eventHandlers = useEventHandlers();
-  const [doc] = useDocument();
   const ref = useAutofocus<HTMLDivElement>();
+  const doc = useDocument();
 
   const props = {
     ...eventHandlers,
@@ -27,8 +27,8 @@ const Container = () => {
 
   return (
     <Div {...props}>
-      {doc.map(({ node, id, props }) =>
-        React.createElement(node, { ...props, id, key: id })
+      {doc.nodes.map(node =>
+        React.createElement(node, { ...props, key: props.id })
       )}
     </Div>
   );

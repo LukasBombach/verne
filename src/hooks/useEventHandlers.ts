@@ -14,7 +14,6 @@ export default function useEventHandlers() {
     if (!selection) return console.warn("No selection");
     if (!selection.isCollapsed)
       return console.warn("Selection is not collapsed");
-    debugger;
     console.log(event);
   }
 

@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
+
+const DomMapContext = React.createContext(new Map<HTMLElement, number>());
 
 export default function useDomMap(id: number) {
-  const [map] = useState(new Map());
-  const ref = useRef(null);
+  const map = useContext(DomMapContext);
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const element = ref.current;
@@ -15,9 +17,6 @@ export default function useDomMap(id: number) {
       };
     }
   }, [id, map]);
-
-  // add to map on mount
-  // remove from map on unmount
 
   return ref;
 }

@@ -25,7 +25,13 @@ const Container = () => {
     ref: ref
   };
 
-  return <Div {...props}>{doc}</Div>;
+  return (
+    <Div {...props}>
+      {doc.map(({ node, id, props }) =>
+        React.createElement(node, { ...props, id, key: id })
+      )}
+    </Div>
+  );
 };
 
 export default Container;

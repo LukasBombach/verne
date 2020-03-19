@@ -1,22 +1,22 @@
 import { useState } from "react";
-import produce from "immer";
 import TextNode from "../components/Text";
 
-type NodeType = typeof TextNode;
-type Props<T extends NodeType> = T extends NodeType ? Parameters<T>[0] : never;
+export type NodeType = typeof TextNode;
+export type Props<T extends NodeType> = { text: string }; //T extends NodeType ? Parameters<T>[0] : never;
+export type Doc = Node<typeof TextNode>[];
 
-interface Node<T extends NodeType> {
+export interface Node<T extends NodeType> {
   node: T;
-  key: number;
+  id: number;
   props: Props<T>;
 }
 
-const initialDoc: Node<typeof TextNode>[] = [
-  { node: TextNode, key: 1, props: { text: "hello world." } },
-  { node: TextNode, key: 2, props: { text: "how are you?" } }
+const initialDoc: Doc = [
+  { node: TextNode, id: 1, props: { text: "hello world." } },
+  { node: TextNode, id: 2, props: { text: "how are you?" } }
 ];
 
-export default function useDocument() {
-  const [doc, setDoc] = useState(initialDoc);
+export default function useDocument(): [Doc, (doc: Doc) => void] {
+  const [doc, setDoc] = useState<Doc>(initialDoc);
   return [doc, setDoc];
 }

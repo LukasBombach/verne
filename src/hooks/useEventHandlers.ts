@@ -19,10 +19,14 @@ export default function useEventHandlers() {
     if (!selection.focusNode) return console.warn("No focusNode");
     if (!selection.focusNode.parentElement)
       return console.warn("No parentElement");
-    const nodeId = map.get(selection.focusNode.parentElement);
-    if (!nodeId) return console.warn("No nodeId");
-    doc.keyDown(nodeId, selection.focusOffset, event.key);
-    console.log(nodeId);
+    const index = Array.prototype.indexOf.call(
+      selection.focusNode.parentElement.childNodes,
+      selection.focusNode
+    );
+    const node = doc.nodes[index];
+    const offset = selection.focusOffset;
+    const str = event.key;
+    doc.keyDown(node.id, { offset, str });
   }
 
   return { onKeyDown };

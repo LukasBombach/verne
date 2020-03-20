@@ -1,13 +1,19 @@
-import Node from "./node";
+// import any from "./component";
 import { KeyDownEvent } from "../event";
+import Text, { TextProps } from "../model/text";
+
+export interface Node {
+  Component: typeof Text;
+  props: TextProps;
+}
 
 export default class Document {
   protected static nextId = 0;
 
   readonly id: number;
-  readonly nodes: Node[];
+  readonly nodes: any[];
 
-  constructor(nodes: Node[]) {
+  constructor(nodes: any[]) {
     this.id = ++Document.nextId;
     this.nodes = nodes;
   }
@@ -24,7 +30,7 @@ export default class Document {
     return node;
   }
 
-  private replace(node: Node, newNode: Node): Document {
+  private replace(node: any, newNode: any): Document {
     const index = this.nodes.indexOf(node);
     if (index < 0) throw new Error(`Could not finde node ${node.id} in doc`);
     const newNodes = this.nodes.splice(index, 1, newNode);

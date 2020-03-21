@@ -32,6 +32,17 @@ export default class Document extends Component<{ nodes: Component[] }> {
       suppressContentEditableWarning: true,
       spellCheck: false
     };
-    return <div {...props}>{this.props.nodes.map(n => n.render())}</div>;
+    return (
+      <div {...props}>
+        {this.props.nodes
+          .map(n => ({
+            Component: n.render.bind(n) as any,
+            key: n.id
+          }))
+          .map(({ Component, key }) => (
+            <Component key={key} />
+          ))}
+      </div>
+    );
   }
 }

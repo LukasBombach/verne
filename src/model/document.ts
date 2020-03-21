@@ -33,7 +33,8 @@ export default class Document {
   private replace(node: any, newNode: any): Document {
     const index = this.nodes.indexOf(node);
     if (index < 0) throw new Error(`Could not finde node ${node.id} in doc`);
-    const newNodes = this.nodes.splice(index, 1, newNode);
-    return new Document(newNodes);
+    const nodes = [...this.nodes];
+    nodes.splice(index, 1, newNode);
+    return new Document(nodes);
   }
 }

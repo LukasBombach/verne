@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import { useState } from "react";
+import useEventHandlers from "./useEventHandlers";
 import Document from "../model/document";
 import Text from "../model/text";
 
-const initalNodes = [new Text("hello world. "), new Text("how are you?")];
+const initalDocument = new Document([
+  new Text("hello world. "),
+  new Text("how are you?")
+]);
 
-const DocumentContext = React.createContext(new Document(initalNodes));
-
-export default function useDocument(): Document {
-  const doc = useContext(DocumentContext);
-  return doc;
+export default function useDocument() {
+  const [doc, setDoc] = useState(initalDocument);
+  const eventHandlers = useEventHandlers(doc, setDoc);
+  return { doc, eventHandlers };
 }

@@ -1,16 +1,13 @@
 import { KeyboardEvent } from "react";
-import useDomMap from "./useDomMap";
-// import produce from "immer";
-import useDocument from "./useDocument";
-// import useEvents from "./useEvents";
+import Document from "../model/document";
 
-export default function useEventHandlers() {
+export default function useEventHandlers(
+  doc: Document,
+  setDoc: (doc: Document) => void
+) {
   const selection = window.getSelection();
-  const { map } = useDomMap();
-  // const emitter = useEvents();
-  const doc = useDocument();
 
-  function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  async function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     event.stopPropagation();
     event.preventDefault();
     if (!selection) return console.warn("No selection");
@@ -26,7 +23,8 @@ export default function useEventHandlers() {
     const node = doc.nodes[index];
     const offset = selection.focusOffset;
     const str = event.key;
-    doc.keyDown(node.id, { offset, str });
+    const newDoc = await doc.keyDown(node.id, { offset, str });
+    setDoc(newDoc);
   }
 
   return { onKeyDown };

@@ -1,5 +1,5 @@
 import { KeyboardEvent } from "react";
-import Document from "../model/document";
+import Document from "../components/Document";
 
 export default function useEventHandlers(
   doc: Document,
@@ -20,10 +20,10 @@ export default function useEventHandlers(
       selection.focusNode.parentElement.childNodes,
       selection.focusNode
     );
-    const node = doc.nodes[index];
+    const node = doc.props.nodes[index];
     const offset = selection.focusOffset;
     const str = event.key;
-    const newDoc = await doc.keyDown(node.id, { offset, str });
+    const newDoc = await doc.keyDown({ node, offset, str });
     setDoc(newDoc);
   }
 

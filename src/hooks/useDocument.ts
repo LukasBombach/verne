@@ -1,15 +1,9 @@
 import { useState } from "react";
 import useEventHandlers from "./useEventHandlers";
-import Document from "../model/document";
-import Text from "../model/text";
+import Document from "../components/Document";
 
-const initalDocument = new Document([
-  new Text("hello world. "),
-  new Text("how are you?")
-]);
-
-export default function useDocument() {
-  const [doc, setDoc] = useState(initalDocument);
+export default function useDocument(nodes = []) {
+  const [doc, setDoc] = useState(new Document({ nodes }));
   const eventHandlers = useEventHandlers(doc, setDoc);
   return { doc, eventHandlers };
 }

@@ -1,9 +1,22 @@
 import React from "react";
 import { css } from "linaria";
-import Container from "./components/Container";
+import { styled } from "linaria/react";
+import Document from "./components/Document";
+
+const Container = styled.div`
+  border: 1px solid red;
+  width: 100vw;
+  height: 100vh;
+  max-width: 500px;
+  max-height: 300px;
+`;
 
 function App() {
-  return <Container />;
+  return (
+    <Container>
+      <Document />
+    </Container>
+  );
 }
 
 css`

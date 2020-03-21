@@ -3,19 +3,12 @@ import { KeyDownEvent } from "../events";
 import Component from "./Component";
 import Text from "./Text";
 
-/* export interface Node<C extends Component> {
-  Component: C;
-  props: C extends Component<infer P> ? P : never;
-} */
-
-export type Node = any;
-
-const nodes = [
+const nodes: Component[] = [
   new Text({ text: "hello world. " }),
   new Text({ text: "how are you?" })
 ];
 
-export default class Document extends Component<{ nodes: Node[] }> {
+export default class Document extends Component<{ nodes: Component[] }> {
   static defaultProps = {
     nodes
   };
@@ -25,7 +18,7 @@ export default class Document extends Component<{ nodes: Node[] }> {
     return this.replace(event.node, newNode);
   }
 
-  private replace(node: Node, newNode: Node): Document {
+  private replace(node: Component, newNode: Component): Document {
     const index = this.props.nodes.indexOf(node);
     if (index < 0) throw new Error(`Could not finde node ${node.id} in doc`);
     const nodes = [...this.props.nodes];
@@ -39,7 +32,6 @@ export default class Document extends Component<{ nodes: Node[] }> {
       suppressContentEditableWarning: true,
       spellCheck: false
     };
-
     return <div {...props}>{this.props.nodes.map(n => n.render())}</div>;
   }
 }

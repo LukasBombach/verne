@@ -34,14 +34,9 @@ export default class Document extends Component<{ nodes: Component[] }> {
     };
     return (
       <div {...props}>
-        {this.props.nodes
-          .map(n => ({
-            Component: n.render.bind(n) as any,
-            key: n.id
-          }))
-          .map(({ Component, key }) => (
-            <Component key={key} />
-          ))}
+        {this.props.nodes.map(({ constructor: Node, id, props }) => (
+          <Node key={id} {...props} />
+        ))}
       </div>
     );
   }

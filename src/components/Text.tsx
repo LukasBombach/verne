@@ -1,14 +1,18 @@
-import Component from "./Component";
-import { KeyDownEvent } from "../events";
+import React from "react";
+import useDocument from "../hooks/useDocument";
+import useEvents from "../hooks/useEvents";
+import { VC } from "../types";
 
-export default class Text extends Component<{ text: string }> {
-  async keyDown({ offset, str }: KeyDownEvent): Promise<Text> {
-    const oldText = this.props.text;
-    const text = oldText.slice(0, offset) + str + oldText.slice(offset);
-    return new Text({ text });
-  }
+const Text: VC<{ text: string }> = ({ node }) => {
+  const { updateNode } = useDocument();
+  const events = useEvents();
 
-  render() {
-    return this.props.text;
-  }
-}
+  events.on("keyDown", ({ offset, str }) => {
+    const text = node.text.slice(0, offset) + str + node.text.slice(offset);
+    updateNode(node, { text });
+  });
+
+  return <>{node.text}</>;
+};
+
+export default Text;

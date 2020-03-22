@@ -1,18 +1,16 @@
 import { KeyboardEvent } from "react";
-import useDocument from "./useDocument";
-import useEvents, { VerneEmitter } from "./useEvents";
-import { Document } from "../types";
+import { Emitter } from "mitt";
+import { Document } from "../types/";
 
-export default function useEventHandlers() {
-  const { doc } = useDocument();
-  const emitter = useEvents();
-
-  return {
+export default function useNativeEvents(doc: Document, emitter: Emitter) {
+  const eventHandlers = {
     onKeyDown: (event: KeyboardEvent) => onKeyDown(doc, emitter, event)
   };
+
+  return eventHandlers;
 }
 
-function onKeyDown(doc: Document, emitter: VerneEmitter, event: KeyboardEvent) {
+function onKeyDown(doc: Document, emitter: Emitter, event: KeyboardEvent) {
   event.stopPropagation();
   event.preventDefault();
   const selection = window.getSelection();

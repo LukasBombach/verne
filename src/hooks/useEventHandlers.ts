@@ -20,11 +20,11 @@ export default function useEventHandlers(
       selection.focusNode.parentElement.childNodes,
       selection.focusNode
     );
-    const node = doc.props.nodes[index];
+    const node = doc.state.nodes[index];
     const offset = selection.focusOffset;
     const str = event.key;
     const newDoc = await doc.keyDown({ node, offset, str });
-    setDoc(newDoc);
+    // setDoc(newDoc);
   }
 
   return { onKeyDown };

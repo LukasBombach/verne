@@ -8,22 +8,40 @@ const nodes: Component[] = [
   new Text({ text: "how are you?" })
 ];
 
-export default class Document extends Component<{ nodes: Component[] }> {
-  static defaultProps = {
-    nodes
-  };
+export default class Document extends Component {
+  state = { nodes };
 
-  async keyDown(event: KeyDownEvent): Promise<Document> {
+  async keyDown(event: KeyDownEvent): Promise<void> {
     const newNode = await event.node.keyDown(event);
-    return this.replace(event.node, newNode);
+    this.replace(event.node, newNode);
   }
 
-  private replace(node: Component, newNode: Component): Document {
-    const index = this.props.nodes.indexOf(node);
+  private replace(node: Component, newNode: Component) {
+    const index = this.state.nodes.indexOf(node);
     if (index < 0) throw new Error(`Could not finde node ${node.id} in doc`);
-    const nodes = [...this.props.nodes];
+    const nodes = [...this.state.nodes];
     nodes.splice(index, 1, newNode);
-    return new Document({ nodes });
+    this.setState({ nodes });
+  }
+
+  private nativeKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    event.stopPropagation();
+    event.preventDefault();
+    const selection = window.getSelection();
+    if (!selection) return console.warn("No selection");
+    if (!selection.isCollapsed)
+      return console.warn("Selection is not collapsed");
+    if (!selection.focusNode) return console.warn("No focusNode");
+    if (!selection.focusNode.parentElement)
+      return console.warn("No parentElement");
+    const index = Array.prototype.indexOf.call(
+      selection.focusNode.parentElement.childNodes,
+      selection.focusNode
+    );
+    const node = this.state.nodes[index];
+    const offset = selection.focusOffset;
+    const str = event.key;
+    this.keyDown({ node, offset, str }).then(() => {});
   }
 
   render() {
@@ -33,8 +51,8 @@ export default class Document extends Component<{ nodes: Component[] }> {
       spellCheck: false
     };
     return (
-      <div {...props}>
-        {this.props.nodes.map(({ constructor: Node, id, props }) => (
+      <div {...props} onKeyDown={e => this.nativeKeyDown(e)}>
+        {this.state.nodes.map(({ constructor: Node, id, props }) => (
           <Node key={id} {...props} />
         ))}
       </div>

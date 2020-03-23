@@ -1,7 +1,7 @@
-import Component from "../components/Component";
+import { Node } from "../context/document";
 
 export interface KeyDownEvent {
-  node: Component;
+  node: Node;
   offset: number;
   str: string;
 }

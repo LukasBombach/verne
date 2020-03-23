@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Node } from "./useDocument";
+import { Node } from "../context/document";
 import mitt from "mitt";
 
 const EventsContext = createContext(mitt());

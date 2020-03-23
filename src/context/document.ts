@@ -1,11 +1,14 @@
 import { createContext } from "react";
 
-export type Node<T extends { id: number } = { id: -1 }> = T;
+export type Node<T extends {} = {}> = { id: number } & T;
 export type Document = Node[];
 
 export interface DocumentContext {
   nodes: Node[];
-  updateNode: (currentNode: Node, update: Partial<Node>) => void;
+  updateNode: <T extends {} = {}>(
+    currentNode: Node<T>,
+    update: Partial<Node<T>>
+  ) => void;
 }
 
 export const initialValue: DocumentContext = {

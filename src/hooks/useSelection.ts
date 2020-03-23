@@ -1,24 +1,29 @@
-import useDocument, { Node } from "./useDocument";
+import { Node } from "../context/document";
+import useDocument from "./useDocument";
 
 export interface Selection {
   node: Node;
   offset: number;
 }
 
-export default function useSelection(): Selection {
-  const { doc } = useDocument();
+export default function useSelection(): Selection | undefined {
+  const { nodes } = useDocument();
   const selection = window.getSelection();
   if (!selection) {
-    throw new Error("No selection");
+    console.warn("No selection");
+    return undefined;
   }
   if (!selection.isCollapsed) {
-    throw new Error("Selection is not collapsed");
+    console.warn("Selection is not collapsed");
+    return undefined;
   }
   if (!selection.focusNode) {
-    throw new Error("No focusNode");
+    console.warn("No focusNode");
+    return undefined;
   }
   if (!selection.focusNode.parentElement) {
-    throw new Error("No parentElement");
+    console.warn("No parentElement");
+    return undefined;
   }
 
   const index = Array.prototype.indexOf.call(
@@ -26,7 +31,7 @@ export default function useSelection(): Selection {
     selection.focusNode!
   );
 
-  const node = doc[index];
+  const node = nodes[index];
   const offset = selection.focusOffset;
 
   return { node, offset };

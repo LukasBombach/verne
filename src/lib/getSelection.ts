@@ -10,7 +10,7 @@ interface FiberNode<N extends { id: number }> {
 }
 
 export interface Selection {
-  node: Node<any>;
+  node: Node<Text>;
   offset: number;
 }
 
@@ -23,7 +23,7 @@ export default function getSelection({ nodes }: DocumentContext): Selection {
   return { node, offset };
 }
 
-function findReactInstance(node: any): FiberNode<any> {
+function findReactInstance(node: any): FiberNode<Text> {
   const keys = Object.keys(node);
   const reactKey = keys.find(k => k.startsWith("__reactInternalInstance"));
   if (!reactKey) throw new Error("Could not find React Internal Instance key");

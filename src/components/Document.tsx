@@ -1,11 +1,11 @@
 import React from "react";
 import documentContext from "../context/document";
-import DocumentProvider from "../hooks/useDocumentProvider";
+import useDocumentProvider from "../hooks/useDocumentProvider";
 import useContentEditable from "../hooks/useContentEditable";
 import useEventHandlers from "../hooks/useEventHandlers";
 
 const Document = () => {
-  const { nodes, updateNode } = DocumentProvider();
+  const { nodes, updateNode } = useDocumentProvider();
   const eventHandlers = useEventHandlers();
   const props = useContentEditable();
 

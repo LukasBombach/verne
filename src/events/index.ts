@@ -1,7 +1,7 @@
 import { Node } from "../context/document";
 
 export interface KeyDownEvent {
-  node: Node<any>;
+  node: Node<Text>;
   offset: number;
   str: string;
 }

@@ -1,19 +1,21 @@
-import { createContext } from "react";
+import { createContext, FC } from "react";
 
-export type Node<T extends {} = {}> = { id: number } & T;
-export type Document = Node[];
+export type Node<P extends {}> = P & { Node: VC<P> };
+export type VC<P = {}> = FC<{ node: P & { id: number } }>;
+
+export type UpdateNode = <N extends Node<any>>(
+  currentNode: N,
+  update: Partial<N>
+) => void;
 
 export interface DocumentContext {
-  nodes: Node[];
-  updateNode: <T extends {} = {}>(
-    currentNode: Node<T>,
-    update: Partial<Node<T>>
-  ) => void;
+  nodes: VC[];
+  updateNode: UpdateNode;
 }
 
 export const initialValue: DocumentContext = {
   nodes: [],
-  updateNode: (currentNode, update) => {}
+  updateNode: () => {}
 };
 
 const documentContext = createContext<DocumentContext>(initialValue);

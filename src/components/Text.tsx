@@ -1,7 +1,7 @@
 import React from "react";
 import useDocument from "../hooks/useDocument";
 import useEvents from "../hooks/useEvents";
-import { VC } from "../types";
+import { VC } from "../context/document";
 
 const Text: VC<{ text: string }> = ({ node }) => {
   const { updateNode } = useDocument();

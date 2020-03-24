@@ -6,7 +6,7 @@ const EventsContext = createContext(mitt());
 
 interface Events {
   keyDown: {
-    node: Node;
+    node: Node<any>;
     offset: number;
     str: string;
   };

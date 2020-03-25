@@ -1,16 +1,8 @@
 import { createContext, useContext } from "react";
-import { Node } from "../context/document";
+import { Events } from "../types";
 import mitt from "mitt";
 
 const EventsContext = createContext(mitt());
-
-interface Events {
-  keyDown: {
-    node: Node<Text>;
-    offset: number;
-    str: string;
-  };
-}
 
 type EventType = keyof Events;
 type Handler<T extends EventType> = (event: Events[T]) => void;

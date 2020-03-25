@@ -1,20 +1,19 @@
-import { Node } from "../context/document";
-import { DocumentContext } from "../context/document";
+import { Node, Props, TextProps } from "../types";
 
-interface FiberNode<N extends { id: number }> {
+interface FiberNode<P extends Props> {
   return: {
     memoizedProps: {
-      node: N;
+      node: Node<P>;
     };
   };
 }
 
 export interface Selection {
-  node: Node<Text>;
+  node: Node<TextProps>;
   offset: number;
 }
 
-export default function getSelection({ nodes }: DocumentContext): Selection {
+export default function getSelection(): Selection {
   const selection = window.getSelection();
   if (!selection?.focusNode?.parentElement) throw new Error("Selection error");
   const reactInstance = findReactInstance(selection.focusNode);
@@ -23,7 +22,7 @@ export default function getSelection({ nodes }: DocumentContext): Selection {
   return { node, offset };
 }
 
-function findReactInstance(node: any): FiberNode<Text> {
+function findReactInstance(node: any): FiberNode<TextProps> {
   const keys = Object.keys(node);
   const reactKey = keys.find(k => k.startsWith("__reactInternalInstance"));
   if (!reactKey) throw new Error("Could not find React Internal Instance key");

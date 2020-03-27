@@ -10,7 +10,7 @@ const initialNodes: Nodes = [
 export default function useDocumentProvider(): DocumentContext {
   const [nodes, setNodes] = useState<Nodes>(initialNodes);
 
-  const updateNode: UpdateNode = (node, props) => {
+  const updateNode: UpdateNode = async (node, props) => {
     const index = nodes.findIndex(n => n.id === node.id);
     if (index < 0) throw new Error(`Could not finde node ${node.id} in doc`);
     const newProps = { ...node, ...props };

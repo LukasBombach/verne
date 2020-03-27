@@ -8,11 +8,11 @@ export interface TextProps extends Props {
   text: string;
 }
 
-export type VC<P extends Props> = FC<{ node: P }>;
-export type Node<P extends Props> = P & { Node: VC<P> };
-export type Nodes = Node<TextProps>[];
+export type VC<P = TextProps> = FC<{ node: Node<P> }>;
+export type Node<P = TextProps> = P & { Node: VC<P> };
+export type Nodes = Node[];
 
-export type UpdateNode = <N extends Node<TextProps>>(
+export type UpdateNode = <N extends Node>(
   currentNode: N,
   update: Partial<N>
 ) => Promise<N>;
@@ -23,25 +23,25 @@ export interface DocumentContext {
 }
 
 export interface Selection {
-  node: Node<TextProps>;
+  node: Node;
   offset: number;
 }
 
 export interface Events {
   keyDown: {
-    node: Node<TextProps>;
+    node: Node;
     id: number;
     offset: number;
     str: string;
   };
 
   mount: {
-    node: Node<TextProps>;
+    node: Node;
     domNode: globalThis.Node;
   };
 
   unmount: {
-    node: Node<TextProps>;
+    node: Node;
     domNode: globalThis.Node;
   };
 }

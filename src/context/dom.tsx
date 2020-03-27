@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { Node, TextProps } from "../types";
+import { Node } from "../types";
 
-export const domMap = new Map<globalThis.Node, Node<TextProps>>();
+export const domMap = new Map<globalThis.Node, Node>();
 
 const domContext = createContext(domMap);
 

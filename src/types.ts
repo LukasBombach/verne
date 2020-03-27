@@ -15,18 +15,33 @@ export type Nodes = Node<TextProps>[];
 export type UpdateNode = <N extends TextProps>(
   currentNode: N,
   update: Partial<N>
-) => void;
+) => TextProps;
 
 export interface DocumentContext {
   nodes: Nodes;
   updateNode: UpdateNode;
 }
 
+export interface Selection {
+  props: TextProps;
+  offset: number;
+}
+
 export interface Events {
   keyDown: {
-    node: Node<TextProps>;
+    props: TextProps;
     id: number;
     offset: number;
     str: string;
+  };
+
+  mount: {
+    node: TextProps;
+    domNode: globalThis.Node;
+  };
+
+  unmount: {
+    node: TextProps;
+    domNode: globalThis.Node;
   };
 }

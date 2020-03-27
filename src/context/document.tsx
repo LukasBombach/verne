@@ -3,7 +3,9 @@ import { DocumentContext } from "../types";
 
 export const initialValue: DocumentContext = {
   nodes: [],
-  updateNode: () => {}
+  updateNode: () => {
+    throw new Error("Document has not been initialized yet");
+  }
 };
 
 const documentContext = createContext<DocumentContext>(initialValue);

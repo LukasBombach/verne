@@ -10,10 +10,10 @@ export default function useEventHandlers() {
     event.preventDefault();
     const selection = getSelection();
     if (!selection) return;
-    const { node, offset } = selection;
-    const { id } = node;
+    const { props, offset } = selection;
+    const { id } = props;
     const str = event.key;
-    const keyDownEvent = { node, id, offset, str };
+    const keyDownEvent = { props, id, offset, str };
     emitter.emit("keyDown", keyDownEvent);
   }
 

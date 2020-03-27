@@ -11,9 +11,8 @@ export default function useEventHandlers() {
     const selection = getSelection();
     if (!selection) return;
     const { node, offset } = selection;
-    const { id } = node;
     const str = event.key;
-    const keyDownEvent = { node, id, offset, str };
+    const keyDownEvent = { node, offset, str };
     emitter.emit("keyDown", keyDownEvent);
   }
 

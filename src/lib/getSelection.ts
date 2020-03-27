@@ -1,4 +1,4 @@
-import { domMap } from "../context/dom";
+import { domMap } from "../state/dom";
 import { Selection } from "../types";
 
 export default function getSelection(): Selection {

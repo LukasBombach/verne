@@ -8,17 +8,18 @@ export interface TextProps extends Props {
   text: string;
 }
 
-export type VC<P = TextProps> = FC<{ node: Node<P> }>;
-export type Node<P = TextProps> = P & { Node: VC<P> };
-export type Nodes = Node[];
+export interface Node<P = TextProps> {
+  Component: FC<P>;
+  props: P;
+}
 
 export type UpdateNode = <N extends Node>(
   currentNode: N,
-  update: Partial<N>
+  props: Partial<N["props"]>
 ) => Promise<N>;
 
 export interface DocumentContext {
-  nodes: Nodes;
+  nodes: Node[];
   updateNode: UpdateNode;
 }
 
@@ -30,7 +31,6 @@ export interface Selection {
 export interface Events {
   keyDown: {
     node: Node;
-    id: number;
     offset: number;
     str: string;
   };

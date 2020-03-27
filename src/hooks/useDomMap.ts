@@ -1,9 +1,11 @@
 import { useRef, useEffect, useContext } from "react";
 import domContext from "../context/dom";
 import useEvents from "../hooks/useEvents";
-import { TextProps } from "../types";
+import { Node, TextProps } from "../types";
 
-export default function useDomMap<T extends globalThis.Node>(node: TextProps) {
+export default function useDomMap<T extends globalThis.Node>(
+  node: Node<TextProps>
+) {
   const emitter = useEvents();
   const domMap = useContext(domContext);
   const ref = useRef<T>(null);

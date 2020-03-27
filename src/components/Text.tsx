@@ -8,7 +8,7 @@ const Text: VC<TextProps> = ({ node }) => {
   const { updateNode, ref } = useDocument<HTMLSpanElement>(node);
   const events = useEvents();
 
-  events.on("keyDown", ({ id, offset, str }) => {
+  events.on("keyDown", async ({ id, offset, str }) => {
     if (id !== node.id) return;
     const text = node.text.slice(0, offset) + str + node.text.slice(offset);
     const newOffset = offset + str.length;

@@ -1,16 +1,5 @@
 import { useState } from "react";
-
-function useVerne() {
-  const onInput = (callback: (value: string) => void) => {};
-
-  return { onInput };
-}
-
-/* function useKeyboard() {
-  const onInput = (callback: (value: string) => void) => {};
-
-  return { onInput };
-} */
+import useVerne from "../hooks/useVerne";
 
 const Text = () => {
   const [value, setValue] = useState("");

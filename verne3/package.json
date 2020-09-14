@@ -3,18 +3,26 @@
   "version": "1.0.0",
   "author": "Lukas Bombach",
   "license": "MIT",
-  "source": "src/index.ts",
+  "source": "src/index.tsx",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
   "unpkg": "dist/index.umd.js",
   "types": "dist/types",
   "scripts": {
-    "build": "microbundle",
-    "dev": "microbundle watch"
+    "dev": "snowpack dev",
+    "microbundle:build": "microbundle --jsx React.createElement",
+    "microbundle:dev": "microbundle --jsx React.createElement watch",
+    "microbundle:server": "servor . index.html 8080 --reload --browse"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "7.11.0",
+    "@snowpack/plugin-run-script": "2.1.2",
     "@types/react": "16.9.49",
+    "@types/react-dom": "16.9.8",
     "microbundle": "0.12.3",
-    "react": "16.13.1"
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "servor": "4.0.2",
+    "snowpack": "2.11.1"
   }
 }

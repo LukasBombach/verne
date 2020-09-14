@@ -8,9 +8,9 @@ function useEventListener(eventName: string, eventListener: EventListener) {
     const isSupported = element?.addEventListener;
     if (!isSupported) return;
 
-    element.addEventListener(eventName, eventListener);
+    element?.addEventListener(eventName, eventListener);
 
-    return () => element.removeEventListener(eventName, eventListener);
+    return () => element?.removeEventListener(eventName, eventListener);
   }, [eventName, element]);
 
   return elementRef;

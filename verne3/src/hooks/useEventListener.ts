@@ -1,17 +1,12 @@
-import { useRef, useEffect } from "react";
+import { useCallback } from "react";
 
 function useEventListener(eventName: string, eventListener: EventListener) {
-  const elementRef = useRef<HTMLElement>();
-  const element = elementRef.current;
-
-  useEffect(() => {
-    const isSupported = element?.addEventListener;
-    if (!isSupported) return;
-
-    element?.addEventListener(eventName, eventListener);
-
-    return () => element?.removeEventListener(eventName, eventListener);
-  }, [eventName, element]);
+  const elementRef = useCallback((element) => {
+    if (element !== null) {
+      console.log("addEventListener", eventName);
+      element.addEventListener(eventName, eventListener);
+    }
+  }, []);
 
   return elementRef;
 }

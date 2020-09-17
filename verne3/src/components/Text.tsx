@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useVerne from "../hooks/useVerne";
+import { useKeyboard, useCaret } from "../hooks";
 
 export interface TextProps {
   text?: string;
@@ -7,9 +7,14 @@ export interface TextProps {
 
 const Text = ({ text }: TextProps) => {
   const [value, setValue] = useState(text);
-  const { onInput } = useVerne();
+  const { onInput } = useKeyboard();
+  const { offset } = useCaret();
 
-  onInput((v) => setValue(v));
+  onInput((e) => {
+    const newValue = value?.slice(0, offset) + e.key + value?.slice(offset);
+    e.preventDefault();
+    setValue(newValue);
+  });
 
   return <span>{value}</span>;
 };

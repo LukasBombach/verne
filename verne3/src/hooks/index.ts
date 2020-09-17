@@ -1,3 +1,5 @@
-export { default as useDocument } from "./useDocument";
-export { default as useEventListener } from "./useEventListener";
-export { default as useVerne } from "./useVerne";
+export { useDocument } from "./useDocument";
+export { useEvent, useEventEmitter } from "./useEvents";
+export { useVerne } from "./useVerne";
+export { useKeyboard } from "./useKeyboard";
+export { useCaret } from "./useCaret";

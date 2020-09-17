@@ -1,5 +1,5 @@
 import React from "react";
-import { useDocument, useEventListener, useVerne } from "../hooks";
+import { useDocument, useEventEmitter, useVerne } from "../hooks";
 import type { Node } from "../hooks/useDocument";
 
 const initalDocument: Node = {
@@ -9,12 +9,8 @@ const initalDocument: Node = {
 
 const Verne = () => {
   const children = useDocument(initalDocument);
-  const { dispatchEvent } = useVerne();
-  const ref = useEventListener("keydown", (e) => {
-    console.log("useEventListener", "keydown", e);
-    e.preventDefault();
-    dispatchEvent("keydown", e);
-  });
+  const ref = useEventEmitter();
+
   return (
     <div contentEditable={true} suppressContentEditableWarning={true} ref={ref}>
       {children}

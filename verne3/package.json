@@ -24,5 +24,8 @@
     "react-dom": "16.13.1",
     "servor": "4.0.2",
     "snowpack": "2.11.1"
+  },
+  "dependencies": {
+    "mitt": "2.1.0"
   }
 }

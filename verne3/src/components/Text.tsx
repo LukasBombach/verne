@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useKeyboard, useCaret } from "../hooks";
 
 export interface TextProps {
@@ -14,24 +14,26 @@ const Text = ({ text }: TextProps) => {
 
   valueRef.current = value;
 
-  onInput((e) => {
-    const offset = getOffset();
+  useEffect(() => {
+    onInput((e) => {
+      const offset = getOffset();
 
-    if (!offset) return;
+      if (!offset) return;
 
-    const newValue =
-      valueRef.current?.slice(0, offset) +
-      e.key +
-      valueRef.current?.slice(offset);
+      const newValue =
+        valueRef.current?.slice(0, offset) +
+        e.key +
+        valueRef.current?.slice(offset);
 
-    e.preventDefault();
+      e.preventDefault();
 
-    setValue(newValue);
+      setValue(newValue);
 
-    if (spanRef.current?.firstChild) {
-      setOffset(spanRef.current.firstChild, offset + 1);
-    }
-  });
+      if (spanRef.current?.firstChild) {
+        setOffset(spanRef.current.firstChild, offset + 1);
+      }
+    });
+  }, []);
 
   return <span ref={spanRef}>{value}</span>;
 };

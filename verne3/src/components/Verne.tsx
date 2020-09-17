@@ -12,7 +12,12 @@ const Verne = () => {
   const ref = useEventEmitter();
 
   return (
-    <div contentEditable={true} suppressContentEditableWarning={true} ref={ref}>
+    <div
+      contentEditable={true}
+      suppressContentEditableWarning={true}
+      ref={ref}
+      style={{ whiteSpace: "pre-wrap" }}
+    >
       {children}
     </div>
   );

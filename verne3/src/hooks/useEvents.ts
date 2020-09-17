@@ -7,6 +7,7 @@ const emitter = mitt();
 
 export function useEvent(eventName: string) {
   const onEvent = (listener: Handler) => {
+    console.log("set up listener for", eventName);
     emitter.on(eventName, listener);
   };
   return onEvent;

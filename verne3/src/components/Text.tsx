@@ -33,6 +33,8 @@ const Text = ({ text }: TextProps) => {
         setOffset(spanRef.current.firstChild, offset + 1);
       }
     });
+
+    return () => console.log("todo: remove onInput listener");
   }, []);
 
   return <span ref={spanRef}>{value}</span>;

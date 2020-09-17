@@ -1,5 +1,5 @@
 import React from "react";
-import { useDocument, useEventEmitter, useVerne } from "../hooks";
+import { useDocument, useEventEmitter } from "../hooks";
 import type { Node } from "../hooks/useDocument";
 
 const initalDocument: Node = {

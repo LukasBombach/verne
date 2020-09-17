@@ -14,6 +14,7 @@ const Verne = () => {
   return (
     <div
       contentEditable={true}
+      spellCheck={false}
       suppressContentEditableWarning={true}
       ref={ref}
       style={{ whiteSpace: "pre-wrap" }}

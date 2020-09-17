@@ -15,17 +15,14 @@ const Text = ({ text }: TextProps) => {
   valueRef.current = value;
 
   useEffect(() => {
-    onInput((e) => {
+    onInput((key) => {
       const offset = getOffset();
-
       if (!offset) return;
 
       const newValue =
         valueRef.current?.slice(0, offset) +
-        e.key +
+        key +
         valueRef.current?.slice(offset);
-
-      e.preventDefault();
 
       setValue(newValue);
 

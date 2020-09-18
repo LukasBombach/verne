@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Provider } from "../document";
+import { Provider, insertText } from "../document";
 import { Text } from "./Text";
 
 import type { Node } from "../document";
@@ -58,11 +58,26 @@ export const Verne = () => {
     return node;
   };
 
+  const getCurrentlySelectedOffset = () => {
+    const selection = window.document.getSelection();
+    const range = selection?.getRangeAt(0);
+    const offset = range?.startOffset;
+    if (offset === undefined) {
+      throw new Error("Cannot get offset");
+    }
+    return offset;
+  };
+
   const onKeyDown: OnKeyDown = (event) => {
     event.preventDefault();
     if (!/^[a-zA-Z0-9 ]$/.test(event?.key)) return;
     const node = getCurrentlySelectedNode();
-    console.log(node);
+    const offset = getCurrentlySelectedOffset();
+    const newNode = insertText(node, offset, event?.key);
+    const children = document.children?.slice();
+    children?.splice(children?.indexOf(node), 1, newNode);
+    const newDocument = { ...document, children };
+    setDocument(newDocument);
   };
 
   return (

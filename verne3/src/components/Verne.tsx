@@ -68,16 +68,30 @@ export const Verne = () => {
     return offset;
   };
 
+  function setOffset(node: any /* Node */, offset: number) {
+    const range = new Range();
+    range.setStart(node, offset);
+    range.setEnd(node, offset);
+    window.document.getSelection()?.removeAllRanges();
+    window.document.getSelection()?.addRange(range);
+  }
+
   const onKeyDown: OnKeyDown = (event) => {
     event.preventDefault();
     if (!/^[a-zA-Z0-9 ]$/.test(event?.key)) return;
+    const selection = window.document.getSelection();
+    const range = selection?.getRangeAt(0);
+    const span = range?.startContainer.parentNode;
     const node = getCurrentlySelectedNode();
     const offset = getCurrentlySelectedOffset();
     const newNode = insertText(node, offset, event?.key);
     const children = document.children?.slice();
     children?.splice(children?.indexOf(node), 1, newNode);
     const newDocument = { ...document, children };
+    console.log("before", span?.firstChild?.textContent);
     setDocument(newDocument);
+    console.log("after", span?.firstChild?.textContent);
+    setOffset(span?.firstChild, offset + 1);
   };
 
   return (

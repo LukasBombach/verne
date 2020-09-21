@@ -1,7 +1,12 @@
 import React from "react";
+import { useVerne } from "../hooks";
 
-export interface TextProps {
-  text?: string;
-}
+import type { VC } from ".";
 
-export const Text = ({ text }: TextProps) => <span>{text}</span>;
+export const Text: VC = ({ node }) => {
+  const { onKeyDown, insertText, caret } = useVerne();
+  onKeyDown(key => insertText(node, caret.offset, key));
+  return <span>{node.text}</span>;
+};
+
+Text.onKeyDown;

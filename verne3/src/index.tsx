@@ -1,10 +1,7 @@
-// window.process = window.process || {};
-// window.process.env = { NODE_ENV: "development" };
-
 import React from "react";
 import ReactDOM from "react-dom";
 
-import Verne from "./components/Verne";
+import Verne from "./components/Verne2";
 
 ReactDOM.render(
   <React.StrictMode>

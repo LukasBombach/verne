@@ -18,5 +18,5 @@ export function useVerne() {
 
   const caret: Caret = {};
 
-  return { onKeyDown, insertText, caret };
+  return { /* onKeyDown, */ insertText, caret };
 }

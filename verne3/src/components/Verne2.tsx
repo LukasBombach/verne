@@ -3,23 +3,25 @@ import mitt from "mitt";
 
 // import type { Handler } from "mitt";
 
-const emitter = mitt();
+interface Caret {
+  node: Node;
+  offset: number;
+}
+
+// const emitter = mitt();
 
 const Text = ({ text }: { text: string }) => {
-  const { onKeyDown, insertText, caret } = useVerne();
-  onKeyDown(key => insertText(caret.offset, key));
+  // const { onKeyDown, insertText, caret } = useVerne();
+  // onKeyDown(key => insertText(caret.offset, key));
   return <span>{text}</span>;
 };
 
-Text.onKeyDown = (key: string, { text }: { text: string }) => {};
+// Text.onKeyDown = (key: string, { text }: { text: string }) => {};
 
 const Verne = () => {
   const [text, setText] = useState("hello world");
   const editorRef = useRef<HTMLDivElement>(null);
-  const caretRef = useRef<{
-    node: ChildNode;
-    offset: number;
-  }>();
+  const [, setCaret] = useCaret();
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -27,14 +29,9 @@ const Verne = () => {
     const offset = getOffset();
     const newText = insertString(text, offset, event.key);
     setText(newText);
-    const node = editorRef.current?.firstChild?.firstChild;
-    if (node) caretRef.current = { node, offset };
+    const node = editorRef.current?.firstChild?.firstChild as Node;
+    setCaret({ node, offset: offset + 1 });
   };
-
-  useEffect(() => {
-    if (caretRef.current)
-      setCaret(caretRef.current.node, caretRef.current.offset + 1);
-  });
 
   return (
     <div {...getEditableProps()} onKeyDown={onKeyDown} ref={editorRef}>
@@ -44,14 +41,13 @@ const Verne = () => {
   );
 };
 
-interface Caret {
-  node: Node;
-  offset: number;
-}
-
-function useCaret() {
+function useCaret(): [Caret | undefined, (caret: Caret) => void] {
   const caretRef = useRef<Caret>();
-  const setCaret = (caret: Caret) => (caretRef.current = caret);
+
+  const setCaret = (caret: Caret) => {
+    caretRef.current = caret;
+  };
+
   const caret = caretRef.current;
 
   useEffect(() => {
@@ -103,14 +99,14 @@ function getOffset() {
   return offset;
 }
 
-function setCaret(node: Node, offset: number) {
+/* function setCaret(node: Node, offset: number) {
   const range = new Range();
   range.setStart(node, offset);
   range.setEnd(node, offset);
   window.document.getSelection()?.removeAllRanges();
   window.document.getSelection()?.addRange(range);
 }
-
+ */
 function insertString(text: string, offset: number, stringToInsert: string) {
   return text.slice(0, offset) + stringToInsert + text.slice(offset);
 }

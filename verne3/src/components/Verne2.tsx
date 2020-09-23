@@ -1,58 +1,83 @@
 import React, { useState, useRef, useEffect } from "react";
-import mitt from "mitt";
-
-// import type { Handler } from "mitt";
 
 interface Caret {
   node: Node;
   offset: number;
+  synced?: boolean;
 }
 
-// const emitter = mitt();
-
 const Text = ({ text }: { text: string }) => {
-  // const { onKeyDown, insertText, caret } = useVerne();
-  // onKeyDown(key => insertText(caret.offset, key));
   return <span>{text}</span>;
 };
-
-// Text.onKeyDown = (key: string, { text }: { text: string }) => {};
 
 const Verne = () => {
   const [text, setText] = useState("hello world");
   const editorRef = useRef<HTMLDivElement>(null);
-  const [, setCaret] = useCaret();
+  const [caret, setCaret] = useCaret();
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  useEffect(() => {
+    const onSelectionChangeHandler = (...args: any[]) => {
+      const selection = window.document.getSelection();
+      const range = selection?.getRangeAt(0);
+      if (range) {
+        const node = range.startContainer;
+        const offset = range.startOffset;
+        const synced = true;
+        setCaret({ node, offset, synced });
+      }
+    };
+    document.addEventListener("selectionchange", onSelectionChangeHandler);
+    return () => {
+      document.removeEventListener("selectionchange", onSelectionChangeHandler);
+    };
+  }, []);
+
+  const keyDownHandler = (event: KeyboardEvent) => {
     event.preventDefault();
+
+    if (!caret) return;
     if (!/^[\w\s]$/.test(event.key)) return;
-    const offset = getOffset();
-    const newText = insertString(text, offset, event.key);
+    const newText = insertString(text, caret.offset, event.key);
     setText(newText);
     const node = editorRef.current?.firstChild?.firstChild as Node;
-    setCaret({ node, offset: offset + 1 });
+    setCaret({ node, offset: caret.offset + 1 });
   };
 
+  useKeyboard(editorRef, keyDownHandler);
+
   return (
-    <div {...getEditableProps()} onKeyDown={onKeyDown} ref={editorRef}>
+    <div {...getEditableProps()} ref={editorRef}>
       <Text text={text} />
       <Text text=" text2" />
     </div>
   );
 };
 
+function useKeyboard(
+  ref: React.RefObject<HTMLElement>,
+  handler: (event: KeyboardEvent) => void
+) {
+  useEffect(() => {
+    if (ref.current) {
+      const element = ref.current;
+      element.addEventListener("keydown", handler);
+      return () => element.removeEventListener("keydown", handler);
+    }
+  });
+}
+
 function useCaret(): [Caret | undefined, (caret: Caret) => void] {
-  const caretRef = useRef<Caret>();
+  const [caret, setCaretToState] = useState<Caret>();
 
   const setCaret = (caret: Caret) => {
-    caretRef.current = caret;
+    caret.synced = Boolean(caret.synced);
+    setCaretToState(caret);
   };
 
-  const caret = caretRef.current;
-
   useEffect(() => {
-    if (caret) {
+    if (caret && !caret.synced) {
       const range = new Range();
+      setCaretToState({ ...caret, synced: true });
       range.setStart(caret.node, caret.offset);
       range.setEnd(caret.node, caret.offset);
       window.document.getSelection()?.removeAllRanges();
@@ -62,32 +87,6 @@ function useCaret(): [Caret | undefined, (caret: Caret) => void] {
 
   return [caret, setCaret];
 }
-
-function useVerne() {
-  function onKeyDown(handler: (key: string) => void) {
-    useEffect(() => {
-      console.log("onKeyDown called");
-    }, []);
-  }
-
-  function insertText(offset: number, text: string) {}
-
-  const caret = {
-    get offset() {
-      return 1;
-    },
-  };
-
-  return { onKeyDown, insertText, caret };
-}
-
-function useInput() {
-  useEffect(() => {
-    console.log("useInput in useEffect");
-  }, []);
-}
-
-function useEvents() {}
 
 function getOffset() {
   const selection = window.document.getSelection();
@@ -99,14 +98,6 @@ function getOffset() {
   return offset;
 }
 
-/* function setCaret(node: Node, offset: number) {
-  const range = new Range();
-  range.setStart(node, offset);
-  range.setEnd(node, offset);
-  window.document.getSelection()?.removeAllRanges();
-  window.document.getSelection()?.addRange(range);
-}
- */
 function insertString(text: string, offset: number, stringToInsert: string) {
   return text.slice(0, offset) + stringToInsert + text.slice(offset);
 }
@@ -121,17 +112,3 @@ function getEditableProps() {
 }
 
 export default Verne;
-
-/* 
-  const caret: Caret = {
-    get offset() {
-      const selection = window.document.getSelection();
-      const range = selection?.getRangeAt(0);
-      return range?.startOffset;
-    },
-    get node() {
-      const selection = window.document.getSelection();
-      const range = selection?.getRangeAt(0);
-      return range?.startContainer;
-    },
-  }; */

@@ -1,34 +1,127 @@
 import React, { useState, useRef, useEffect } from "react";
 
-const Text = ({ text }: { text: string }) => {
-  return <span>{text}</span>;
+/** ************************************************************************************************************************
+ *
+ * TYPES
+ *
+ * *************************************************************************************************************************/
+
+interface Document {
+  root: Node;
+  insertText: (node: Node, offset: number, textToInsert: string) => void;
+  getTextNode: (node: Node) => globalThis.Node;
+  getDocumentNode: (textNode: globalThis.Node) => Node;
+}
+
+interface Node {
+  text?: string;
+  children?: Node[];
+}
+
+/* type Node = NodeWithText | NodeWithChildren;
+
+interface NodeWithText {
+  text: string;
+}
+
+interface NodeWithChildren {
+  children: Node[];
+} */
+
+interface Caret {
+  node: Node;
+  offset: number;
+  synced?: boolean;
+}
+
+/** ************************************************************************************************************************
+ *
+ * Code
+ *
+ * *************************************************************************************************************************/
+
+const intitialRoot: Node = {
+  children: [{ text: "hello " }, { text: "world" }],
+};
+
+const Text = ({ node }: { node: Node }) => {
+  return <span>{node.text}</span>;
 };
 
 const Verne = () => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [caret, setCaret] = useCaret();
-  const [text, setText] = useState("hello world");
+  const document = useDocument(editorRef, intitialRoot);
+  const [caret, setCaret] = useCaret(document);
 
-  const keyDownHandler = (event: KeyboardEvent) => {
+  useKeyboard(editorRef, event => {
     event.preventDefault();
-
     if (!caret) return;
     if (!/^[\w\s]$/.test(event.key)) return;
-    const newText = insertString(text, caret.offset, event.key);
-    setText(newText);
-    const node = editorRef.current?.firstChild?.firstChild as Node;
-    setCaret({ node, offset: caret.offset + 1 });
-  };
-
-  useKeyboard(editorRef, keyDownHandler);
+    const newNode = document.insertText(caret.node, caret.offset, event.key);
+    setCaret(newNode, caret.offset + 1);
+  });
 
   return (
     <div {...getEditableProps()} ref={editorRef}>
-      <Text text={text} />
-      <Text text=" text2" />
+      {document.root.children?.map((node, i) => (
+        <Text key={i} node={node} />
+      ))}
     </div>
   );
 };
+
+/** ************************************************************************************************************************
+ *
+ * HOOKS
+ *
+ * *************************************************************************************************************************/
+
+function useDocument(
+  ref: React.RefObject<HTMLElement>,
+  initialRoot: Node = {}
+) {
+  const [root, setRoot] = useState<Node>(initialRoot);
+
+  function insertText(node: Node, offset: number, textToInsert: string) {
+    const textBefore = node.text?.slice(0, offset) || "";
+    const textAfter = node.text?.slice(offset) || "";
+    const text = textBefore + textToInsert + textAfter;
+    const newNode = { ...node, text };
+    replaceNode(node, newNode);
+    return newNode;
+  }
+
+  function getTextNode(node: Node): globalThis.Node {
+    if (!root.children) throw new Error("root has no children");
+    if (!ref.current) throw new Error("missing editor ref");
+    const index = root.children.indexOf(node);
+    if (index < 0) throw new Error("Cannot find node");
+    const textNode = Array.from(ref.current.childNodes)[index].firstChild;
+    if (!textNode) throw new Error("Could not find textNode");
+    return textNode;
+  }
+
+  function getDocumentNode(textNode: globalThis.Node): Node {
+    if (!root.children) throw new Error("root has no children");
+    if (!textNode.parentNode) throw new Error("textNode has no parentNode");
+    const index = Array.prototype.indexOf.call(
+      textNode.parentNode.children,
+      textNode
+    );
+    if (index < 0) throw new Error("Cannot find textNode");
+    return root.children[index];
+  }
+
+  function replaceNode(currentNode: Node, newNode: Node) {
+    if (!root.children) throw new Error("root has no children");
+    const index = root.children.indexOf(currentNode);
+    if (index < 0) throw new Error("Cannot find node");
+    const children = Object.assign([], root.children, { [index]: newNode });
+    setRoot({ ...setRoot, children });
+  }
+
+  return { root, insertText, getTextNode, getDocumentNode };
+}
 
 function useKeyboard(
   ref: React.RefObject<HTMLElement>,
@@ -43,20 +136,22 @@ function useKeyboard(
   });
 }
 
-function useCaret(): [Caret | undefined, (caret: Caret) => void] {
+function useCaret(
+  document: Document
+): [Caret | undefined, (node: Node, offset: number, synced?: boolean) => void] {
   const [caret, setCaretToState] = useState<Caret>();
 
-  const setCaret = (caret: Caret) => {
-    caret.synced = Boolean(caret.synced);
-    setCaretToState(caret);
+  const setCaret = (node: Node, offset: number, synced = false) => {
+    setCaretToState({ node, offset, synced });
   };
 
   useEffect(() => {
     if (caret && !caret.synced) {
       const range = new Range();
       setCaretToState({ ...caret, synced: true });
-      range.setStart(caret.node, caret.offset);
-      range.setEnd(caret.node, caret.offset);
+      const node = document.getTextNode(caret.node);
+      range.setStart(node, caret.offset);
+      range.setEnd(node, caret.offset);
       window.document.getSelection()?.removeAllRanges();
       window.document.getSelection()?.addRange(range);
     }
@@ -67,34 +162,32 @@ function useCaret(): [Caret | undefined, (caret: Caret) => void] {
       const selection = window.document.getSelection();
       const range = selection?.getRangeAt(0);
       if (range) {
-        const node = range.startContainer;
+        const node = document.getDocumentNode(range.startContainer);
         const offset = range.startOffset;
         const synced = true;
         setCaretToState({ node, offset, synced });
       }
     };
-    document.addEventListener("selectionchange", onSelectionChangeHandler);
+    window.document.addEventListener(
+      "selectionchange",
+      onSelectionChangeHandler
+    );
     return () => {
-      document.removeEventListener("selectionchange", onSelectionChangeHandler);
+      window.document.removeEventListener(
+        "selectionchange",
+        onSelectionChangeHandler
+      );
     };
   }, []);
 
   return [caret, setCaret];
 }
 
-function getOffset() {
-  const selection = window.document.getSelection();
-  const range = selection?.getRangeAt(0);
-  const offset = range?.startOffset;
-  if (offset === undefined) {
-    throw new Error("Cannot get offset");
-  }
-  return offset;
-}
-
-function insertString(text: string, offset: number, stringToInsert: string) {
-  return text.slice(0, offset) + stringToInsert + text.slice(offset);
-}
+/** ************************************************************************************************************************
+ *
+ * HELPERS
+ *
+ * *************************************************************************************************************************/
 
 function getEditableProps() {
   return {
@@ -105,10 +198,10 @@ function getEditableProps() {
   } as const;
 }
 
-interface Caret {
-  node: Node;
-  offset: number;
-  synced?: boolean;
-}
+/** ************************************************************************************************************************
+ *
+ * EXPORTS
+ *
+ * *************************************************************************************************************************/
 
 export default Verne;

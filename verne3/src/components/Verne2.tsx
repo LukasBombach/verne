@@ -1,36 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 
-interface Caret {
-  node: Node;
-  offset: number;
-  synced?: boolean;
-}
-
 const Text = ({ text }: { text: string }) => {
   return <span>{text}</span>;
 };
 
 const Verne = () => {
-  const [text, setText] = useState("hello world");
   const editorRef = useRef<HTMLDivElement>(null);
   const [caret, setCaret] = useCaret();
-
-  useEffect(() => {
-    const onSelectionChangeHandler = (...args: any[]) => {
-      const selection = window.document.getSelection();
-      const range = selection?.getRangeAt(0);
-      if (range) {
-        const node = range.startContainer;
-        const offset = range.startOffset;
-        const synced = true;
-        setCaret({ node, offset, synced });
-      }
-    };
-    document.addEventListener("selectionchange", onSelectionChangeHandler);
-    return () => {
-      document.removeEventListener("selectionchange", onSelectionChangeHandler);
-    };
-  }, []);
+  const [text, setText] = useState("hello world");
 
   const keyDownHandler = (event: KeyboardEvent) => {
     event.preventDefault();
@@ -85,6 +62,23 @@ function useCaret(): [Caret | undefined, (caret: Caret) => void] {
     }
   });
 
+  useEffect(() => {
+    const onSelectionChangeHandler = () => {
+      const selection = window.document.getSelection();
+      const range = selection?.getRangeAt(0);
+      if (range) {
+        const node = range.startContainer;
+        const offset = range.startOffset;
+        const synced = true;
+        setCaretToState({ node, offset, synced });
+      }
+    };
+    document.addEventListener("selectionchange", onSelectionChangeHandler);
+    return () => {
+      document.removeEventListener("selectionchange", onSelectionChangeHandler);
+    };
+  }, []);
+
   return [caret, setCaret];
 }
 
@@ -109,6 +103,12 @@ function getEditableProps() {
     suppressContentEditableWarning: true,
     style: { whiteSpace: "pre-wrap" },
   } as const;
+}
+
+interface Caret {
+  node: Node;
+  offset: number;
+  synced?: boolean;
 }
 
 export default Verne;

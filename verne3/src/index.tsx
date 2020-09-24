@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import Verne from "./components/Verne2";
+import Verne from "./components/Verne3";
 
 ReactDOM.render(
   <React.StrictMode>

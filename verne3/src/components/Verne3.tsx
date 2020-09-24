@@ -1,5 +1,5 @@
 import React from "react";
-import { VerneDocument, useDocument } from "./Document";
+import { useVerne } from "./useVerne";
 
 const editorProps = {
   contentEditable: true,
@@ -8,23 +8,19 @@ const editorProps = {
   style: { whiteSpace: "pre-wrap" },
 } as const;
 
-const Editor = () => {
-  const document = useDocument();
-
-  return (
-    <div ref={document.ref} {...editorProps}>
-      {document.root.children?.map((node, i) => (
-        <span key={i}>{node.text}</span>
-      ))}
-    </div>
-  );
+const initalRoot = {
+  children: [{ text: "hello " }, { text: "world" }],
 };
 
 const Verne = () => {
+  const { ref, root } = useVerne(initalRoot);
+
   return (
-    <VerneDocument>
-      <Editor />
-    </VerneDocument>
+    <div ref={ref} {...editorProps}>
+      {root.children?.map((node, i) => (
+        <span key={i}>{node.text}</span>
+      ))}
+    </div>
   );
 };
 

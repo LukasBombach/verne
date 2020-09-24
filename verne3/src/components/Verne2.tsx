@@ -11,6 +11,16 @@ interface Node {
   children?: Node[];
 }
 
+/* type Node = NodeWithText | NodeWithChildren;
+
+interface NodeWithText {
+  text: string;
+}
+
+interface NodeWithChildren {
+  children: Node[];
+} */
+
 interface Caret {
   node: Node;
   offset: number;
@@ -33,6 +43,8 @@ interface Document {
 const intitialRoot: Node = {
   children: [{ text: "hello " }, { text: "world" }],
 };
+
+const DocumentContext = createContext<Document | null>({ root: intitialRoot });
 
 /** ************************************************************************************************************************
  *
@@ -81,7 +93,48 @@ function useDocument(
 ) {
   const [root, setRoot] = useState<Node>(initialRoot);
 
-  return { root };
+  function insertText(node: Node, offset: number, textToInsert: string) {
+    const textBefore = node.text?.slice(0, offset) || "";
+    const textAfter = node.text?.slice(offset) || "";
+    const text = textBefore + textToInsert + textAfter;
+    const newNode = { ...node, text };
+
+    replaceNode(node, newNode);
+    return newNode;
+  }
+
+  function getTextNode(node: Node): globalThis.Node {
+    if (!root.children) throw new Error("root has no children");
+    if (!ref.current) throw new Error("missing editor ref");
+    const index = root.children.indexOf(node);
+    if (index < 0) throw new Error("Cannot find node");
+    const textNode = Array.from(ref.current.childNodes)[index].firstChild;
+    if (!textNode) throw new Error("Could not find textNode");
+    return textNode;
+  }
+
+  function getDocumentNode(textNode: globalThis.Node): Node {
+    if (!root.children) throw new Error("root has no children");
+    if (!textNode.parentNode?.parentNode)
+      throw new Error("textNode has no parentNode?.parentNode");
+    const index = Array.prototype.indexOf.call(
+      textNode.parentNode.parentNode.childNodes,
+      textNode.parentNode
+    );
+    if (index < 0) throw new Error("Cannot find textNode");
+
+    return root.children[index];
+  }
+
+  function replaceNode(currentNode: Node, newNode: Node) {
+    if (!root.children) throw new Error("root has no children");
+    const index = root.children.indexOf(currentNode);
+    if (index < 0) throw new Error("Cannot find node");
+    const children = Object.assign([], root.children, { [index]: newNode });
+    setRoot({ ...root, children });
+  }
+
+  return { root, insertText, getTextNode, getDocumentNode };
 }
 
 function useKeyboard(

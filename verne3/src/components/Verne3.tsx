@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-
+import React from "react";
 import { VerneDocument, useDocument } from "./Document";
 
 const editorProps = {
@@ -10,11 +9,10 @@ const editorProps = {
 } as const;
 
 const Editor = () => {
-  const editorRef = useRef<HTMLDivElement>(null);
-  const document = useDocument(editorRef);
+  const document = useDocument();
 
   return (
-    <div ref={editorRef} {...editorProps}>
+    <div ref={document.ref} {...editorProps}>
       {document.root.children?.map((node, i) => (
         <span key={i}>{node.text}</span>
       ))}

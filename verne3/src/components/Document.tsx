@@ -1,4 +1,5 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, useRef, createContext } from "react";
+import { useDom } from "./useDom";
 
 import type { ReactNode, RefObject } from "react";
 
@@ -9,10 +10,6 @@ export interface VerneDocumentProps {
 export interface Node {
   text?: string;
   children?: Node[];
-}
-
-export interface Document {
-  root: Node;
 }
 
 export function insertText(
@@ -41,7 +38,7 @@ export function getTextNode(
   return textNode;
 }
 
-export function getDocumentNode(root: Node, textNode: globalThis.Node): Node {
+export function getNode(root: Node, textNode: globalThis.Node): Node {
   if (!root.children) throw new Error("root has no children");
   if (!textNode.parentNode?.parentNode)
     throw new Error("textNode has no parentNode?.parentNode");
@@ -62,23 +59,31 @@ export function replaceNode(root: Node, currentNode: Node, newNode: Node) {
   return { ...root, children };
 }
 
-export const DocumentContext = createContext<Document>({ root: {} });
+export const DocumentContext = createContext<Document | null>(null);
 
 export const intitialRoot: Node = {
   children: [{ text: "hello " }, { text: "world" }],
 };
 
-export function useDocument(editorRef: RefObject<HTMLElement>): Document {
+export function useDocument(): Document {
   const document = useContext(DocumentContext);
+  if (document === null) throw new Error("document is null");
   return document;
 }
 
 export const VerneDocument = ({ children }: VerneDocumentProps) => {
   const [root, setRoot] = useState<Node>(intitialRoot);
+  const { ref, getTextNode } = useDom();
 
   return (
-    <DocumentContext.Provider value={{ root }}>
+    <DocumentContext.Provider value={{ root, ref, getTextNode }}>
       {children}
     </DocumentContext.Provider>
   );
 };
+
+export interface Document {
+  root: Node;
+  ref: RefObject<HTMLDivElement>;
+  getTextNode: (node: Node) => globalThis.Node;
+}

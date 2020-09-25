@@ -44,7 +44,7 @@ const intitialRoot: Node = {
   children: [{ text: "hello " }, { text: "world" }],
 };
 
-const DocumentContext = createContext<Document | null>({ root: intitialRoot });
+const DocumentContext = createContext<Document | null>(null);
 
 /** ************************************************************************************************************************
  *

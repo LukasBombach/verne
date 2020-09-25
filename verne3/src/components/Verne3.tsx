@@ -8,16 +8,16 @@ const editorProps = {
   style: { whiteSpace: "pre-wrap" },
 } as const;
 
-const initalRoot = {
+const initalDocument = {
   children: [{ text: "hello " }, { text: "world" }],
 };
 
 const Verne = () => {
-  const { ref, root } = useVerne(initalRoot);
+  const { ref, document } = useVerne(initalDocument);
 
   return (
     <div ref={ref} {...editorProps}>
-      {root.children?.map((node, i) => (
+      {document.children?.map((node, i) => (
         <span key={i}>{node.text}</span>
       ))}
     </div>

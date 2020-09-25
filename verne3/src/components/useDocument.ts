@@ -2,10 +2,10 @@ import React, { useState, useContext, useRef, createContext } from "react";
 import type { Node } from "./Document";
 
 export function useDocument(initialRoot: Node) {
-  const [root, setRoot] = useState<Node>(initialRoot);
+  const [document, setDocument] = useState<Node>(initialRoot);
 
   function getNode(textNode: globalThis.Node): Node {
-    if (!root.children) throw new Error("root has no children");
+    if (!document.children) throw new Error("root has no children");
     if (!textNode.parentNode?.parentNode)
       throw new Error("textNode has no parentNode?.parentNode");
     const index = Array.prototype.indexOf.call(
@@ -13,7 +13,7 @@ export function useDocument(initialRoot: Node) {
       textNode.parentNode
     );
     if (index < 0) throw new Error("Cannot find textNode");
-    return root.children[index];
+    return document.children[index];
   }
 
   function insertText(node: Node, offset: number, textToInsert: string) {
@@ -25,12 +25,12 @@ export function useDocument(initialRoot: Node) {
   }
 
   function replaceNode(currentNode: Node, newNode: Node) {
-    if (!root.children) throw new Error("root has no children");
-    const index = root.children.indexOf(currentNode);
+    if (!document.children) throw new Error("root has no children");
+    const index = document.children.indexOf(currentNode);
     if (index < 0) throw new Error("Cannot find node");
-    const children = Object.assign([], root.children, { [index]: newNode });
-    setRoot({ ...root, children });
+    const children = Object.assign([], document.children, { [index]: newNode });
+    setDocument({ ...document, children });
   }
 
-  return { root, getNode, insertText };
+  return { document, getNode, insertText };
 }

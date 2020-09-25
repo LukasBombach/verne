@@ -1,13 +1,14 @@
-import { useDom } from "./useDom";
 import { useDocument } from "./useDocument";
+import { useDom } from "./useDom";
+import { useKeyboard } from "./useKeyboard";
 
 import type { Node } from "./Document";
 
 export function useVerne(initialRoot: Node) {
-  const { root, getNode, insertText } = useDocument(initialRoot);
-  const { ref, getTextNode } = useDom(root);
-  useKeyboard({ ref, insertText });
-  useMouse({ root, getNode });
+  const { document, getNode, insertText } = useDocument(initialRoot);
+  const { ref, getTextNode } = useDom(document);
+  useKeyboard(ref, insertText);
+  // useMouse(document, getNode);
 
-  return { root, ref, getTextNode, getNode, insertText };
+  return { document, ref, getTextNode, getNode, insertText };
 }

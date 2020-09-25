@@ -15,7 +15,7 @@ export interface Node {
 }
 
 export interface Document {
-  root: Node;
+  document: Node;
   ref: RefObject<HTMLDivElement>;
   getTextNode: (node: Node) => globalThis.Node;
   getNode: (textNode: globalThis.Node) => Node;
@@ -25,10 +25,10 @@ export interface Document {
 export const DocumentContext = createContext<Document | null>(null);
 
 export const VerneDocument = (props: VerneDocumentProps) => {
-  const { root, getNode, insertText } = useDocument(props.root);
-  const { ref, getTextNode } = useDom(root);
+  const { document, getNode, insertText } = useDocument(props.root);
+  const { ref, getTextNode } = useDom(document);
 
-  const value = { root, ref, getTextNode, getNode, insertText };
+  const value = { document, ref, getTextNode, getNode, insertText };
 
   return (
     <DocumentContext.Provider value={value}>

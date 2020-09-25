@@ -1,6 +1,6 @@
 import React from "react";
-import { useVerne } from ".";
-import type { Node } from ".";
+import { useVerne } from "./";
+import type { Node } from "./";
 
 export interface VerneProps {
   document: Node;

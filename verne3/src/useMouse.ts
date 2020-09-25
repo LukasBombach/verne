@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
-import type { Node, UseVerne } from ".";
+import type { Node, UseVerneRef } from "./";
 
 export interface Caret {
   node: Node;
   offset: number;
 }
 
-export function useMouse(verne?: UseVerne) {
+export function useMouse(verne: UseVerneRef) {
   const [caret, setCaret] = useState<Caret>();
 
   const onSelectionChange = () => {
     const selection = window.document.getSelection();
     const range = selection?.rangeCount && selection?.getRangeAt(0);
     if (!range) return;
-    if (!verne) {
-      throw new Error("verne is undefined");
+    if (!verne.current) {
+      throw new Error("selectionchange: missing verne");
     }
-    const node = verne.getNode(range.startContainer);
+    const node = verne.current.getNode(range.startContainer);
     const offset = range.startOffset;
     setCaret({ node, offset });
   };
@@ -26,7 +26,7 @@ export function useMouse(verne?: UseVerne) {
     return () => {
       window.document.removeEventListener("selectionchange", onSelectionChange);
     };
-  }, []);
+  }, [verne]);
 
   return { caret, setCaret };
 }

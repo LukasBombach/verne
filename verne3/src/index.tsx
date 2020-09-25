@@ -9,7 +9,7 @@ export { useKeyboard } from "./useKeyboard";
 export { useMouse } from "./useMouse";
 export type { Node } from "./useDocument";
 export type { Caret } from "./useMouse";
-export type { UseVerne } from "./useVerne";
+export type { UseVerne, UseVerneRef } from "./useVerne";
 
 const document = {
   children: [{ text: "hello " }, { text: "world" }],

@@ -1,22 +1,20 @@
-import { useEffect, useRef } from "react";
-import type { Node } from "./Document";
-import type { Caret } from "./useMouse";
-import { VerneApi } from "./useVerne";
+import { useEffect } from "react";
+import { UseVerne } from "./useVerne";
 
-export function useKeyboard(verne?: VerneApi) {
-  const caretRef = useRef<Caret | undefined>(caret);
-  caretRef.current = caret;
-
+export function useKeyboard(verne?: UseVerne) {
   useEffect(() => {
-    const element = ref.current;
+    if (!verne) {
+      throw new Error("verne is undefined");
+    }
+    const element = verne.ref.current;
     if (!element) return;
 
     const handler = (e: KeyboardEvent) => {
       e.preventDefault();
-      if (caretRef.current) {
-        insertText(caretRef.current.node, caretRef.current.offset, e.key);
-        // caretRef.current.setOffset(caretRef.current.offset + 1);
+      if (!verne.caret) {
+        throw new Error("verne.caret is undefined");
       }
+      verne.insertText(verne.caret.node, verne.caret.offset, e.key);
     };
 
     element.addEventListener("keydown", handler);

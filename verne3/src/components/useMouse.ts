@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 
 import type { Node } from "./Document";
+import { VerneApi } from "./useVerne";
 
 export interface Caret {
   node: Node;
   offset: number;
 }
 
-export function useMouse(getNode: (textNode: globalThis.Node) => Node) {
+export function useMouse(verne?: VerneApi) {
   const [caret, setCaret] = useState<Caret>();
 
   const onSelectionChange = () => {
@@ -26,5 +27,5 @@ export function useMouse(getNode: (textNode: globalThis.Node) => Node) {
     };
   }, []);
 
-  return caret;
+  return { caret, setCaret };
 }

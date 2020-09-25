@@ -1,8 +1,9 @@
 import { useRef } from "react";
 
 import { Node } from "./Document";
+import { VerneApi } from "./useVerne";
 
-export function useDom(root: Node) {
+export function useDom(verne?: VerneApi) {
   const ref = useRef<HTMLDivElement>(null);
 
   function getTextNode(node: Node): globalThis.Node {

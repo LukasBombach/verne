@@ -1,12 +1,9 @@
 import { useEffect, useRef } from "react";
 import type { Node } from "./Document";
 import type { Caret } from "./useMouse";
+import { VerneApi } from "./useVerne";
 
-export function useKeyboard(
-  ref: React.RefObject<HTMLDivElement>,
-  caret: Caret | undefined,
-  insertText: (node: Node, offset: number, textToInsert: string) => void
-) {
+export function useKeyboard(verne?: VerneApi) {
   const caretRef = useRef<Caret | undefined>(caret);
   caretRef.current = caret;
 
@@ -18,6 +15,7 @@ export function useKeyboard(
       e.preventDefault();
       if (caretRef.current) {
         insertText(caretRef.current.node, caretRef.current.offset, e.key);
+        // caretRef.current.setOffset(caretRef.current.offset + 1);
       }
     };
 

@@ -30,6 +30,7 @@ export function useDocument(initialRoot: Node) {
     if (index < 0) throw new Error("Cannot find node");
     const children = Object.assign([], document.children, { [index]: newNode });
     setDocument({ ...document, children });
+    // todo update caret automatically
   }
 
   return { document, getNode, insertText };

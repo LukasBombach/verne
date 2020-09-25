@@ -1,7 +1,7 @@
 export default null;
 
-/* import React, { useState, useEffect } from "react";
-import { useDocument } from "./Document";
+import React, { useState, useEffect } from "react";
+import { useDocument } from "./useDocument";
 
 import type { Node } from "./Document";
 
@@ -56,4 +56,3 @@ export function useCaret(): UseCaretApi {
 
   return [caret, setCaret];
 }
- */

@@ -4,7 +4,7 @@ import type { Node, DomNode, UseVerneRef } from "./";
 export interface Caret {
   node: Node;
   offset: number;
-  synced: boolean;
+  synced?: boolean;
 }
 
 function setSelection(node: DomNode, offset: number) {

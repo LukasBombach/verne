@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { UseVerne } from "./useVerne";
+import type { UseVerne } from ".";
 
 export function useKeyboard(verne?: UseVerne) {
   useEffect(() => {

@@ -1,7 +1,5 @@
 import { useRef } from "react";
-
-import { Node } from "./Document";
-import { UseVerne } from "./useVerne";
+import type { Node, UseVerne } from ".";
 
 export function useDom(verne?: UseVerne) {
   const ref = useRef<HTMLDivElement>(null);

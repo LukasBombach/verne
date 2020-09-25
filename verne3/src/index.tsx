@@ -1,11 +1,23 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
+import Verne from "./Verne";
 
-import Verne from "./components/Verne3";
+export { useVerne } from "./useVerne";
+export { useDocument } from "./useDocument";
+export { useDom } from "./useDom";
+export { useKeyboard } from "./useKeyboard";
+export { useMouse } from "./useMouse";
+export type { Node } from "./useDocument";
+export type { Caret } from "./useMouse";
+export type { UseVerne } from "./useVerne";
+
+const document = {
+  children: [{ text: "hello " }, { text: "world" }],
+};
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Verne />
-  </React.StrictMode>,
-  document.getElementById("root")
+  <StrictMode>
+    <Verne document={document} />
+  </StrictMode>,
+  window.document.getElementById("root")
 );

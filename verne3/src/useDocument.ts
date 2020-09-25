@@ -1,5 +1,9 @@
-import React, { useState, useContext, useRef, createContext } from "react";
-import type { Node } from "./Document";
+import { useState } from "react";
+
+export interface Node {
+  text?: string;
+  children?: Node[];
+}
 
 export function useDocument(initialRoot: Node) {
   const [document, setDocument] = useState<Node>(initialRoot);

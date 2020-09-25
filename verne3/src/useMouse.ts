@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-
-import type { Node } from "./Document";
-import { UseVerne } from "./useVerne";
+import type { Node, UseVerne } from ".";
 
 export interface Caret {
   node: Node;

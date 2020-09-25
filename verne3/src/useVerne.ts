@@ -1,10 +1,6 @@
 import { useRef } from "react";
-import { useDocument } from "./useDocument";
-import { useDom } from "./useDom";
-import { useKeyboard } from "./useKeyboard";
-import { useMouse } from "./useMouse";
-
-import type { Node } from "./Document";
+import { useDocument, useDom, useKeyboard, useMouse } from ".";
+import type { Node } from ".";
 
 export type UseVerne = ReturnType<typeof useVerne>;
 

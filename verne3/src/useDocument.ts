@@ -1,11 +1,12 @@
 import { useState } from "react";
+import type { UseVerneRef } from "./";
 
 export interface Node {
   text?: string;
   children?: Node[];
 }
 
-export function useDocument(initialRoot: Node) {
+export function useDocument(initialRoot: Node, verne: UseVerneRef) {
   const [document, setDocument] = useState<Node>(initialRoot);
 
   function getNode(textNode: globalThis.Node): Node {
@@ -31,10 +32,14 @@ export function useDocument(initialRoot: Node) {
   function replaceNode(currentNode: Node, newNode: Node) {
     if (!document.children) throw new Error("root has no children");
     const index = document.children.indexOf(currentNode);
-    if (index < 0) throw new Error("Cannot find node");
+    if (index < 0) throw new Error("replaceNode Cannot find node");
     const children = Object.assign([], document.children, { [index]: newNode });
     setDocument({ ...document, children });
-    // todo update caret automatically
+    if (!verne.current) throw new Error("missing verne.current");
+    if (!verne.current.caret) throw new Error("missing verne.current.caret");
+    const node = newNode;
+    const offset = verne.current.caret.offset;
+    verne.current.setCaret({ node, offset });
   }
 
   return { document, getNode, insertText };

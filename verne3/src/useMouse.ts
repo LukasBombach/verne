@@ -1,9 +1,18 @@
 import { useState, useEffect } from "react";
-import type { Node, UseVerneRef } from "./";
+import type { Node, DomNode, UseVerneRef } from "./";
 
 export interface Caret {
   node: Node;
   offset: number;
+  synced: boolean;
+}
+
+function setSelection(node: DomNode, offset: number) {
+  const range = new Range();
+  range.setStart(node, offset);
+  range.setEnd(node, offset);
+  document.getSelection()?.removeAllRanges();
+  document.getSelection()?.addRange(range);
 }
 
 export function useMouse(verne: UseVerneRef) {
@@ -18,7 +27,8 @@ export function useMouse(verne: UseVerneRef) {
     }
     const node = verne.current.getNode(range.startContainer);
     const offset = range.startOffset;
-    setCaret({ node, offset });
+    const synced = true;
+    setCaret({ node, offset, synced });
   };
 
   useEffect(() => {
@@ -27,6 +37,14 @@ export function useMouse(verne: UseVerneRef) {
       window.document.removeEventListener("selectionchange", onSelectionChange);
     };
   }, [verne]);
+
+  useEffect(() => {
+    if (!caret) return;
+    if (caret.synced) return;
+    if (!verne.current) return;
+    const node = verne.current.getTextNode(caret.node);
+    setSelection(node, caret.offset);
+  });
 
   return { caret, setCaret };
 }

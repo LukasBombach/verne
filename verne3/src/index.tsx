@@ -8,6 +8,7 @@ export { useDom } from "./useDom";
 export { useKeyboard } from "./useKeyboard";
 export { useMouse } from "./useMouse";
 export type { Node } from "./useDocument";
+export type { DomNode } from "./useDom";
 export type { Caret } from "./useMouse";
 export type { UseVerne, UseVerneRef } from "./useVerne";
 

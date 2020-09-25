@@ -9,7 +9,7 @@ export type UseVerneRef = MutableRefObject<UseVerne | undefined>;
 
 export function useVerne(initialRoot: Node) {
   const verneRef = useRef<UseVerne>();
-  const document = useDocument(initialRoot);
+  const document = useDocument(initialRoot, verneRef);
   const dom = useDom(verneRef);
   const mouse = useMouse(verneRef);
   useKeyboard(verneRef);

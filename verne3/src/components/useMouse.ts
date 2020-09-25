@@ -11,7 +11,8 @@ export function useMouse(getNode: (textNode: globalThis.Node) => Node) {
   const [caret, setCaret] = useState<Caret>();
 
   const onSelectionChange = () => {
-    const range = window.document.getSelection()?.getRangeAt(0);
+    const selection = window.document.getSelection();
+    const range = selection?.rangeCount && selection?.getRangeAt(0);
     if (!range) return;
     const node = getNode(range.startContainer);
     const offset = range.startOffset;
